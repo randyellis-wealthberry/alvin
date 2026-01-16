@@ -14,6 +14,8 @@ import { ZodError } from "zod";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 
+import { checkRateLimit } from "./rate-limit";
+
 /**
  * 1. CONTEXT
  *
@@ -104,6 +106,21 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 });
 
 /**
+ * Rate limiting middleware
+ *
+ * Limits requests per IP address. Uses in-memory storage (resets on restart).
+ * For production at scale, consider Redis-based rate limiting.
+ */
+export const rateLimitMiddleware = t.middleware(async ({ ctx, next }) => {
+  const identifier =
+    ctx.headers.get("x-forwarded-for") ??
+    ctx.headers.get("x-real-ip") ??
+    "unknown";
+  checkRateLimit(identifier);
+  return next();
+});
+
+/**
  * Public (unauthenticated) procedure
  *
  * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
@@ -111,6 +128,13 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+/**
+ * Rate-limited public procedure
+ *
+ * Use for public endpoints that should have rate limiting (e.g., mutations).
+ */
+export const rateLimitedProcedure = publicProcedure.use(rateLimitMiddleware);
 
 /**
  * Protected (authenticated) procedure
