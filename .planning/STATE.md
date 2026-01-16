@@ -9,7 +9,7 @@ See: .planning/PROJECT.md (updated 2026-01-16)
 
 ## Current Position
 
-Phase: 1 of 8 (Database Schema)
+Phase: 1 of 9 (Database Schema)
 Plan: Not started
 Status: Ready to plan
 Last activity: 2026-01-16 — Project initialized

@@ -1,13 +1,13 @@
 # Phase 1: Database Schema - Research
 
 **Researched:** 2026-01-16
-**Domain:** Prisma 6.x schema design for check-in/alert notification system
+**Domain:** Prisma 6.x schema design for check-in/alert/conversation system
 **Confidence:** HIGH
 
 <research_summary>
 ## Summary
 
-Researched Prisma 6.x patterns for ALVIN's "dead man's switch" schema: user profiles with check-in schedules, family contacts with priority ordering, check-in records, and escalating alerts with 4-level state progression.
+Researched Prisma 6.x patterns for ALVIN's "dead man's switch" schema: user profiles with check-in schedules, family contacts with priority ordering, check-in records, escalating alerts with 4-level state progression, and conversation history for the ALVIN Chat feature.
 
 Key findings:
 1. **SQLite limitations** - No native enums (use String with comments for typing), no JSON arrays, DateTime stored as ISO 8601 strings
@@ -57,7 +57,9 @@ prisma/schema.prisma
 ├── UserProfile (new - extends User with ALVIN settings)
 ├── Contact (new - family contacts)
 ├── CheckIn (new - check-in records)
-└── Alert (new - escalation state)
+├── Alert (new - escalation state)
+├── Conversation (new - chat sessions)
+└── Message (new - chat messages)
 ```
 
 ### Pattern 1: Extending User with Profile
@@ -221,6 +223,7 @@ model UserProfile {
   contacts              Contact[]
   checkIns              CheckIn[]
   alerts                Alert[]
+  conversations         Conversation[]
 
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
@@ -266,6 +269,9 @@ model CheckIn {
 
   performedAt   DateTime    @default(now())
 
+  // Relation to conversation (if check-in came from chat)
+  conversation  Conversation?
+
   @@index([userProfileId, performedAt])
 }
 
@@ -292,6 +298,48 @@ model Alert {
 
   @@index([userProfileId, level])
   @@index([level, triggeredAt])
+}
+
+model Conversation {
+  id            String      @id @default(cuid())
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId String
+
+  // Conversation metadata
+  title         String?     // Auto-generated or user-provided
+
+  // Optional link to check-in (if conversation resulted in check-in)
+  checkInId     String?     @unique
+  checkIn       CheckIn?    @relation(fields: [checkInId], references: [id])
+
+  // Messages
+  messages      Message[]
+
+  startedAt     DateTime    @default(now())
+  endedAt       DateTime?
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([userProfileId, startedAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+
+  // Message content
+  // Role values: "user", "assistant"
+  role           String
+  content        String
+
+  // Metadata
+  tokenCount     Int?        // For tracking usage
+
+  createdAt      DateTime    @default(now())
+
+  @@index([conversationId, createdAt])
 }
 ```
 
@@ -325,9 +373,17 @@ export type AlertLevel = (typeof AlertLevel)[keyof typeof AlertLevel];
 export const CheckInMethod = {
   MANUAL: "MANUAL",
   BIOMETRIC: "BIOMETRIC",
+  CONVERSATION: "CONVERSATION",  // Check-in via ALVIN Chat
 } as const;
 
 export type CheckInMethod = (typeof CheckInMethod)[keyof typeof CheckInMethod];
+
+export const MessageRole = {
+  USER: "user",
+  ASSISTANT: "assistant",
+} as const;
+
+export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole];
 ```
 </code_examples>
 

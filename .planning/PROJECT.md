@@ -1,4 +1,4 @@
-# ALVIN - AI Life Verification & Intelligent Notification
+# ALVIN - Active Language and Vitality Intelligence Network
 
 ## What This Is
 
@@ -31,6 +31,10 @@ Never false alarm — family contacts are only reached when truly needed, protec
 - [ ] Biometric check-in verification (device-based)
 - [ ] Scheduled check-in reminders (push/email)
 - [ ] Family contact management (add, edit, remove trusted contacts)
+- [ ] **ALVIN Chat** — Conversational AI interface for:
+  - Wellness check-ins via natural conversation
+  - Context gathering when cancelling alerts
+  - Personalized engagement based on user preferences
 - [ ] Escalating alert system:
   - Level 1: Gentle reminder to user (24h after missed check-in)
   - Level 2: Second reminder to user (48h)
