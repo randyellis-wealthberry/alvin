@@ -19,7 +19,7 @@ const DEFAULT_CONFIG: RateLimitConfig = {
 
 export function checkRateLimit(
   identifier: string,
-  config: RateLimitConfig = DEFAULT_CONFIG
+  config: RateLimitConfig = DEFAULT_CONFIG,
 ): void {
   const now = Date.now();
   const entry = store.get(identifier);

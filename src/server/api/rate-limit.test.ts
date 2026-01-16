@@ -34,7 +34,7 @@ describe("rate-limit", () => {
       checkRateLimit("user-1", config);
 
       expect(() => checkRateLimit("user-1", config)).toThrow(
-        "Rate limit exceeded"
+        "Rate limit exceeded",
       );
     });
 

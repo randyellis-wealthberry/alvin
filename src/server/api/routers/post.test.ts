@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { TRPCError } from "@trpc/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -26,7 +27,8 @@ import { appRouter } from "~/server/api/root";
 import { type createTRPCContext } from "~/server/api/trpc";
 import { db } from "~/server/db";
 
-const mockDb = vi.mocked(db);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockDb = db as any;
 
 describe("post router", () => {
   const mockSession = {
@@ -59,7 +61,7 @@ describe("post router", () => {
     it("requires authentication", async () => {
       const caller = createCaller(null);
       await expect(caller.post.create({ name: "Test Post" })).rejects.toThrow(
-        TRPCError
+        TRPCError,
       );
     });
 

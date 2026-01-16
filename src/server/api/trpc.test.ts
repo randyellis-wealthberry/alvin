@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock auth before importing trpc
@@ -12,7 +13,8 @@ vi.mock("~/server/db", () => ({
 import { auth } from "~/server/auth";
 import { createTRPCContext } from "./trpc";
 
-const mockAuth = vi.mocked(auth);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockAuth = auth as any;
 
 describe("tRPC", () => {
   beforeEach(() => {

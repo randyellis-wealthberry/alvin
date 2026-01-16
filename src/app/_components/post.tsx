@@ -49,9 +49,7 @@ export function LatestPost() {
           minLength={1}
           className="w-full rounded-full bg-white/10 px-4 py-2 text-white"
         />
-        {error && (
-          <p className="text-sm text-red-400">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           type="submit"
           className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"

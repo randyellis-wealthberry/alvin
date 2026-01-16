@@ -6,8 +6,7 @@ import { z } from "zod";
 describe("env validation schema", () => {
   // Replicate the server schema from env.js
   const createServerSchema = (nodeEnv: string) => ({
-    AUTH_SECRET:
-      nodeEnv === "production" ? z.string() : z.string().optional(),
+    AUTH_SECRET: nodeEnv === "production" ? z.string() : z.string().optional(),
     AUTH_DISCORD_ID: z.string(),
     AUTH_DISCORD_SECRET: z.string(),
     DATABASE_URL: z.string().url(),

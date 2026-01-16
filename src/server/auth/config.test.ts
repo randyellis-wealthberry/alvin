@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 import { describe, expect, it, vi } from "vitest";
 
 // Mock next-auth before any imports
@@ -25,7 +26,13 @@ vi.mock("~/server/db", () => ({
 describe("auth config", () => {
   describe("session callback logic", () => {
     // Replicate the session callback from config.ts for testing
-    const sessionCallback = ({ session, user }: { session: any; user: any }) => ({
+    const sessionCallback = ({
+      session,
+      user,
+    }: {
+      session: any;
+      user: any;
+    }) => ({
       ...session,
       user: {
         ...session.user,
@@ -38,7 +45,11 @@ describe("auth config", () => {
         user: { name: "Test", email: "test@example.com" },
         expires: new Date().toISOString(),
       };
-      const mockUser = { id: "user-123", name: "Test", email: "test@example.com" };
+      const mockUser = {
+        id: "user-123",
+        name: "Test",
+        email: "test@example.com",
+      };
 
       const result = sessionCallback({
         session: mockSession,
@@ -50,10 +61,18 @@ describe("auth config", () => {
 
     it("preserves existing session properties", () => {
       const mockSession = {
-        user: { name: "Test", email: "test@example.com", image: "https://example.com/img.jpg" },
+        user: {
+          name: "Test",
+          email: "test@example.com",
+          image: "https://example.com/img.jpg",
+        },
         expires: "2026-01-17T00:00:00.000Z",
       };
-      const mockUser = { id: "user-123", name: "Test", email: "test@example.com" };
+      const mockUser = {
+        id: "user-123",
+        name: "Test",
+        email: "test@example.com",
+      };
 
       const result = sessionCallback({
         session: mockSession,
@@ -67,7 +86,11 @@ describe("auth config", () => {
 
     it("preserves user image from session", () => {
       const mockSession = {
-        user: { name: "Test", email: "test@example.com", image: "https://cdn.example.com/avatar.jpg" },
+        user: {
+          name: "Test",
+          email: "test@example.com",
+          image: "https://cdn.example.com/avatar.jpg",
+        },
         expires: "2026-01-17T00:00:00.000Z",
       };
       const mockUser = { id: "user-456" };
