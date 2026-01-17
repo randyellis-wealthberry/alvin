@@ -2,6 +2,7 @@ import { alertRouter } from "~/server/api/routers/alert";
 import { checkInRouter } from "~/server/api/routers/checkin";
 import { contactRouter } from "~/server/api/routers/contact";
 import { conversationRouter } from "~/server/api/routers/conversation";
+import { dashboardRouter } from "~/server/api/routers/dashboard";
 import { passkeyRouter } from "~/server/api/routers/passkey";
 import { postRouter } from "~/server/api/routers/post";
 import { profileRouter } from "~/server/api/routers/profile";
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   checkIn: checkInRouter,
   contact: contactRouter,
   conversation: conversationRouter,
+  dashboard: dashboardRouter,
   passkey: passkeyRouter,
   post: postRouter,
   profile: profileRouter,
