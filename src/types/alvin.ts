@@ -40,3 +40,11 @@ export const MessageRole = {
   ASSISTANT: "assistant",
 } as const;
 export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole];
+
+// Passkey device types
+export const PasskeyDeviceType = {
+  SINGLE_DEVICE: "singleDevice",
+  MULTI_DEVICE: "multiDevice",
+} as const;
+export type PasskeyDeviceType =
+  (typeof PasskeyDeviceType)[keyof typeof PasskeyDeviceType];

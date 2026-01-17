@@ -99,9 +99,29 @@ model UserProfile {
     checkIns      CheckIn[]
     contacts      Contact[]
     alerts        Alert[]
+    passkeys      Passkey[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model Passkey {
+    id            String      @id // credentialId from WebAuthn (Base64URL)
+    userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+    userProfileId String
+
+    // WebAuthn credential data
+    publicKey      Bytes  // Credential public key
+    webAuthnUserID String // User handle for WebAuthn
+    counter        BigInt @default(0)
+    deviceType     String // "singleDevice" | "multiDevice"
+    backedUp       Boolean @default(false)
+    transports     String? // CSV of transports: "internal,hybrid"
+
+    createdAt DateTime @default(now())
+    name      String?  // User-friendly name like "MacBook TouchID"
+
+    @@index([userProfileId])
 }
 
 model Conversation {
