@@ -44,20 +44,18 @@ export const contactRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Find or create user's profile
-      let profile = await ctx.db.userProfile.findUnique({
-        where: { userId: ctx.session.user.id },
-      });
-
-      if (!profile) {
-        profile = await ctx.db.userProfile.create({
+      const profile =
+        (await ctx.db.userProfile.findUnique({
+          where: { userId: ctx.session.user.id },
+        })) ??
+        (await ctx.db.userProfile.create({
           data: {
             userId: ctx.session.user.id,
             checkInFrequencyHours: 24,
             timezone: "UTC",
             isActive: true,
           },
-        });
-      }
+        }));
 
       // Create contact linked to profile
       return ctx.db.contact.create({
@@ -102,7 +100,7 @@ export const contactRouter = createTRPCRouter({
         where: { id: input.id },
       });
 
-      if (!contact || contact.userProfileId !== profile.id) {
+      if (contact?.userProfileId !== profile.id) {
         throw new Error("Contact not found");
       }
 
@@ -131,7 +129,7 @@ export const contactRouter = createTRPCRouter({
         where: { id: input.id },
       });
 
-      if (!contact || contact.userProfileId !== profile.id) {
+      if (contact?.userProfileId !== profile.id) {
         throw new Error("Contact not found");
       }
 
