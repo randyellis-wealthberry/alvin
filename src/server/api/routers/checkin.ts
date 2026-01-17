@@ -3,20 +3,18 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 export const checkInRouter = createTRPCRouter({
   record: protectedProcedure.mutation(async ({ ctx }) => {
     // Get or create profile
-    let profile = await ctx.db.userProfile.findUnique({
-      where: { userId: ctx.session.user.id },
-    });
-
-    if (!profile) {
-      profile = await ctx.db.userProfile.create({
+    const profile =
+      (await ctx.db.userProfile.findUnique({
+        where: { userId: ctx.session.user.id },
+      })) ??
+      (await ctx.db.userProfile.create({
         data: {
           userId: ctx.session.user.id,
           checkInFrequencyHours: 24,
           timezone: "UTC",
           isActive: true,
         },
-      });
-    }
+      }));
 
     const now = new Date();
 

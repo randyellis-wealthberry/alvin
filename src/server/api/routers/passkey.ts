@@ -128,24 +128,22 @@ export const passkeyRouter = createTRPCRouter({
       },
     });
 
-    if (!profile) {
-      profile = await ctx.db.userProfile.create({
-        data: {
-          userId: ctx.session.user.id,
-          checkInFrequencyHours: 24,
-          timezone: "UTC",
-          isActive: true,
-        },
-        include: {
-          passkeys: {
-            select: {
-              id: true,
-              transports: true,
-            },
+    profile ??= await ctx.db.userProfile.create({
+      data: {
+        userId: ctx.session.user.id,
+        checkInFrequencyHours: 24,
+        timezone: "UTC",
+        isActive: true,
+      },
+      include: {
+        passkeys: {
+          select: {
+            id: true,
+            transports: true,
           },
         },
-      });
-    }
+      },
+    });
 
     // Generate a new WebAuthn user ID for each registration
     const webAuthnUserID = generateWebAuthnUserID();

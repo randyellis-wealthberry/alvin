@@ -21,7 +21,7 @@ export default async function CheckInPage() {
         <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16">
           <h1 className="text-4xl font-bold">Check In</h1>
           <p className="text-lg text-white/70">
-            Let us know you're okay with a quick check-in
+            Let us know you&apos;re okay with a quick check-in
           </p>
           <CheckInButton />
           <div className="mt-8 w-full max-w-md">
