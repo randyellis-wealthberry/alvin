@@ -55,6 +55,14 @@ export default async function Home() {
               <div className="flex gap-4">
                 {session && (
                   <Link
+                    href="/check-in"
+                    className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+                  >
+                    Check In
+                  </Link>
+                )}
+                {session && (
+                  <Link
                     href="/profile"
                     className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
                   >
