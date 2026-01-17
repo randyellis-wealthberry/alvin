@@ -15,6 +15,7 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
     ANTHROPIC_API_KEY: z.string(),
+    CRON_SECRET: z.string().min(1),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -39,6 +40,7 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    CRON_SECRET: process.env.CRON_SECRET,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**
