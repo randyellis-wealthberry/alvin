@@ -5,37 +5,38 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** Never false alarm — family contacts are only reached when truly needed
-**Current focus:** Phase 7 complete — Next: Phase 8 (Contact Notifications)
+**Current focus:** Phase 8 complete — Next: Phase 9 (Activity Dashboard)
 
 ## Current Position
 
-Phase: 7 of 10 (Alert Escalation Engine) — COMPLETE
+Phase: 8 of 10 (Contact Notifications) — COMPLETE
 Plan: 2 of 2 complete
-Status: Phase complete, ready for next phase (Phase 8)
-Last activity: 2026-01-17 — Completed Phase 7 via sequential execution
+Status: Phase complete, ready for next phase (Phase 9)
+Last activity: 2026-01-17 — Completed Phase 8 via sequential execution
 
-Progress: ████████████████████████████ ~80% (8 of 10 phases complete)
+Progress: █████████████████████████████ ~90% (9 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 13
-- Average duration: ~13 min/plan
-- Total execution time: ~163 min
+- Total plans completed: 15
+- Average duration: ~12 min/plan
+- Total execution time: ~171 min
 
 **By Phase:**
 
-| Phase                  | Plans | Total   | Avg/Plan |
-|------------------------|-------|---------|----------|
-| 1. Database Schema     | 1/1   | ~3 min  | ~3 min   |
-| 2. User Profile        | 1/1   | ~7 min  | ~7 min   |
-| 3. Contact Management  | 1/1   | ~5 min  | ~5 min   |
-| 4. Check-In System     | 2/2   | ~60 min | ~30 min  |
-| 5. ALVIN Chat          | 3/3   | ~45 min | ~15 min  |
-| 6. Reminder System     | 2/2   | ~13 min | ~6 min   |
-| 7. Alert Escalation    | 2/2   | ~20 min | ~10 min  |
-| 10. Thesys Integration | 1/1   | ~10 min | ~10 min  |
+| Phase                    | Plans | Total   | Avg/Plan |
+|--------------------------|-------|---------|----------|
+| 1. Database Schema       | 1/1   | ~3 min  | ~3 min   |
+| 2. User Profile          | 1/1   | ~7 min  | ~7 min   |
+| 3. Contact Management    | 1/1   | ~5 min  | ~5 min   |
+| 4. Check-In System       | 2/2   | ~60 min | ~30 min  |
+| 5. ALVIN Chat            | 3/3   | ~45 min | ~15 min  |
+| 6. Reminder System       | 2/2   | ~13 min | ~6 min   |
+| 7. Alert Escalation      | 2/2   | ~20 min | ~10 min  |
+| 8. Contact Notifications | 2/2   | ~8 min  | ~4 min   |
+| 10. Thesys Integration   | 1/1   | ~10 min | ~10 min  |
 
 **Recent Trend:**
 
@@ -76,13 +77,33 @@ None yet.
 
 ### Blockers/Concerns
 
-None - alert escalation engine is complete, ready for contact notifications.
+None - contact notifications complete, ready for activity dashboard.
 
 ## Session Continuity
 
 Last session: 2026-01-17
-Stopped at: Completed Phase 7 via sequential execution (07-01 + 07-02)
+Stopped at: Completed Phase 8 via sequential execution (08-01 + 08-02)
 Resume file: None
+
+## Phase 8 Summary
+
+**Commits:**
+
+- 08-01: 2 commits (ContactAlertEmail component, notifications module)
+- 08-02: 1 commit (cron notification integration)
+
+**Key Files Created/Modified:**
+
+- src/emails/ContactAlertEmail.tsx — React Email template with L3 (concerned) and L4 (urgent) variants
+- src/lib/alerts/notifications.ts — notifyPrimaryContact and notifyAllContacts functions
+- src/app/api/cron/escalation/route.ts — Added notification calls on L3/L4 transitions
+
+**Patterns Established:**
+
+- L3: Notify primary contact only (lowest priority number)
+- L4: Batch notify all eligible contacts via resend.batch.send()
+- Notification after level update (atomic, no duplicate sends)
+- Filter: deletedAt === null && notifyByEmail && email
 
 ## Phase 7 Summary
 
