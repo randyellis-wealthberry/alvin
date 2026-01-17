@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
@@ -22,6 +23,14 @@ export default async function ProfilePage() {
             Configure your check-in schedule and preferences
           </p>
           <ProfileForm />
+
+          {/* Passkeys Link */}
+          <Link
+            href="/profile/passkeys"
+            className="mt-4 rounded-full bg-white/10 px-6 py-3 font-semibold no-underline transition hover:bg-white/20"
+          >
+            Manage Passkeys &rarr;
+          </Link>
         </div>
       </main>
     </HydrateClient>

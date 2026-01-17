@@ -11,8 +11,9 @@ export default async function CheckInPage() {
     redirect("/api/auth/signin");
   }
 
-  // Prefetch check-in history for SSR
+  // Prefetch check-in history and passkey status for SSR
   void api.checkIn.list.prefetch();
+  void api.passkey.hasPasskeys.prefetch();
 
   return (
     <HydrateClient>
