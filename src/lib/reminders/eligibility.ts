@@ -81,7 +81,7 @@ export function calculateNextCheckInDue(profile: {
   };
 
   // Create candidate date at preferred time on baseDue's date
-  let candidateLocal = new Date(
+  const candidateLocal = new Date(
     baseDueYear,
     baseDueMonth,
     baseDueDay,
