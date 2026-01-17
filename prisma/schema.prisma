@@ -56,14 +56,15 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String       @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?      @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    profile       UserProfile?
 }
 
 model VerificationToken {
@@ -72,4 +73,59 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// ======================
+// ALVIN EXTENSION MODELS
+// ======================
+
+model UserProfile {
+    id     String @id @default(cuid())
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    // Check-in schedule
+    checkInFrequencyHours Int      @default(24)
+    preferredCheckInTime  String?  // "HH:MM" format
+    timezone              String   @default("UTC")
+
+    // Status
+    isActive       Boolean   @default(true)
+    lastCheckInAt  DateTime?
+    nextCheckInDue DateTime?
+
+    // Relations
+    conversations Conversation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Conversation {
+    id            String      @id @default(cuid())
+    userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+    userProfileId String
+
+    // Messages
+    messages Message[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userProfileId, updatedAt])
+}
+
+model Message {
+    id             String       @id @default(cuid())
+    conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+    conversationId String
+
+    // Message content
+    // Role values: "user", "assistant"
+    role    String
+    content String
+
+    createdAt DateTime @default(now())
+
+    @@index([conversationId, createdAt])
 }
