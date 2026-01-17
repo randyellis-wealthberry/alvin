@@ -5,15 +5,11 @@ export const conversationRouter = createTRPCRouter({
   // Create a new conversation
   create: protectedProcedure.mutation(async ({ ctx }) => {
     // Get or create user profile (required for conversation)
-    let profile = await ctx.db.userProfile.findUnique({
+    const profile = await ctx.db.userProfile.upsert({
       where: { userId: ctx.session.user.id },
+      update: {},
+      create: { userId: ctx.session.user.id },
     });
-
-    if (!profile) {
-      profile = await ctx.db.userProfile.create({
-        data: { userId: ctx.session.user.id },
-      });
-    }
 
     const conversation = await ctx.db.conversation.create({
       data: { userProfileId: profile.id },
