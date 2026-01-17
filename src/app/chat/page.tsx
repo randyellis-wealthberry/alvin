@@ -1,6 +1,7 @@
 import { auth } from "~/server/auth";
 import { redirect } from "next/navigation";
-import { ChatInterface } from "~/components/chat/ChatInterface";
+import { api, HydrateClient } from "~/trpc/server";
+import { ConversationList } from "~/components/chat/ConversationList";
 
 export default async function ChatPage() {
   const session = await auth();
@@ -8,9 +9,14 @@ export default async function ChatPage() {
     redirect("/api/auth/signin");
   }
 
+  // Prefetch conversations
+  void api.conversation.list.prefetch();
+
   return (
-    <main className="flex min-h-screen flex-col">
-      <ChatInterface />
-    </main>
+    <HydrateClient>
+      <main className="flex min-h-screen flex-col">
+        <ConversationList />
+      </main>
+    </HydrateClient>
   );
 }

@@ -2,21 +2,48 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import Link from "next/link";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 
-export function ChatInterface() {
+interface ChatInterfaceProps {
+  conversationId: string;
+  initialMessages?: Array<{
+    id: string;
+    role: "user" | "assistant";
+    content: string;
+  }>;
+}
+
+export function ChatInterface({
+  conversationId,
+  initialMessages = [],
+}: ChatInterfaceProps) {
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      body: { conversationId },
+    }),
+    messages: initialMessages.map((m) => ({
+      id: m.id,
+      role: m.role,
+      parts: [{ type: "text" as const, text: m.content }],
+      createdAt: new Date(),
+    })),
   });
 
   const isLoading = status === "streaming" || status === "submitted";
 
   return (
     <div className="flex h-screen flex-col">
-      <header className="border-b p-4">
-        <h1 className="text-xl font-semibold">ALVIN</h1>
-        <p className="text-sm text-gray-500">Your wellness companion</p>
+      <header className="flex items-center gap-4 border-b p-4">
+        <Link href="/chat" className="text-blue-500 hover:underline">
+          &larr; Back
+        </Link>
+        <div>
+          <h1 className="text-xl font-semibold">ALVIN</h1>
+          <p className="text-sm text-gray-500">Your wellness companion</p>
+        </div>
       </header>
 
       <MessageList messages={messages} isLoading={isLoading} />
