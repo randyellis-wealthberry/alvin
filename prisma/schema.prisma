@@ -96,6 +96,9 @@ model UserProfile {
 
     // Relations
     conversations Conversation[]
+    checkIns      CheckIn[]
+    contacts      Contact[]
+    alerts        Alert[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -105,6 +108,10 @@ model Conversation {
     id            String      @id @default(cuid())
     userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
     userProfileId String
+
+    // Optional link to check-in (if conversation resulted in check-in)
+    checkInId String?  @unique
+    checkIn   CheckIn? @relation(fields: [checkInId], references: [id])
 
     // Messages
     messages Message[]
@@ -128,4 +135,72 @@ model Message {
     createdAt DateTime @default(now())
 
     @@index([conversationId, createdAt])
+}
+
+model CheckIn {
+    id            String      @id @default(cuid())
+    userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+    userProfileId String
+
+    // Check-in method
+    // Values: "MANUAL", "BIOMETRIC", "CONVERSATION"
+    method String @default("MANUAL")
+
+    // Timestamps
+    performedAt DateTime @default(now())
+
+    // Relation to conversation (if check-in came from chat)
+    conversation Conversation?
+
+    @@index([userProfileId, performedAt])
+}
+
+model Contact {
+    id            String      @id @default(cuid())
+    userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+    userProfileId String
+
+    name         String
+    email        String
+    phone        String?
+    relationship String? // Values: "spouse", "child", "sibling", "friend", "other"
+
+    // Notification settings
+    priority      Int     @default(999) // Lower = higher priority (notified first)
+    notifyByEmail Boolean @default(true)
+    notifyBySms   Boolean @default(false)
+
+    // Soft delete
+    deletedAt DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userProfileId, priority])
+    @@index([userProfileId, deletedAt])
+}
+
+model Alert {
+    id              String       @id @default(cuid())
+    userProfile     UserProfile? @relation(fields: [userProfileId], references: [id], onDelete: SetNull)
+    userProfileId   String? // Optional to preserve audit trail when user is deleted
+
+    // Escalation level
+    // Values: "LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4", "CANCELLED", "RESOLVED"
+    level String @default("LEVEL_1")
+
+    // Timing
+    triggeredAt     DateTime  @default(now())
+    lastEscalatedAt DateTime?
+
+    // Resolution
+    resolvedAt   DateTime? // When user checked in
+    cancelledAt  DateTime? // When user manually cancelled
+    cancelReason String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userProfileId, level])
+    @@index([level, triggeredAt])
 }
