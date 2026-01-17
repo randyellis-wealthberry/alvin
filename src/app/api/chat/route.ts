@@ -1,5 +1,6 @@
 import { streamText, convertToModelMessages, type UIMessage } from "ai";
 import { alvinModel, MAX_OUTPUT_TOKENS } from "~/lib/ai/config";
+import { analyzeConversationForCheckIn } from "~/lib/ai/check-in-detection";
 import { ALVIN_SYSTEM_PROMPT } from "~/lib/ai/prompts";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
@@ -79,6 +80,43 @@ export async function POST(req: Request) {
         where: { id: conversationId },
         data: { updatedAt: new Date() },
       });
+
+      // Check-in detection: analyze if user confirmed wellness
+      const messagesForAnalysis = finalMessages.map((m) => ({
+        role: m.role,
+        content: m.parts
+          .filter(
+            (p): p is { type: "text"; text: string } => p.type === "text",
+          )
+          .map((p) => p.text)
+          .join(""),
+      }));
+
+      const checkInResult = analyzeConversationForCheckIn(messagesForAnalysis);
+
+      if (checkInResult.shouldCheckIn && !conversation.checkInId) {
+        // Record check-in (conversation method)
+        const checkIn = await db.checkIn.create({
+          data: {
+            userProfileId: profile.id,
+            method: "CONVERSATION",
+          },
+        });
+
+        // Link conversation to check-in
+        await db.conversation.update({
+          where: { id: conversationId },
+          data: { checkInId: checkIn.id },
+        });
+
+        // Update user's last check-in timestamp
+        await db.userProfile.update({
+          where: { id: profile.id },
+          data: { lastCheckInAt: new Date() },
+        });
+
+        console.log(`Check-in recorded via conversation: ${checkIn.id}`);
+      }
     },
   });
 }
