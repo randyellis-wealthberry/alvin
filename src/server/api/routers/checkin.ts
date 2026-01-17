@@ -1,4 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { ACTIVE_LEVELS } from "~/lib/alerts/escalation";
 
 export const checkInRouter = createTRPCRouter({
   record: protectedProcedure.mutation(async ({ ctx }) => {
@@ -18,20 +19,44 @@ export const checkInRouter = createTRPCRouter({
 
     const now = new Date();
 
-    // Create check-in and update lastCheckInAt in a transaction
-    const [checkIn] = await ctx.db.$transaction([
-      ctx.db.checkIn.create({
+    // Find any active alert for this profile
+    const activeAlert = await ctx.db.alert.findFirst({
+      where: {
+        userProfileId: profile.id,
+        level: { in: ACTIVE_LEVELS },
+      },
+    });
+
+    // Use interactive transaction to ensure atomicity
+    const checkIn = await ctx.db.$transaction(async (tx) => {
+      // Create check-in
+      const newCheckIn = await tx.checkIn.create({
         data: {
           userProfileId: profile.id,
           method: "MANUAL",
           performedAt: now,
         },
-      }),
-      ctx.db.userProfile.update({
+      });
+
+      // Update lastCheckInAt
+      await tx.userProfile.update({
         where: { id: profile.id },
         data: { lastCheckInAt: now },
-      }),
-    ]);
+      });
+
+      // If there's an active alert, resolve it
+      if (activeAlert) {
+        await tx.alert.update({
+          where: { id: activeAlert.id },
+          data: {
+            level: "RESOLVED",
+            resolvedAt: now,
+          },
+        });
+      }
+
+      return newCheckIn;
+    });
 
     return checkIn;
   }),
