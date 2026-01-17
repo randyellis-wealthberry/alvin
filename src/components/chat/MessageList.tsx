@@ -1,6 +1,7 @@
 "use client";
 
 import type { UIMessage } from "ai";
+import { C1Component } from "@thesysai/genui-sdk";
 
 interface MessageListProps {
   messages: UIMessage[];
@@ -17,22 +18,30 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
         </div>
       )}
 
-      {messages.map((message) => (
+      {messages.map((message, index) => (
         <div
           key={message.id}
           className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
         >
-          <div
-            className={`max-w-[80%] rounded-lg p-3 ${
-              message.role === "user"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-900"
-            }`}
-          >
-            {message.parts.map((part, i) =>
-              part.type === "text" ? <span key={i}>{part.text}</span> : null,
-            )}
-          </div>
+          {message.role === "user" ? (
+            <div className="max-w-[80%] rounded-lg bg-blue-500 p-3 text-white">
+              {message.parts.map((part, i) =>
+                part.type === "text" ? <span key={i}>{part.text}</span> : null,
+              )}
+            </div>
+          ) : (
+            <div className="max-w-[80%] rounded-lg bg-gray-100 p-3 text-gray-900">
+              <C1Component
+                c1Response={message.parts
+                  .filter(
+                    (p): p is { type: "text"; text: string } => p.type === "text",
+                  )
+                  .map((p) => p.text)
+                  .join("")}
+                isStreaming={isLoading && index === messages.length - 1}
+              />
+            </div>
+          )}
         </div>
       ))}
 
