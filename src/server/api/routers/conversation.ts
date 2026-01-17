@@ -106,4 +106,28 @@ export const conversationRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+  // Get check-in status for a conversation
+  getCheckInStatus: protectedProcedure
+    .input(z.object({ conversationId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.userProfile.findUnique({
+        where: { userId: ctx.session.user.id },
+      });
+
+      if (!profile) return { hasCheckIn: false };
+
+      const conversation = await ctx.db.conversation.findUnique({
+        where: {
+          id: input.conversationId,
+          userProfileId: profile.id,
+        },
+        include: { checkIn: true },
+      });
+
+      return {
+        hasCheckIn: !!conversation?.checkIn,
+        checkInAt: conversation?.checkIn?.performedAt,
+      };
+    }),
 });

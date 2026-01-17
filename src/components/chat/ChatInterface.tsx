@@ -3,6 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import Link from "next/link";
+import { CheckInBanner } from "./CheckInBanner";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 
@@ -45,6 +46,8 @@ export function ChatInterface({
           <p className="text-sm text-gray-500">Your wellness companion</p>
         </div>
       </header>
+
+      <CheckInBanner conversationId={conversationId} />
 
       <MessageList messages={messages} isLoading={isLoading} />
 
