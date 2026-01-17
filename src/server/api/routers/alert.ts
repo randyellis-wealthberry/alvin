@@ -157,4 +157,55 @@ export const alertRouter = createTRPCRouter({
 
       return updatedAlert;
     }),
+
+  /**
+   * Cancel an active alert.
+   * Validates that the alert belongs to the user's profile and is active.
+   */
+  cancel: protectedProcedure
+    .input(
+      z.object({
+        alertId: z.string(),
+        reason: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Get profile
+      const profile = await ctx.db.userProfile.findUnique({
+        where: { userId: ctx.session.user.id },
+      });
+
+      if (!profile) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Profile not found",
+        });
+      }
+
+      // Find and validate alert belongs to user and is active
+      const alert = await ctx.db.alert.findFirst({
+        where: {
+          id: input.alertId,
+          userProfileId: profile.id,
+          level: { in: ACTIVE_LEVELS },
+        },
+      });
+
+      if (!alert) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Active alert not found",
+        });
+      }
+
+      // Cancel alert
+      return ctx.db.alert.update({
+        where: { id: alert.id },
+        data: {
+          level: "CANCELLED",
+          cancelledAt: new Date(),
+          cancelReason: input.reason,
+        },
+      });
+    }),
 });
