@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** Never false alarm — family contacts are only reached when truly needed
-**Current focus:** Phase 3 complete — Next: Phase 4 (Check-In System)
+**Current focus:** Phase 4 complete — Next: Phase 6 (Reminder System)
 
 ## Current Position
 
-Phase: 3 of 10 (Contact Management) — COMPLETE
-Plan: 1 of 1 complete
-Status: Phase complete, ready for next phase
-Last activity: 2026-01-17 — Completed 03-01-PLAN.md
+Phase: 4 of 10 (Check-In System) — COMPLETE
+Plan: 2 of 2 complete
+Status: Phase complete, ready for next phase (Phase 6)
+Last activity: 2026-01-16 — Completed Phase 4 via parallel execution
 
-Progress: ██████████████████░░ ~50% (5 of 10 phases complete)
+Progress: ████████████████████ ~60% (6 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 7
-- Average duration: ~10 min/plan
-- Total execution time: ~70 min
+- Total plans completed: 9
+- Average duration: ~14 min/plan
+- Total execution time: ~130 min
 
 **By Phase:**
 
@@ -31,6 +31,7 @@ Progress: ██████████████████░░ ~50% (5 o
 | 1. Database Schema     | 1/1   | ~3 min  | ~3 min   |
 | 2. User Profile        | 1/1   | ~7 min  | ~7 min   |
 | 3. Contact Management  | 1/1   | ~5 min  | ~5 min   |
+| 4. Check-In System     | 2/2   | ~60 min | ~30 min  |
 | 5. ALVIN Chat          | 3/3   | ~45 min | ~15 min  |
 | 10. Thesys Integration | 1/1   | ~10 min | ~10 min  |
 
@@ -55,6 +56,9 @@ Recent decisions affecting current work:
 - Rate limiting on profile update only (not get)
 - Empty array for contacts.list when profile missing (smoother UX)
 - Form auto-close with 1.5s delay for success feedback
+- Transaction pattern for atomic check-in + lastCheckInAt update
+- In-memory Map for WebAuthn challenge storage (MVP, upgrade to Redis later)
+- Platform authenticator attachment for WebAuthn (TouchID/FaceID/Windows Hello)
 
 ### Deferred Issues
 
@@ -70,13 +74,38 @@ None yet.
 
 ### Blockers/Concerns
 
-None - contact management is complete, ready for check-in system.
+None - check-in system is complete (manual + biometric), ready for reminder system.
 
 ## Session Continuity
 
-Last session: 2026-01-17
-Stopped at: Completed 03-01-PLAN.md (Contact Management)
+Last session: 2026-01-16
+Stopped at: Completed Phase 4 via parallel execution (04-01 + 04-02)
 Resume file: None
+
+## Phase 4 Summary
+
+**Commits:**
+
+- 04-01: 2 commits (checkIn router, check-in page/button/history)
+- 04-02: 3 commits (Passkey model + SimpleWebAuthn, passkey router, passkey UI + biometric button)
+
+**Key Files Created/Modified:**
+
+- src/server/api/routers/checkin.ts — CheckIn router with record/list
+- src/server/api/routers/passkey.ts — Passkey router with WebAuthn flows
+- src/app/check-in/page.tsx — Check-in page with SSR
+- src/app/check-in/check-in-button.tsx — Manual + biometric check-in buttons
+- src/app/check-in/check-in-history.tsx — History with method badges
+- src/app/profile/passkeys/page.tsx — Passkey management page
+- src/app/profile/passkeys/passkey-setup.tsx — Passkey registration UI
+- prisma/schema.prisma — Added Passkey model
+
+**Patterns Established:**
+
+- WebAuthn registration/authentication flow with SimpleWebAuthn
+- Challenge storage in in-memory Map (5-min expiry)
+- Check-in methods: MANUAL, BIOMETRIC, CONVERSATION
+- Biometric check-in via passkey authentication
 
 ## Phase 3 Summary
 

@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Database Schema** - Define data models for users, contacts, check-ins, alerts, and conversations
 - [x] **Phase 2: User Profile Management** - Profile CRUD with check-in schedule configuration
 - [x] **Phase 3: Contact Management** - Family contact CRUD operations
-- [ ] **Phase 4: Check-In System** - Biometric verification and manual check-in flow
+- [x] **Phase 4: Check-In System** - Biometric verification and manual check-in flow
 - [x] **Phase 5: ALVIN Chat** - Conversational AI interface for wellness check-ins and engagement
 - [ ] **Phase 6: Reminder System** - Scheduled check-in reminders via email
 - [ ] **Phase 7: Alert Escalation Engine** - 4-level escalation state machine with timing logic
@@ -65,8 +65,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Basic check-in flow
-- [ ] 04-02: Biometric verification with WebAuthn
+- [x] 04-01: Basic check-in flow
+- [x] 04-02: Biometric verification with WebAuthn
 
 ### Phase 5: ALVIN Chat
 **Goal**: Conversational AI interface for wellness check-ins, engagement, and context gathering
@@ -144,7 +144,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 1. Database Schema | 1/1 | Complete | 2026-01-17 |
 | 2. User Profile | 1/1 | Complete | 2026-01-17 |
 | 3. Contact Management | 1/1 | Complete | 2026-01-17 |
-| 4. Check-In System | 0/2 | Not started | - |
+| 4. Check-In System | 2/2 | Complete | 2026-01-16 |
 | 5. ALVIN Chat | 3/3 | Complete | 2026-01-16 |
 | 6. Reminder System | 0/2 | Not started | - |
 | 7. Alert Escalation | 0/2 | Not started | - |
