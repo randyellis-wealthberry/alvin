@@ -1,6 +1,7 @@
 import { checkInRouter } from "~/server/api/routers/checkin";
 import { contactRouter } from "~/server/api/routers/contact";
 import { conversationRouter } from "~/server/api/routers/conversation";
+import { passkeyRouter } from "~/server/api/routers/passkey";
 import { postRouter } from "~/server/api/routers/post";
 import { profileRouter } from "~/server/api/routers/profile";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   checkIn: checkInRouter,
   contact: contactRouter,
   conversation: conversationRouter,
+  passkey: passkeyRouter,
   post: postRouter,
   profile: profileRouter,
 });
