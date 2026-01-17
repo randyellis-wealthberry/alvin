@@ -5,23 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** Never false alarm — family contacts are only reached when truly needed
-**Current focus:** Phase 2 complete — Next: Phase 3 (Contact Management)
+**Current focus:** Phase 3 complete — Next: Phase 4 (Check-In System)
 
 ## Current Position
 
-Phase: 2 of 10 (User Profile Management) — COMPLETE
+Phase: 3 of 10 (Contact Management) — COMPLETE
 Plan: 1 of 1 complete
 Status: Phase complete, ready for next phase
-Last activity: 2026-01-17 — Completed 02-01-PLAN.md
+Last activity: 2026-01-17 — Completed 03-01-PLAN.md
 
-Progress: ████████████████░░░░ ~40% (4 of 10 phases complete)
+Progress: ██████████████████░░ ~50% (5 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: ~11 min/plan
-- Total execution time: ~65 min
+
+- Total plans completed: 7
+- Average duration: ~10 min/plan
+- Total execution time: ~70 min
 
 **By Phase:**
 
@@ -29,12 +30,14 @@ Progress: ████████████████░░░░ ~40% (4 o
 |------------------------|-------|---------|----------|
 | 1. Database Schema     | 1/1   | ~3 min  | ~3 min   |
 | 2. User Profile        | 1/1   | ~7 min  | ~7 min   |
+| 3. Contact Management  | 1/1   | ~5 min  | ~5 min   |
 | 5. ALVIN Chat          | 3/3   | ~45 min | ~15 min  |
 | 10. Thesys Integration | 1/1   | ~10 min | ~10 min  |
 
 **Recent Trend:**
-- Last 3 plans: 10-01, 01-01, 02-01
-- Trend: Fast execution continues (~7 min for profile)
+
+- Last 3 plans: 01-01, 02-01, 03-01
+- Trend: Fast execution continues (~5 min for contacts)
 
 ## Accumulated Context
 
@@ -50,6 +53,8 @@ Recent decisions affecting current work:
 - Contact soft delete via deletedAt timestamp
 - Upsert pattern for profile get-or-create
 - Rate limiting on profile update only (not get)
+- Empty array for contacts.list when profile missing (smoother UX)
+- Form auto-close with 1.5s delay for success feedback
 
 ### Deferred Issues
 
@@ -65,26 +70,31 @@ None yet.
 
 ### Blockers/Concerns
 
-None - profile management is complete, ready for contacts.
+None - contact management is complete, ready for check-in system.
 
 ## Session Continuity
 
 Last session: 2026-01-17
-Stopped at: Completed 02-01-PLAN.md (User Profile Management)
+Stopped at: Completed 03-01-PLAN.md (Contact Management)
 Resume file: None
 
-## Phase 2 Summary
+## Phase 3 Summary
 
 **Commits:**
-- 02-01: 3 commits (profile router, settings page/form, navigation link)
+
+- 03-01: 4 commits (contact router, contacts page/list/form, navigation link, lint fixes)
 
 **Key Files Created/Modified:**
-- src/server/api/routers/profile.ts — Profile router with get/update
-- src/app/profile/page.tsx — Settings page (SSR)
-- src/app/profile/profile-form.tsx — Settings form (client)
-- src/app/page.tsx — Added Settings navigation link
+
+- src/server/api/routers/contact.ts — Contact router with list/create/update/delete
+- src/app/contacts/page.tsx — Contacts page (SSR)
+- src/app/contacts/contact-list.tsx — Contact list with edit/delete
+- src/app/contacts/contact-form.tsx — Add/edit form modal
+- src/app/page.tsx — Added Contacts navigation link
 
 **Patterns Established:**
-- Upsert pattern for profile (findFirst + create fallback)
-- Rate-limited mutations with unrestricted queries
-- SSR prefetch with HydrateClient
+
+- Soft delete via deletedAt timestamp
+- Priority ordering (lower = higher priority, default 999)
+- Inline delete confirmation (no modal)
+- Modal form for create/edit operations
