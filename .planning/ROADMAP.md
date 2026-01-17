@@ -17,7 +17,7 @@ None
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Database Schema** - Define data models for users, contacts, check-ins, alerts, and conversations
-- [ ] **Phase 2: User Profile Management** - Profile CRUD with check-in schedule configuration
+- [x] **Phase 2: User Profile Management** - Profile CRUD with check-in schedule configuration
 - [ ] **Phase 3: Contact Management** - Family contact CRUD operations
 - [ ] **Phase 4: Check-In System** - Biometric verification and manual check-in flow
 - [x] **Phase 5: ALVIN Chat** - Conversational AI interface for wellness check-ins and engagement
@@ -45,7 +45,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 02-01: Profile tRPC router and UI
+- [x] 02-01: Profile tRPC router and UI
 
 ### Phase 3: Contact Management
 **Goal**: Add, edit, remove family contacts with notification preferences (email, later SMS)
@@ -141,7 +141,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Database Schema | 1/1 | Complete | 2026-01-17 |
-| 2. User Profile | 0/1 | Not started | - |
+| 2. User Profile | 1/1 | Complete | 2026-01-17 |
 | 3. Contact Management | 0/1 | Not started | - |
 | 4. Check-In System | 0/2 | Not started | - |
 | 5. ALVIN Chat | 3/3 | Complete | 2026-01-16 |
