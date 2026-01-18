@@ -4,6 +4,7 @@ import { type Metadata, type Viewport } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { InstallPrompt, IOSInstallInstructions } from "~/components/pwa";
 
 export const metadata: Metadata = {
   applicationName: "ALVIN",
@@ -45,6 +46,8 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
+        <InstallPrompt />
+        <IOSInstallInstructions />
       </body>
     </html>
   );
