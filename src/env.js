@@ -19,6 +19,10 @@ export const env = createEnv({
     // RESEND_API_KEY - Get from https://resend.com/api-keys
     // Optional in development; required in production for email delivery
     RESEND_API_KEY: z.string().optional(),
+    // VAPID keys for Web Push notifications
+    // Generate with: npx web-push generate-vapid-keys --json
+    VAPID_PRIVATE_KEY: z.string().min(1),
+    VAPID_CONTACT_EMAIL: z.string().email(), // Used in VAPID "subject" field
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -30,7 +34,8 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    // VAPID public key (client-exposed for push subscription)
+    NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().min(1),
   },
 
   /**
@@ -45,6 +50,10 @@ export const env = createEnv({
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     CRON_SECRET: process.env.CRON_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    // VAPID keys for Web Push
+    VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY,
+    VAPID_CONTACT_EMAIL: process.env.VAPID_CONTACT_EMAIL,
+    NEXT_PUBLIC_VAPID_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**
