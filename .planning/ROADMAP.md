@@ -35,16 +35,15 @@ None
 
 **Milestone Goal:** Transform ALVIN into a native-like mobile experience with reliable multi-channel notifications
 
-#### Phase 11: PWA Foundation
+#### Phase 11: PWA Foundation ✓
 
 **Goal**: Progressive web app with manifest, service worker, and home screen install
 **Depends on**: v1.0 complete
-**Research**: Likely (Next.js 15 PWA patterns)
-**Research topics**: next-pwa or serwist setup, web app manifest, service worker registration in App Router
-**Plans**: TBD
+**Status**: Complete (2026-01-17)
 
 Plans:
-- [ ] 11-01: TBD (run /gsd:plan-phase 11 to break down)
+- [x] 11-01: Core PWA infrastructure (Serwist + manifest)
+- [x] 11-02: PWA assets and install experience
 
 #### Phase 12: Push Notifications
 
@@ -101,7 +100,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 11. PWA Foundation | v2.0 | 0/? | Not started | - |
+| 11. PWA Foundation | v2.0 | 2/2 | Complete | 2026-01-17 |
 | 12. Push Notifications | v2.0 | 0/? | Not started | - |
 | 13. Offline Caching | v2.0 | 0/? | Not started | - |
 | 14. SMS Integration | v2.0 | 0/? | Not started | - |

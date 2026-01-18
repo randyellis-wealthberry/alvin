@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-17)
 ## Current Position
 
 Phase: 11 of 14 (PWA Foundation)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-01-17 — Milestone v2.0 created
+Plan: 2 of 2 complete
+Status: Phase complete
+Last activity: 2026-01-17 — Completed Phase 11 via sequential execution
 
-Progress: ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0% (0 of 4 phases complete)
+Progress: █████████░░░░░░░░░░░░░░░░░░░░░ 25% (1 of 4 phases complete)
 
 ## v2.0 Mobile & Messaging
 
@@ -41,6 +41,8 @@ All v1.0 decisions logged in PROJECT.md Key Decisions table with outcomes marked
 - Push notifications for all activity types (not user-configurable in v2)
 - View-only offline mode (no offline check-ins or chat)
 - SMS for both user reminders and family escalation (L3-4)
+- Serwist for service worker (modern, Next.js 15 compatible, replaces deprecated next-pwa)
+- Service worker disabled in dev mode (Turbopack incompatible)
 
 ### Deferred Issues
 
@@ -60,14 +62,14 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-17
-Stopped at: Milestone v2.0 initialization
+Stopped at: Phase 11 complete
 Resume file: None
 
 ## Next Steps
 
-1. **Plan Phase 11** — PWA Foundation (`/gsd:plan-phase 11`)
-2. **Research Phase 11** — If needed (`/gsd:research-phase 11`)
-3. **Execute Phase 11** — After planning (`/gsd:execute-phase 11`)
+1. **Plan Phase 12** — Push Notifications (`/gsd:plan-phase 12`)
+2. **Research Phase 12** — If needed (`/gsd:research-phase 12`)
+3. **Execute Phase 12** — After planning (`/gsd:execute-phase 12`)
 
 ### Roadmap Evolution
 
