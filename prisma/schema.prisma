@@ -95,11 +95,12 @@ model UserProfile {
     nextCheckInDue DateTime?
 
     // Relations
-    conversations Conversation[]
-    checkIns      CheckIn[]
-    contacts      Contact[]
-    alerts        Alert[]
-    passkeys      Passkey[]
+    conversations     Conversation[]
+    checkIns          CheckIn[]
+    contacts          Contact[]
+    alerts            Alert[]
+    passkeys          Passkey[]
+    pushSubscriptions PushSubscription[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -223,4 +224,21 @@ model Alert {
 
     @@index([userProfileId, level])
     @@index([level, triggeredAt])
+}
+
+model PushSubscription {
+    id            String      @id @default(cuid())
+    userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+    userProfileId String
+
+    // Web Push subscription data
+    endpoint String @unique
+    p256dh   String // Public key
+    auth     String // Auth secret
+
+    // Metadata
+    userAgent String? // Track device/browser
+    createdAt DateTime @default(now())
+
+    @@index([userProfileId])
 }
