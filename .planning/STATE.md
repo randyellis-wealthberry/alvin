@@ -5,66 +5,71 @@
 See: .planning/PROJECT.md (updated 2026-01-17)
 
 **Core value:** Never false alarm — family contacts are only reached when truly needed
-**Current focus:** v1.0 MVP complete — planning next milestone or project complete
+**Current focus:** v2.0 Mobile & Messaging — PWA and SMS notifications
 
 ## Current Position
 
-Phase: 10 of 10 (Thesys Integration) — MILESTONE COMPLETE
-Plan: All plans complete
-Status: v1.0 MVP shipped
-Last activity: 2026-01-17 — v1.0 milestone archived
+Phase: 11 of 14 (PWA Foundation)
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-01-17 — Milestone v2.0 created
 
-Progress: ██████████████████████████████ 100% (10 of 10 phases complete)
+Progress: ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0% (0 of 4 phases complete)
 
-## v1.0 MVP Summary
+## v2.0 Mobile & Messaging
 
-**Shipped:** 2026-01-17
+**Started:** 2026-01-17
 
-**Stats:**
+**Features:**
 
-- 10 phases, 16 plans
-- 64 files, 6,254 lines TypeScript
-- 2 days from start to ship
+- Mobile PWA with home screen install
+- Push notifications for full activity feed
+- View-only offline mode
+- SMS notifications via Twilio (user + family)
 
-**Key Features:**
-
-- Biometric check-ins (WebAuthn/passkeys)
-- ALVIN Chat with conversational AI
-- 4-level alert escalation (24h thresholds)
-- Family contact email notifications
-- Activity dashboard
-
-**Archive:** .planning/milestones/v1.0-ROADMAP.md
+**Phases:** 11-14 (4 phases)
 
 ## Accumulated Context
 
 ### Decisions
 
-All decisions logged in PROJECT.md Key Decisions table with outcomes marked.
+All v1.0 decisions logged in PROJECT.md Key Decisions table with outcomes marked.
+
+**v2.0 decisions:**
+
+- Twilio selected for SMS provider (reliable, well-documented)
+- Push notifications for all activity types (not user-configurable in v2)
+- View-only offline mode (no offline check-ins or chat)
+- SMS for both user reminders and family escalation (L3-4)
 
 ### Deferred Issues
 
-None critical. Technical debt for v2:
+Carried from v1.0:
 
-- In-memory WebAuthn challenges → Redis
-- Phrase-based check-in detection → LLM upgrade if needed
+- In-memory WebAuthn challenges → Redis (production scalability)
+- Custom escalation timing (not included in v2 scope)
 
 ### Pending Todos
 
-None — v1.0 complete.
+None — ready to plan Phase 11.
 
 ### Blockers/Concerns
 
-None — ready for next milestone or project wrap-up.
+None.
 
 ## Session Continuity
 
 Last session: 2026-01-17
-Stopped at: v1.0 milestone complete
+Stopped at: Milestone v2.0 initialization
 Resume file: None
 
 ## Next Steps
 
-1. **Plan v2 milestone** — SMS, PWA, custom escalation timing (`/gsd:discuss-milestone`)
-2. **Archive project** — If v1.0 is the final version
-3. **Deploy to production** — Ship v1.0 to users
+1. **Plan Phase 11** — PWA Foundation (`/gsd:plan-phase 11`)
+2. **Research Phase 11** — If needed (`/gsd:research-phase 11`)
+3. **Execute Phase 11** — After planning (`/gsd:execute-phase 11`)
+
+### Roadmap Evolution
+
+- v1.0 MVP shipped: 10 phases, 16 plans (2026-01-17)
+- Milestone v2.0 created: Mobile & Messaging, 4 phases (Phase 11-14)

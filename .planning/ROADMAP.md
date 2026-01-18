@@ -8,9 +8,10 @@ ALVIN (Active Language and Vitality Intelligence Network) transforms a productio
 
 None
 
-## Completed Milestones
+## Milestones
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-01-17
+- 🚧 **v2.0 Mobile & Messaging** — Phases 11-14 (in progress)
 
 ## Phases
 
@@ -30,6 +31,53 @@ None
 
 </details>
 
+### 🚧 v2.0 Mobile & Messaging (In Progress)
+
+**Milestone Goal:** Transform ALVIN into a native-like mobile experience with reliable multi-channel notifications
+
+#### Phase 11: PWA Foundation
+
+**Goal**: Progressive web app with manifest, service worker, and home screen install
+**Depends on**: v1.0 complete
+**Research**: Likely (Next.js 15 PWA patterns)
+**Research topics**: next-pwa or serwist setup, web app manifest, service worker registration in App Router
+**Plans**: TBD
+
+Plans:
+- [ ] 11-01: TBD (run /gsd:plan-phase 11 to break down)
+
+#### Phase 12: Push Notifications
+
+**Goal**: Native push alerts for full activity feed (reminders, escalations, family alerts)
+**Depends on**: Phase 11 (service worker required)
+**Research**: Likely (web-push library, Push API)
+**Research topics**: VAPID key generation, PushSubscription storage, web-push Node.js library
+**Plans**: TBD
+
+Plans:
+- [ ] 12-01: TBD
+
+#### Phase 13: Offline Caching
+
+**Goal**: View-only offline mode with cached activity history
+**Depends on**: Phase 11 (service worker)
+**Research**: Unlikely (extends Phase 11 patterns)
+**Plans**: TBD
+
+Plans:
+- [ ] 13-01: TBD
+
+#### Phase 14: SMS Integration
+
+**Goal**: Twilio SMS for user check-in reminders and family escalation alerts (L3-4)
+**Depends on**: Phase 11 (can run in parallel after PWA foundation)
+**Research**: Likely (Twilio API integration)
+**Research topics**: Twilio Node.js SDK, phone number validation, SMS templates
+**Plans**: TBD
+
+Plans:
+- [ ] 14-01: TBD
+
 ## Progress
 
 **v1.0 MVP — COMPLETE**
@@ -48,3 +96,12 @@ None
 | 10. Thesys Integration | v1.0 | 1/1 | Complete | 2026-01-16 |
 
 **Total: 10 phases, 16 plans — 100% complete**
+
+**v2.0 Mobile & Messaging — IN PROGRESS**
+
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 11. PWA Foundation | v2.0 | 0/? | Not started | - |
+| 12. Push Notifications | v2.0 | 0/? | Not started | - |
+| 13. Offline Caching | v2.0 | 0/? | Not started | - |
+| 14. SMS Integration | v2.0 | 0/? | Not started | - |
