@@ -49,12 +49,13 @@ Plans:
 
 **Goal**: Native push alerts for full activity feed (reminders, escalations, family alerts)
 **Depends on**: Phase 11 (service worker required)
-**Research**: Likely (web-push library, Push API)
-**Research topics**: VAPID key generation, PushSubscription storage, web-push Node.js library
-**Plans**: TBD
+**Status**: In progress (2/4 plans complete)
 
 Plans:
-- [ ] 12-01: TBD
+- [x] 12-01: Push notification infrastructure (web-push, VAPID, PushSubscription model)
+- [x] 12-02: Push subscription API endpoints (tRPC router, service worker handlers)
+- [ ] 12-03: Client permission UI
+- [ ] 12-04: Integration with reminders and escalations
 
 #### Phase 13: Offline Caching
 
@@ -101,6 +102,6 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 11. PWA Foundation | v2.0 | 2/2 | Complete | 2026-01-17 |
-| 12. Push Notifications | v2.0 | 0/? | Not started | - |
+| 12. Push Notifications | v2.0 | 2/4 | In progress | - |
 | 13. Offline Caching | v2.0 | 0/? | Not started | - |
 | 14. SMS Integration | v2.0 | 0/? | Not started | - |
