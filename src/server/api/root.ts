@@ -6,6 +6,7 @@ import { dashboardRouter } from "~/server/api/routers/dashboard";
 import { passkeyRouter } from "~/server/api/routers/passkey";
 import { postRouter } from "~/server/api/routers/post";
 import { profileRouter } from "~/server/api/routers/profile";
+import { pushRouter } from "~/server/api/routers/push";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   passkey: passkeyRouter,
   post: postRouter,
   profile: profileRouter,
+  push: pushRouter,
 });
 
 // export type definition of API
