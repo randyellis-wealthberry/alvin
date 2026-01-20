@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
+import { OfflineIndicator } from "~/components/offline";
 import { StatusWidget } from "./status-widget";
 import { ActivityLog } from "./activity-log";
 import { PushPromptWrapper } from "./push-prompt-wrapper";
@@ -18,6 +19,7 @@ export default async function DashboardPage() {
 
   return (
     <HydrateClient>
+      <OfflineIndicator />
       <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <div className="container flex flex-col items-center gap-8 px-4 py-16">
           <h1 className="text-4xl font-bold">Dashboard</h1>
