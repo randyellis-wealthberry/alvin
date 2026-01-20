@@ -1,6 +1,28 @@
 import { defaultCache } from "@serwist/next/worker";
-import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { Serwist } from "serwist";
+import type {
+  PrecacheEntry,
+  RuntimeCaching,
+  SerwistGlobalConfig,
+} from "serwist";
+import { ExpirationPlugin, Serwist, StaleWhileRevalidate } from "serwist";
+
+// ALVIN-specific caching rules for dashboard data
+// StaleWhileRevalidate: Show cached data immediately, update in background
+// This ensures dashboard works offline with recent activity data
+const alvinCache: RuntimeCaching[] = [
+  {
+    matcher: ({ url }) => url.pathname.startsWith("/api/trpc/dashboard"),
+    handler: new StaleWhileRevalidate({
+      cacheName: "alvin-dashboard-data",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 50,
+          maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+        }),
+      ],
+    }),
+  },
+];
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -15,7 +37,7 @@ const serwist = new Serwist({
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
-  runtimeCaching: defaultCache,
+  runtimeCaching: [...alvinCache, ...defaultCache],
   fallbacks: {
     entries: [
       {
