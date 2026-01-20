@@ -4,6 +4,7 @@ import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 import { StatusWidget } from "./status-widget";
 import { ActivityLog } from "./activity-log";
+import { PushPromptWrapper } from "./push-prompt-wrapper";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -28,6 +29,9 @@ export default async function DashboardPage() {
             <StatusWidget />
             <ActivityLog />
           </div>
+
+          {/* Push notification prompt - positioned after main content */}
+          <PushPromptWrapper />
         </div>
       </main>
     </HydrateClient>
