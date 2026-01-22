@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { api } from "~/trpc/react";
+import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();
@@ -24,7 +26,7 @@ function formatRelativeTime(date: Date): string {
   }
 }
 
-function getActivityIcon(type: string): string {
+function _getActivityIcon(type: string): string {
   switch (type) {
     case "check-in":
       return "checkmark"; // Will render as text icon
@@ -46,7 +48,7 @@ function getActivityColor(type: string): string {
     case "conversation":
       return "bg-blue-600";
     default:
-      return "bg-gray-600";
+      return "bg-muted";
   }
 }
 
@@ -116,9 +118,11 @@ export function ActivityLog() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md rounded-xl bg-white/10 p-6">
-        <p className="text-center text-white/70">Loading activity...</p>
-      </div>
+      <Card className="w-full max-w-md">
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">Loading activity...</p>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -126,11 +130,13 @@ export function ActivityLog() {
     return (
       <div className="w-full max-w-md">
         <h2 className="mb-4 text-2xl font-bold">Recent Activity</h2>
-        <div className="rounded-xl bg-white/10 p-6">
-          <p className="text-center text-white/70">
-            No activity yet. Start by checking in!
-          </p>
-        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">
+              No activity yet. Start by checking in!
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -140,43 +146,38 @@ export function ActivityLog() {
       <h2 className="mb-4 text-2xl font-bold">Recent Activity</h2>
 
       {/* Activity Timeline */}
-      <div className="space-y-3">
-        {activities.map((activity) => (
-          <div
-            key={activity.id}
-            className="flex items-start gap-3 rounded-lg bg-white/10 p-3"
-          >
-            <ActivityIcon type={activity.type} />
-            <div className="flex-1">
-              <p className="text-white">{activity.description}</p>
-              <p className="text-sm text-white/60">
-                {formatRelativeTime(new Date(activity.timestamp))}
-              </p>
-            </div>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="space-y-3">
+            {activities.map((activity) => (
+              <div
+                key={activity.id}
+                className="flex items-start gap-3 rounded-lg bg-muted/50 p-3"
+              >
+                <ActivityIcon type={activity.type} />
+                <div className="flex-1">
+                  <p>{activity.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatRelativeTime(new Date(activity.timestamp))}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* View All Links */}
       <div className="mt-6 flex justify-center gap-4">
-        <Link
-          href="/check-in"
-          className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium transition hover:bg-white/20"
-        >
-          All Check-ins
-        </Link>
-        <Link
-          href="/alerts"
-          className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium transition hover:bg-white/20"
-        >
-          All Alerts
-        </Link>
-        <Link
-          href="/chat"
-          className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium transition hover:bg-white/20"
-        >
-          All Chats
-        </Link>
+        <Button variant="secondary" size="sm" asChild>
+          <Link href="/check-in">All Check-ins</Link>
+        </Button>
+        <Button variant="secondary" size="sm" asChild>
+          <Link href="/alerts">All Alerts</Link>
+        </Button>
+        <Button variant="secondary" size="sm" asChild>
+          <Link href="/chat">All Chats</Link>
+        </Button>
       </div>
     </div>
   );
