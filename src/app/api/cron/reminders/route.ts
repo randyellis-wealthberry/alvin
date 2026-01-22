@@ -19,7 +19,9 @@ interface ReminderResult {
 
 /**
  * Send a reminder notification to a single user.
- * Uses push-first, email-fallback pattern via unified notification service.
+ * Uses push-first, email-fallback, SMS-tertiary pattern via unified notification service.
+ *
+ * Fallback order: push -> email -> SMS
  *
  * @param user - User needing reminder
  * @returns Result of notification attempt
@@ -34,6 +36,7 @@ async function sendReminderNotification(
       userProfileId: user.profileId,
       ...template,
       userEmail: user.email ?? undefined,
+      userPhone: user.phone ?? undefined,
     });
 
     console.log(
