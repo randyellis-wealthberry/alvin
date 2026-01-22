@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useQuery as useConvexQuery } from "convex/react";
 import { api } from "~/trpc/react";
-import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 
 function formatRelativeTime(date: Date): string {
@@ -113,61 +111,11 @@ function ActivityIcon({ type }: { type: string }) {
   );
 }
 
-// Try to import Convex API - may not exist if not generated yet
-let convexApi: { activities: { getRecentActivities: unknown } } | null = null;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  convexApi = require("~/convex/_generated/api").api;
-} catch {
-  // Convex API not generated yet - will fallback to tRPC
-}
-
-// Check if Convex is configured via environment variable
-const isConvexConfigured =
-  typeof window !== "undefined" &&
-  !!process.env.NEXT_PUBLIC_CONVEX_URL;
-
 export function ActivityLog() {
-  const { data: session } = useSession();
-
-  // Convex real-time subscription (if configured and API available)
-  const convexActivities = useConvexQuery(
-    convexApi?.activities?.getRecentActivities as unknown as never,
-    isConvexConfigured && convexApi && session?.user?.id
-      ? ({ userId: session.user.id, limit: 20 } as never)
-      : "skip"
-  );
-
-  // tRPC fallback (used when Convex not configured)
-  const { data: trpcActivities, isLoading: trpcLoading } =
-    api.dashboard.getActivityLog.useQuery(
-      { limit: 20 },
-      { enabled: !isConvexConfigured || !convexApi }
-    );
-
-  // Map Convex data format to UI format (timestamps are numbers in Convex)
-  const mappedConvexActivities = convexActivities
-    ? (
-        convexActivities as Array<{
-          _id: string;
-          type: string;
-          description: string;
-          timestamp: number;
-        }>
-      ).map((activity) => ({
-        id: activity._id,
-        type: activity.type,
-        description: activity.description,
-        timestamp: new Date(activity.timestamp),
-      }))
-    : null;
-
-  // Use Convex data if available, else tRPC
-  const activities = mappedConvexActivities ?? trpcActivities;
-  const isLoading =
-    isConvexConfigured && convexApi
-      ? convexActivities === undefined
-      : trpcLoading;
+  // Use tRPC for activity data
+  const { data: activities, isLoading } = api.dashboard.getActivityLog.useQuery({
+    limit: 20,
+  });
 
   if (isLoading) {
     return (

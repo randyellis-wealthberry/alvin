@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import { type Metadata, type Viewport } from "next";
 import { Geist, Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { ConvexClientProvider } from "~/components/convex-provider";
@@ -49,11 +50,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn(geist.variable, inter.variable)}>
       <body>
-        <ConvexClientProvider>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
-        </ConvexClientProvider>
-        <InstallPrompt />
-        <IOSInstallInstructions />
+        <SessionProvider>
+          <ConvexClientProvider>
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </ConvexClientProvider>
+          <InstallPrompt />
+          <IOSInstallInstructions />
+        </SessionProvider>
       </body>
     </html>
   );

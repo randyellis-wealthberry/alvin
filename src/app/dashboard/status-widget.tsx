@@ -2,24 +2,10 @@
 
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useQuery as useConvexQuery } from "convex/react";
 import { api } from "~/trpc/react";
 import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-
-// Try to import Convex API - may not exist if not generated yet
-let convexApi: { alerts: { getUserStatus: unknown } } | null = null;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  convexApi = require("~/convex/_generated/api").api;
-} catch {
-  // Convex API not generated yet - will fallback to tRPC
-}
-
-// Check if Convex is configured via environment variable
-const isConvexConfigured =
-  typeof window !== "undefined" && !!process.env.NEXT_PUBLIC_CONVEX_URL;
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();
@@ -84,64 +70,10 @@ function getAlertLevelBadgeStyle(level: string): string {
 }
 
 export function StatusWidget() {
-  const { data: session } = useSession();
+  useSession(); // Keep session hook for consistency
 
-  // Convex real-time subscription (if configured and API available)
-  const convexStatus = useConvexQuery(
-    convexApi?.alerts?.getUserStatus as unknown as never,
-    isConvexConfigured && convexApi && session?.user?.id
-      ? ({ userId: session.user.id } as never)
-      : "skip"
-  );
-
-  // tRPC fallback (used when Convex not configured)
-  const { data: trpcStatus, isLoading: trpcLoading } =
-    api.dashboard.getStatus.useQuery(undefined, {
-      enabled: !isConvexConfigured || !convexApi,
-    });
-
-  // Map Convex data format to UI format (timestamps are numbers in Convex)
-  // Convex provides: lastCheckIn, nextDue, alertLevel, alertTriggeredAt
-  const mappedConvexStatus = convexStatus
-    ? {
-        lastCheckIn: (convexStatus as { lastCheckIn?: number }).lastCheckIn
-          ? new Date((convexStatus as { lastCheckIn: number }).lastCheckIn)
-          : null,
-        nextDue: (convexStatus as { nextDue?: number }).nextDue
-          ? new Date((convexStatus as { nextDue: number }).nextDue)
-          : null,
-        alertLevel: (convexStatus as { alertLevel?: string | null }).alertLevel,
-        alertTriggeredAt: (convexStatus as { alertTriggeredAt?: number })
-          .alertTriggeredAt
-          ? new Date(
-              (convexStatus as { alertTriggeredAt: number }).alertTriggeredAt
-            )
-          : null,
-        // Compute derived fields to match tRPC status shape
-        activeAlert: (convexStatus as { alertLevel?: string | null }).alertLevel
-          ? {
-              triggeredAt: (convexStatus as { alertTriggeredAt?: number })
-                .alertTriggeredAt
-                ? new Date(
-                    (convexStatus as { alertTriggeredAt: number })
-                      .alertTriggeredAt
-                  )
-                : new Date(),
-            }
-          : null,
-        daysUntilDue: (convexStatus as { nextDue?: number }).nextDue
-          ? Math.floor(
-              ((convexStatus as { nextDue: number }).nextDue - Date.now()) /
-                (1000 * 60 * 60 * 24)
-            )
-          : null,
-      }
-    : null;
-
-  // Use Convex data if available, else tRPC
-  const status = mappedConvexStatus ?? trpcStatus;
-  const isLoading =
-    isConvexConfigured && convexApi ? convexStatus === undefined : trpcLoading;
+  // Use tRPC for status data
+  const { data: status, isLoading } = api.dashboard.getStatus.useQuery();
 
   if (isLoading) {
     return (
