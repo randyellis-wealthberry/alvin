@@ -2,6 +2,8 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { ACTIVE_LEVELS, getNextLevel } from "~/lib/alerts/escalation";
+import { sendUserNotification, NOTIFICATION_TEMPLATES } from "~/lib/notifications";
+import { syncActivity, syncUserStatus } from "~/lib/convex/sync";
 
 export const alertRouter = createTRPCRouter({
   /**
@@ -94,6 +96,24 @@ export const alertRouter = createTRPCRouter({
       },
     });
 
+    // Sync to Convex for real-time updates (non-critical)
+    try {
+      await syncActivity({
+        userId: ctx.session.user.id,
+        type: "alert",
+        description: "Alert triggered at Level 1",
+        timestamp: now,
+      });
+
+      await syncUserStatus({
+        userId: ctx.session.user.id,
+        alertLevel: "L1",
+        alertTriggeredAt: now,
+      });
+    } catch (e) {
+      console.error("Convex sync failed (non-critical):", e);
+    }
+
     return alert;
   }),
 
@@ -155,6 +175,35 @@ export const alertRouter = createTRPCRouter({
         },
       });
 
+      // Sync to Convex for real-time updates (non-critical)
+      try {
+        // Map Prisma level to Convex level format
+        const levelMap: Record<string, "L1" | "L2" | "L3" | "L4"> = {
+          LEVEL_1: "L1",
+          LEVEL_2: "L2",
+          LEVEL_3: "L3",
+          LEVEL_4: "L4",
+        };
+        const convexLevel = levelMap[nextLevel];
+
+        await syncActivity({
+          userId: ctx.session.user.id,
+          type: "alert",
+          description: `Alert escalated to Level ${nextLevel.replace("LEVEL_", "")}`,
+          timestamp: now,
+        });
+
+        if (convexLevel) {
+          await syncUserStatus({
+            userId: ctx.session.user.id,
+            alertLevel: convexLevel,
+            alertTriggeredAt: alert.triggeredAt,
+          });
+        }
+      } catch (e) {
+        console.error("Convex sync failed (non-critical):", e);
+      }
+
       return updatedAlert;
     }),
 
@@ -199,7 +248,7 @@ export const alertRouter = createTRPCRouter({
       }
 
       // Cancel alert
-      return ctx.db.alert.update({
+      const cancelledAlert = await ctx.db.alert.update({
         where: { id: alert.id },
         data: {
           level: "CANCELLED",
@@ -207,5 +256,31 @@ export const alertRouter = createTRPCRouter({
           cancelReason: input.reason,
         },
       });
+
+      // Send push notification to user confirming cancellation
+      await sendUserNotification({
+        userProfileId: profile.id,
+        ...NOTIFICATION_TEMPLATES.ALERT_CANCELLED,
+      });
+
+      // Sync to Convex for real-time updates (non-critical)
+      try {
+        await syncActivity({
+          userId: ctx.session.user.id,
+          type: "alert",
+          description: "Alert cancelled",
+          timestamp: new Date(),
+        });
+
+        await syncUserStatus({
+          userId: ctx.session.user.id,
+          alertLevel: null,
+          alertTriggeredAt: null,
+        });
+      } catch (e) {
+        console.error("Convex sync failed (non-critical):", e);
+      }
+
+      return cancelledAlert;
     }),
 });
