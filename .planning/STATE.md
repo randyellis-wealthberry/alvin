@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-17)
 
 ## Current Position
 
-Phase: 14 of 16 (SMS Integration) — PLANNED
-Plan: 0 of 2 complete
-Status: Ready for execution
-Last activity: 2026-01-21 — Created 14-01-PLAN.md and 14-02-PLAN.md
+Phase: 14 of 16 (SMS Integration) — COMPLETE
+Plan: 2 of 2 complete
+Status: Phase complete, ready for Phase 15
+Last activity: 2026-01-21 — Completed 14-02-PLAN.md (Family SMS + cron integration)
 
-Progress: ██████████████████░░░░░░░░░░░░ 50% (Phases 11-13 complete, 3 remaining)
+Progress: ████████████████████████░░░░░░ 67% (Phases 11-14 complete, 2 remaining)
 
 ## v2.0 Mobile & Messaging
 
@@ -71,9 +71,9 @@ Resume file: None
 
 ## Next Steps
 
-1. **Execute Phase 14** — SMS Notifications (`/gsd:execute-phase 14`)
-2. **Plan Phase 15** — Shadcn UI Refresh (`/gsd:plan-phase 15`)
-3. **Plan Phase 15** — Shadcn UI Refresh (`/gsd:plan-phase 15`)
+1. **Plan Phase 15** — Shadcn UI Refresh (`/gsd:plan-phase 15`)
+2. **Execute Phase 15** — Shadcn component migration
+3. **Plan Phase 16** — Convex Real-time Dashboard (`/gsd:plan-phase 16`)
 4. **Plan Phase 16** — Convex Real-time Dashboard (`/gsd:plan-phase 16`)
 5. **Complete v2.0 milestone**
 
@@ -84,3 +84,4 @@ Resume file: None
 - Phase 11 (PWA Foundation) complete: 2026-01-17
 - Phase 12 (Push Notifications) complete: 2026-01-19
 - Phase 13 (Offline Caching) complete: 2026-01-21
+- Phase 14 (SMS Integration) complete: 2026-01-21

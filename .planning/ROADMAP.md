@@ -75,8 +75,8 @@ Plans:
 **Status**: Planned (2026-01-21)
 
 Plans:
-- [ ] 14-01: Twilio infrastructure (schema, service, env, unified notifications)
-- [ ] 14-02: Family SMS + cron integration (L3/L4 alerts, reminder fallback)
+- [x] 14-01: Twilio infrastructure (schema, service, env, unified notifications)
+- [x] 14-02: Family SMS + cron integration (L3/L4 alerts, reminder fallback)
 
 #### Phase 15: Shadcn UI Refresh
 
@@ -124,6 +124,6 @@ Plans:
 | 11. PWA Foundation | v2.0 | 2/2 | Complete | 2026-01-17 |
 | 12. Push Notifications | v2.0 | 4/4 | Complete | 2026-01-19 |
 | 13. Offline Caching | v2.0 | 1/1 | Complete | 2026-01-21 |
-| 14. SMS Integration | v2.0 | 0/2 | Planned | - |
+| 14. SMS Integration | v2.0 | 2/2 | Complete | 2026-01-21 |
 | 15. Shadcn UI Refresh | v2.0 | 0/? | Not started | - |
 | 16. Convex Real-time | v2.0 | 0/? | Not started | - |
