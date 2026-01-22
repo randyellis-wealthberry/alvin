@@ -11,7 +11,7 @@ None
 ## Milestones
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-01-17
-- 🚧 **v2.0 Mobile & Messaging** — Phases 11-16 (in progress)
+- ✅ [v2.0 Mobile & Messaging](milestones/v2.0-ROADMAP.md) (Phases 11-16) — SHIPPED 2026-01-22
 
 ## Phases
 
@@ -31,77 +31,17 @@ None
 
 </details>
 
-### 🚧 v2.0 Mobile & Messaging (In Progress)
+<details>
+<summary>✅ v2.0 Mobile & Messaging (Phases 11-16) — SHIPPED 2026-01-22</summary>
 
-**Milestone Goal:** Transform ALVIN into a native-like mobile experience with reliable multi-channel notifications, polished UI, and real-time updates
+- [x] **Phase 11: PWA Foundation** - Serwist service worker, manifest, home screen install
+- [x] **Phase 12: Push Notifications** - Web Push with VAPID, subscription management, activity feed alerts
+- [x] **Phase 13: Offline Caching** - View-only offline mode with cached activity history
+- [x] **Phase 14: SMS Integration** - Twilio SMS for user reminders and L3/L4 family escalation
+- [x] **Phase 15: Shadcn UI Refresh** - Polished component system (Button, Card, Dialog, Alert, etc.)
+- [x] **Phase 16: Convex Real-time Dashboard** - Live activity log and status updates via subscriptions
 
-#### Phase 11: PWA Foundation ✓
-
-**Goal**: Progressive web app with manifest, service worker, and home screen install
-**Depends on**: v1.0 complete
-**Status**: Complete (2026-01-17)
-
-Plans:
-- [x] 11-01: Core PWA infrastructure (Serwist + manifest)
-- [x] 11-02: PWA assets and install experience
-
-#### Phase 12: Push Notifications
-
-**Goal**: Native push alerts for full activity feed (reminders, escalations, family alerts)
-**Depends on**: Phase 11 (service worker required)
-**Status**: In progress (2/4 plans complete)
-
-Plans:
-- [x] 12-01: Push notification infrastructure (web-push, VAPID, PushSubscription model)
-- [x] 12-02: Push subscription API endpoints (tRPC router, service worker handlers)
-- [ ] 12-03: Client permission UI
-- [ ] 12-04: Integration with reminders and escalations
-
-#### Phase 13: Offline Caching
-
-**Goal**: View-only offline mode with cached activity history
-**Depends on**: Phase 11 (service worker)
-**Research**: Unlikely (extends Phase 11 patterns)
-**Plans**: TBD
-
-Plans:
-- [ ] 13-01: TBD
-
-#### Phase 14: SMS Integration
-
-**Goal**: Twilio SMS for user check-in reminders and family escalation alerts (L3-4)
-**Depends on**: Phase 11 (can run in parallel after PWA foundation)
-**Research**: Complete (Twilio SDK patterns verified)
-**Status**: Planned (2026-01-21)
-
-Plans:
-- [x] 14-01: Twilio infrastructure (schema, service, env, unified notifications)
-- [x] 14-02: Family SMS + cron integration (L3/L4 alerts, reminder fallback)
-
-#### Phase 15: Shadcn UI Refresh
-
-**Goal**: Replace current styling with Shadcn components for a polished, consistent look
-**Depends on**: None (can run in parallel)
-**Research**: Minimal (design-os reference available)
-**Reference**: design-os/src/components/ui/ contains base Shadcn components
-
-Plans:
-- [x] 15-01: Shadcn CSS + core components (Button, Input, Label, Card)
-- [ ] 15-02: Form components (Dialog, Select, Textarea, Checkbox)
-- [ ] 15-03: Feedback components (Alert, Badge, Skeleton, Tooltip)
-- [ ] 15-04: Migrate existing UI to Shadcn components
-
-#### Phase 16: Convex Real-time Dashboard
-
-**Goal**: Live updates for activity log, alerts, and status without page refresh
-**Depends on**: Phase 15 recommended (UI should be stable first)
-**Research**: Likely (Convex React integration, subscriptions)
-**Research topics**: Convex queries vs mutations, real-time subscriptions, migration strategy
-
-Plans:
-- [x] 16-01: Convex schema & sync utility (schema, queries, mutations, sync)
-- [x] 16-02: Real-time dashboard integration (activity log subscription, write-through sync)
-- [x] 16-03: Status component integration (user status subscription)
+</details>
 
 ## Progress
 
@@ -122,7 +62,7 @@ Plans:
 
 **Total: 10 phases, 16 plans — 100% complete**
 
-**v2.0 Mobile & Messaging — IN PROGRESS**
+**v2.0 Mobile & Messaging — COMPLETE**
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -132,3 +72,5 @@ Plans:
 | 14. SMS Integration | v2.0 | 2/2 | Complete | 2026-01-21 |
 | 15. Shadcn UI Refresh | v2.0 | 4/4 | Complete | 2026-01-22 |
 | 16. Convex Real-time | v2.0 | 3/3 | Complete | 2026-01-22 |
+
+**Total: 6 phases, 16 plans — 100% complete**

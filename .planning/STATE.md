@@ -2,62 +2,41 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-17)
+See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** Never false alarm — family contacts are only reached when truly needed
-**Current focus:** v2.0 Mobile & Messaging — PWA and SMS notifications
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 16 of 16 (Convex Real-time Dashboard) — COMPLETE
-Plan: 3 of 3 complete
-Status: Phase complete
-Last activity: 2026-01-22 — Completed 16-03-PLAN.md (Status Component Integration)
+Phase: 16 of 16 complete
+Plan: All complete
+Status: v2.0 shipped, ready for next milestone
+Last activity: 2026-01-22 — v2.0 Mobile & Messaging milestone complete
 
-Progress: ██████████████████████████████ 100% (All v2.0 phases complete)
+Progress: ██████████████████████████████ 100% (v1.0 + v2.0 complete)
 
-## v2.0 Mobile & Messaging
+## Milestones Shipped
 
-**Started:** 2026-01-17
+### v1.0 MVP (2026-01-17)
+- 10 phases, 16 plans
+- Core ALVIN functionality: check-ins, chat, alerts, notifications
 
-**Features:**
-
-- Mobile PWA with home screen install
-- Push notifications for full activity feed
-- View-only offline mode
-- SMS notifications via Twilio (user + family)
-- Shadcn UI refresh for polished look
-- Convex real-time dashboard updates
-
-**Phases:** 11-16 (6 phases)
+### v2.0 Mobile & Messaging (2026-01-22)
+- 6 phases, 16 plans
+- PWA, push notifications, SMS, offline mode, Shadcn UI, real-time dashboard
 
 ## Accumulated Context
 
 ### Decisions
 
-All v1.0 decisions logged in PROJECT.md Key Decisions table with outcomes marked.
-
-**v2.0 decisions:**
-
-- Twilio selected for SMS provider (reliable, well-documented)
-- Push notifications for all activity types (not user-configurable in v2)
-- View-only offline mode (no offline check-ins or chat)
-- SMS for both user reminders and family escalation (L3-4)
-- Serwist for service worker (modern, Next.js 15 compatible, replaces deprecated next-pwa)
-- Service worker disabled in dev mode (Turbopack incompatible)
-- Push-first, email-fallback notification pattern (Phase 12)
-- Notification tags for grouping/replacing same-type notifications
+All decisions logged in PROJECT.md Key Decisions table with outcomes marked.
 
 ### Deferred Issues
 
-Carried from v1.0:
-
+Carried forward:
 - In-memory WebAuthn challenges → Redis (production scalability)
-- Custom escalation timing (not included in v2 scope)
-
-### Pending Todos
-
-None — ready to plan Phase 11.
+- Custom escalation timing (potential v3 feature)
 
 ### Blockers/Concerns
 
@@ -66,20 +45,16 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-22
-Stopped at: Completed 16-03-PLAN.md (Status Component Integration) — Phase 16 complete
+Stopped at: v2.0 milestone complete, ready for next milestone planning
 Resume file: None
 
 ## Next Steps
 
-1. **Complete v2.0 milestone** — Archive and prepare for next version
+1. **Plan v3.0 milestone** — Define next feature set
+2. **Or** — Deploy and gather user feedback before planning
 
 ### Roadmap Evolution
 
 - v1.0 MVP shipped: 10 phases, 16 plans (2026-01-17)
-- Milestone v2.0 created: Mobile & Messaging, 4 phases (Phase 11-14)
-- Phase 11 (PWA Foundation) complete: 2026-01-17
-- Phase 12 (Push Notifications) complete: 2026-01-19
-- Phase 13 (Offline Caching) complete: 2026-01-21
-- Phase 14 (SMS Integration) complete: 2026-01-21
-- Phase 15 (Shadcn UI Refresh) complete: 2026-01-22
-- Phase 16 (Convex Real-time Dashboard) complete: 2026-01-22
+- v2.0 Mobile & Messaging shipped: 6 phases, 16 plans (2026-01-22)
+- Total: 16 phases, 32 plans across 2 milestones

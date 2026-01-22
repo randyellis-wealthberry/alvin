@@ -36,15 +36,23 @@ Never false alarm — family contacts are only reached when truly needed, protec
 - ✓ Contact email notifications (L3/L4 escalation) — v1.0
 - ✓ Thesys GenUI integration for ALVIN chat — v1.0
 
+**Shipped in v2.0 Mobile & Messaging:**
+- ✓ PWA with home screen install (Serwist service worker) — v2.0
+- ✓ Push notifications for full activity feed — v2.0
+- ✓ View-only offline mode with cached activity — v2.0
+- ✓ SMS notifications via Twilio (user + L3/L4 family) — v2.0
+- ✓ Shadcn UI component system — v2.0
+- ✓ Convex real-time dashboard updates — v2.0
+
 ### Active
 
 <!-- Next milestone scope -->
 
-None — v1.0 MVP complete. Future enhancements for v2:
-- [ ] SMS notifications (Twilio integration)
-- [ ] PWA with push notifications
+None — v2.0 complete. Future enhancements for v3:
 - [ ] Custom escalation timing configuration
 - [ ] Multiple check-in schedule types
+- [ ] Redis for WebAuthn challenge storage (production scalability)
+- [ ] Additional OAuth providers (Google, Apple)
 
 ### Out of Scope
 
@@ -59,19 +67,24 @@ None — v1.0 MVP complete. Future enhancements for v2:
 
 ## Context
 
-**Current State (v1.0 shipped 2026-01-17):**
-- 6,254 lines of TypeScript across 64 files
-- 10 phases, 16 plans executed in 2 days
-- Full feature set: check-ins, chat, alerts, notifications, dashboard
+**Current State (v2.0 shipped 2026-01-22):**
+- 8,485 lines of TypeScript across 89 files
+- 16 phases, 32 plans executed over 7 days total
+- Full feature set: check-ins, chat, alerts, PWA, push, SMS, real-time dashboard
 
 **Tech Stack:**
 - Next.js 15 (App Router), tRPC 11, Prisma 6.6, NextAuth 5 beta
 - AI SDK (Vercel) with Claude for ALVIN chat
-- Resend for email, Vercel Cron for scheduling
+- Resend for email, Twilio for SMS, Vercel Cron for scheduling
 - SimpleWebAuthn for biometric authentication
+- Serwist for PWA service worker, web-push for notifications
+- Convex for real-time dashboard subscriptions
+- Shadcn UI component system
 
-**Key Insight (validated):**
-The 4-level escalation system with 24h thresholds successfully prevents false alarms. Users have multiple opportunities (L1, L2 reminders) before family is contacted (L3, L4).
+**Key Insights (validated):**
+- The 4-level escalation system with 24h thresholds successfully prevents false alarms
+- Push-first, email-fallback, SMS-last notification chain provides reliable delivery
+- Write-through sync pattern (Prisma → Convex) gives real-time UX without complexity
 
 ## Constraints
 
@@ -95,6 +108,12 @@ The 4-level escalation system with 24h thresholds successfully prevents false al
 | In-memory WebAuthn challenges | MVP approach, upgrade to Redis later | ⚠️ Revisit — not production-ready |
 | Soft delete for contacts | Preserve audit trail | ✓ Good — deletedAt pattern clean |
 | 24h threshold per level | Balance between urgency and false alarms | ✓ Good — configurable later if needed |
+| Serwist for service worker | Modern, Next.js 15 compatible, replaces deprecated next-pwa | ✓ Good — clean API, works with App Router |
+| Push-first notification chain | Push → email → SMS fallback ensures delivery | ✓ Good — reliable multi-channel delivery |
+| View-only offline mode | Simpler than full offline support, covers main use case | ✓ Good — users can view history offline |
+| Twilio for SMS | Reliable, well-documented, reasonable pricing | ✓ Good — easy integration |
+| Write-through sync for Convex | Prisma as source of truth, Convex for real-time reads | ✓ Good — simple pattern, graceful degradation |
+| Shadcn UI components | Polished defaults, customizable, accessibility built-in | ✓ Good — consistent look with minimal effort |
 
 ---
-*Last updated: 2026-01-17 after v1.0 milestone*
+*Last updated: 2026-01-22 after v2.0 milestone*
