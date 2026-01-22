@@ -1,10 +1,22 @@
 import { Resend } from "resend";
 import { env } from "~/env";
 import { ContactAlertEmail } from "~/emails/ContactAlertEmail";
+import { sendSMS } from "~/lib/sms";
 import type { Alert, Contact, User, UserProfile } from "~/../generated/prisma";
 
 // Initialize Resend client (only if API key is configured)
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
+
+/**
+ * SMS message templates for family contact notifications (plain text).
+ * L3 is courteous/concerned tone, L4 is urgent.
+ */
+const SMS_TEMPLATES = {
+  L3: (contactName: string, userName: string, lastCheckIn: string) =>
+    `Hi ${contactName}, ALVIN hasn't heard from ${userName} since ${lastCheckIn}. This is a courtesy notification - please reach out when you can.`,
+  L4: (contactName: string, userName: string, lastCheckIn: string) =>
+    `URGENT: ${contactName}, ${userName} has not responded to ALVIN for an extended period (last check-in: ${lastCheckIn}). Please contact them immediately.`,
+};
 
 /**
  * Profile with nested user for notification context
@@ -17,6 +29,7 @@ type ProfileWithUser = UserProfile & { user: User };
 interface PrimaryNotifyResult {
   success: boolean;
   email?: string;
+  smsSuccess?: boolean;
   error?: string;
 }
 
@@ -26,6 +39,7 @@ interface PrimaryNotifyResult {
 interface BatchNotifyResult {
   sent: number;
   failed: number;
+  smsSent: number;
 }
 
 /**
@@ -75,15 +89,34 @@ function getEligibleContacts(contacts: Contact[]): Contact[] {
 }
 
 /**
+ * Filter contacts to only those eligible for SMS notifications.
+ *
+ * Eligible contacts must:
+ * - Not be soft-deleted (deletedAt === null)
+ * - Have SMS notifications enabled (notifyBySms === true)
+ * - Have a valid phone number
+ *
+ * @param contacts - Array of contacts to filter
+ * @returns Filtered array of eligible contacts
+ */
+function getEligibleContactsForSms(contacts: Contact[]): Contact[] {
+  return contacts.filter(
+    (c) => c.deletedAt === null && c.notifyBySms && c.phone
+  );
+}
+
+/**
  * Notify the primary contact about an L3 (LEVEL_3) alert.
  *
  * Primary contact is determined by the lowest priority number.
  * Lower priority = higher importance (notified first).
  *
+ * SMS is sent in addition to email if the contact has notifyBySms enabled.
+ *
  * @param alert - The alert being escalated
  * @param profile - User profile with nested user data
  * @param contacts - All contacts for the user
- * @returns Result indicating success/failure and email sent to
+ * @returns Result indicating success/failure and channels used
  */
 export async function notifyPrimaryContact(
   alert: Alert,
@@ -91,76 +124,111 @@ export async function notifyPrimaryContact(
   contacts: Contact[]
 ): Promise<PrimaryNotifyResult> {
   const eligibleContacts = getEligibleContacts(contacts);
+  const smsEligibleContacts = getEligibleContactsForSms(contacts);
 
   // Sort by priority (ascending - lower = higher priority) and take first
   const primaryContact = eligibleContacts.sort(
     (a, b) => a.priority - b.priority
   )[0];
 
-  if (!primaryContact) {
-    console.log(`[Notification] Alert ${alert.id}: No eligible primary contact`);
+  // Also check if primary contact is SMS-eligible (may be different if no email-eligible contacts)
+  const smsPrimaryContact = smsEligibleContacts.sort(
+    (a, b) => a.priority - b.priority
+  )[0];
+
+  // If no eligible contacts for either channel, return early
+  if (!primaryContact && !smsPrimaryContact) {
+    console.log(`[Notification] Alert ${alert.id}: No eligible primary contact for email or SMS`);
     return { success: false, error: "No eligible contact" };
   }
 
-  if (!resend) {
+  const userName = profile.user.name ?? "your loved one";
+  const lastCheckIn = formatLastCheckIn(profile.lastCheckInAt);
+
+  let emailSuccess = false;
+  let emailError: string | undefined;
+
+  // Send email to primary contact if email-eligible
+  if (primaryContact && resend) {
+    try {
+      console.log(
+        `[Notification] Notifying primary contact by email: ${primaryContact.email}`
+      );
+
+      const { error } = await resend.emails.send({
+        from: "ALVIN Alert <alerts@resend.dev>",
+        to: primaryContact.email,
+        subject: `We haven't heard from ${userName}`,
+        react: ContactAlertEmail({
+          contactName: primaryContact.name,
+          userName,
+          alertLevel: "L3",
+          lastCheckIn,
+        }),
+        tags: [
+          { name: "alert_id", value: alert.id },
+          { name: "level", value: "LEVEL_3" },
+        ],
+      });
+
+      if (error) {
+        console.error(
+          `[Notification] Alert ${alert.id}: Failed to notify ${primaryContact.email}:`,
+          error
+        );
+        emailError = error.message;
+      } else {
+        console.log(
+          `[Notification] Alert ${alert.id}: Notified primary contact ${primaryContact.email}`
+        );
+        emailSuccess = true;
+      }
+    } catch (err) {
+      emailError = err instanceof Error ? err.message : "Unknown error";
+      console.error(
+        `[Notification] Alert ${alert.id}: Exception notifying ${primaryContact.email}:`,
+        emailError
+      );
+    }
+  } else if (primaryContact && !resend) {
     console.warn(
       `[Notification] Alert ${alert.id}: RESEND_API_KEY not configured, skipping email to ${primaryContact.email}`
     );
-    return { success: false, error: "Email not configured" };
+    emailError = "Email not configured";
   }
 
-  try {
-    const userName = profile.user.name ?? "your loved one";
-    const lastCheckIn = formatLastCheckIn(profile.lastCheckInAt);
-
+  // Send SMS to primary SMS-eligible contact (supplementary to email)
+  let smsSuccess = false;
+  if (smsPrimaryContact?.phone) {
     console.log(
-      `[Notification] Notifying primary contact: ${primaryContact.email}`
+      `[Notification] Alert ${alert.id}: Sending SMS to primary contact ${smsPrimaryContact.phone}`
     );
 
-    const { error } = await resend.emails.send({
-      from: "ALVIN Alert <alerts@resend.dev>",
-      to: primaryContact.email,
-      subject: `We haven't heard from ${userName}`,
-      react: ContactAlertEmail({
-        contactName: primaryContact.name,
-        userName,
-        alertLevel: "L3",
-        lastCheckIn,
-      }),
-      tags: [
-        { name: "alert_id", value: alert.id },
-        { name: "level", value: "LEVEL_3" },
-      ],
-    });
+    const smsMessage = SMS_TEMPLATES.L3(smsPrimaryContact.name, userName, lastCheckIn);
+    const smsResult = await sendSMS(smsPrimaryContact.phone, smsMessage);
 
-    if (error) {
-      console.error(
-        `[Notification] Alert ${alert.id}: Failed to notify ${primaryContact.email}:`,
-        error
+    if (smsResult.success) {
+      console.log(
+        `[Notification] Alert ${alert.id}: SMS sent to ${smsPrimaryContact.phone}`
       );
-      return {
-        success: false,
-        email: primaryContact.email,
-        error: error.message,
-      };
+      smsSuccess = true;
+    } else {
+      console.error(
+        `[Notification] Alert ${alert.id}: SMS failed to ${smsPrimaryContact.phone}:`,
+        smsResult.error
+      );
     }
-
-    console.log(
-      `[Notification] Alert ${alert.id}: Notified primary contact ${primaryContact.email}`
-    );
-    return { success: true, email: primaryContact.email };
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    console.error(
-      `[Notification] Alert ${alert.id}: Exception notifying ${primaryContact.email}:`,
-      errorMessage
-    );
-    return {
-      success: false,
-      email: primaryContact.email,
-      error: errorMessage,
-    };
   }
+
+  // Success if either channel succeeded
+  const success = emailSuccess || smsSuccess;
+
+  return {
+    success,
+    email: primaryContact?.email,
+    smsSuccess,
+    error: !success ? (emailError ?? "No notification sent") : undefined,
+  };
 }
 
 /**
@@ -169,10 +237,12 @@ export async function notifyPrimaryContact(
  * Uses Resend batch API to send up to 100 emails in a single request.
  * This is more efficient than sequential sends and rate-limit friendly.
  *
+ * SMS is sent in addition to email for contacts with notifyBySms enabled.
+ *
  * @param alert - The alert being escalated to L4
  * @param profile - User profile with nested user data
  * @param contacts - All contacts for the user
- * @returns Result with count of sent and failed emails
+ * @returns Result with count of sent and failed emails, and SMS count
  */
 export async function notifyAllContacts(
   alert: Alert,
@@ -180,63 +250,99 @@ export async function notifyAllContacts(
   contacts: Contact[]
 ): Promise<BatchNotifyResult> {
   const eligibleContacts = getEligibleContacts(contacts);
+  const smsEligibleContacts = getEligibleContactsForSms(contacts);
 
-  if (eligibleContacts.length === 0) {
-    console.log(`[Notification] Alert ${alert.id}: No contacts to notify for L4`);
-    return { sent: 0, failed: 0 };
-  }
+  const userName = profile.user.name ?? "your loved one";
+  const lastCheckIn = formatLastCheckIn(profile.lastCheckInAt);
 
-  if (!resend) {
+  let emailsSent = 0;
+  let emailsFailed = 0;
+
+  // Send batch email to all email-eligible contacts
+  if (eligibleContacts.length > 0 && resend) {
+    try {
+      console.log(
+        `[Notification] Notifying ${eligibleContacts.length} contacts by email for L4 alert`
+      );
+
+      const emails = eligibleContacts.map((contact) => ({
+        from: "ALVIN Alert <alerts@resend.dev>",
+        to: contact.email,
+        subject: `Urgent: Please contact ${userName}`,
+        react: ContactAlertEmail({
+          contactName: contact.name,
+          userName,
+          alertLevel: "L4",
+          lastCheckIn,
+        }),
+        tags: [
+          { name: "alert_id", value: alert.id },
+          { name: "level", value: "LEVEL_4" },
+        ],
+      }));
+
+      const { error } = await resend.batch.send(emails);
+
+      if (error) {
+        console.error(
+          `[Notification] Alert ${alert.id}: Batch email send failed:`,
+          error
+        );
+        emailsFailed = eligibleContacts.length;
+      } else {
+        console.log(
+          `[Notification] Alert ${alert.id}: Sent ${eligibleContacts.length} emails`
+        );
+        emailsSent = eligibleContacts.length;
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      console.error(
+        `[Notification] Alert ${alert.id}: Batch email exception:`,
+        errorMessage
+      );
+      emailsFailed = eligibleContacts.length;
+    }
+  } else if (eligibleContacts.length > 0 && !resend) {
     console.warn(
       `[Notification] Alert ${alert.id}: RESEND_API_KEY not configured, skipping ${eligibleContacts.length} emails`
     );
-    return { sent: 0, failed: 0 };
+  } else {
+    console.log(`[Notification] Alert ${alert.id}: No email-eligible contacts for L4`);
   }
 
-  try {
-    const userName = profile.user.name ?? "your loved one";
-    const lastCheckIn = formatLastCheckIn(profile.lastCheckInAt);
-
+  // Send SMS to all SMS-eligible contacts (supplementary to email)
+  let smsSent = 0;
+  if (smsEligibleContacts.length > 0) {
     console.log(
-      `[Notification] Notifying ${eligibleContacts.length} contacts for L4 alert`
+      `[Notification] Alert ${alert.id}: Sending SMS to ${smsEligibleContacts.length} contacts for L4`
     );
 
-    const emails = eligibleContacts.map((contact) => ({
-      from: "ALVIN Alert <alerts@resend.dev>",
-      to: contact.email,
-      subject: `Urgent: Please contact ${userName}`,
-      react: ContactAlertEmail({
-        contactName: contact.name,
-        userName,
-        alertLevel: "L4",
-        lastCheckIn,
-      }),
-      tags: [
-        { name: "alert_id", value: alert.id },
-        { name: "level", value: "LEVEL_4" },
-      ],
-    }));
+    for (const contact of smsEligibleContacts) {
+      if (!contact.phone) continue;
 
-    const { error } = await resend.batch.send(emails);
+      const smsMessage = SMS_TEMPLATES.L4(contact.name, userName, lastCheckIn);
+      const smsResult = await sendSMS(contact.phone, smsMessage);
 
-    if (error) {
-      console.error(
-        `[Notification] Alert ${alert.id}: Batch send failed:`,
-        error
-      );
-      return { sent: 0, failed: eligibleContacts.length };
+      if (smsResult.success) {
+        smsSent++;
+        console.log(
+          `[Notification] Alert ${alert.id}: SMS sent to ${contact.phone}`
+        );
+      } else {
+        console.error(
+          `[Notification] Alert ${alert.id}: SMS failed to ${contact.phone}:`,
+          smsResult.error
+        );
+      }
     }
 
     console.log(
-      `[Notification] Alert ${alert.id}: Notified ${eligibleContacts.length} contacts`
+      `[Notification] Alert ${alert.id}: Sent ${smsSent}/${smsEligibleContacts.length} SMS messages`
     );
-    return { sent: eligibleContacts.length, failed: 0 };
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    console.error(
-      `[Notification] Alert ${alert.id}: Batch exception:`,
-      errorMessage
-    );
-    return { sent: 0, failed: eligibleContacts.length };
+  } else {
+    console.log(`[Notification] Alert ${alert.id}: No SMS-eligible contacts for L4`);
   }
+
+  return { sent: emailsSent, failed: emailsFailed, smsSent };
 }
