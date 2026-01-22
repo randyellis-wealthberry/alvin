@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { api } from "~/trpc/react";
+import { Card, CardContent } from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();
@@ -44,24 +47,24 @@ function formatFutureRelativeTime(date: Date): string {
 }
 
 function getDueStatusColor(daysUntilDue: number | null): string {
-  if (daysUntilDue === null) return "text-white/70";
-  if (daysUntilDue < 0) return "text-red-400"; // Overdue
-  if (daysUntilDue < 1) return "text-yellow-400"; // Less than 24 hours
-  return "text-green-400"; // More than 24 hours
+  if (daysUntilDue === null) return "text-muted-foreground";
+  if (daysUntilDue < 0) return "text-red-500"; // Overdue
+  if (daysUntilDue < 1) return "text-yellow-500"; // Less than 24 hours
+  return "text-green-500"; // More than 24 hours
 }
 
-function getAlertLevelBadgeColor(level: string): string {
+function getAlertLevelBadgeStyle(level: string): string {
   switch (level) {
     case "LEVEL_1":
-      return "bg-yellow-600";
+      return "bg-yellow-600 text-white border-transparent";
     case "LEVEL_2":
-      return "bg-orange-600";
+      return "bg-orange-600 text-white border-transparent";
     case "LEVEL_3":
-      return "bg-red-600";
+      return "bg-red-600 text-white border-transparent";
     case "LEVEL_4":
-      return "bg-red-800";
+      return "bg-red-800 text-white border-transparent";
     default:
-      return "bg-gray-600";
+      return "";
   }
 }
 
@@ -70,19 +73,23 @@ export function StatusWidget() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md rounded-xl bg-white/10 p-6">
-        <p className="text-center text-white/70">Loading status...</p>
-      </div>
+      <Card className="w-full max-w-md">
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">Loading status...</p>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!status) {
     return (
-      <div className="w-full max-w-md rounded-xl bg-white/10 p-6">
-        <p className="text-center text-white/70">
-          No profile found. Please set up your profile first.
-        </p>
-      </div>
+      <Card className="w-full max-w-md">
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">
+            No profile found. Please set up your profile first.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -93,74 +100,75 @@ export function StatusWidget() {
       <h2 className="text-2xl font-bold">Your Status</h2>
 
       {/* Last Check-in Card */}
-      <div className="rounded-xl bg-white/10 p-4">
-        <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-white/60">
-          Last Check-in
-        </h3>
-        {status.lastCheckIn ? (
-          <div>
-            <p className="text-xl font-semibold">
-              {formatRelativeTime(new Date(status.lastCheckIn))}
-            </p>
-            <p className="text-sm text-white/60">
-              {new Date(status.lastCheckIn).toLocaleString()}
-            </p>
-          </div>
-        ) : (
-          <p className="text-white/70">No check-ins yet</p>
-        )}
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">
+            Last Check-in
+          </h3>
+          {status.lastCheckIn ? (
+            <div>
+              <p className="text-xl font-semibold">
+                {formatRelativeTime(new Date(status.lastCheckIn))}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {new Date(status.lastCheckIn).toLocaleString()}
+              </p>
+            </div>
+          ) : (
+            <p className="text-muted-foreground">No check-ins yet</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Next Check-in Due Card */}
-      <div className="rounded-xl bg-white/10 p-4">
-        <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-white/60">
-          Next Check-in Due
-        </h3>
-        {status.nextDue ? (
-          <div>
-            <p
-              className={`text-xl font-semibold ${getDueStatusColor(status.daysUntilDue)}`}
-            >
-              {formatFutureRelativeTime(new Date(status.nextDue))}
-            </p>
-            <p className="text-sm text-white/60">
-              {new Date(status.nextDue).toLocaleString()}
-            </p>
-          </div>
-        ) : (
-          <p className="text-white/70">Not scheduled</p>
-        )}
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">
+            Next Check-in Due
+          </h3>
+          {status.nextDue ? (
+            <div>
+              <p
+                className={`text-xl font-semibold ${getDueStatusColor(status.daysUntilDue)}`}
+              >
+                {formatFutureRelativeTime(new Date(status.nextDue))}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {new Date(status.nextDue).toLocaleString()}
+              </p>
+            </div>
+          ) : (
+            <p className="text-muted-foreground">Not scheduled</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Active Alert Card */}
-      <div className="rounded-xl bg-white/10 p-4">
-        <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-white/60">
-          Alert Status
-        </h3>
-        {status.activeAlert ? (
-          <div className="flex items-center gap-3">
-            <span
-              className={`rounded-full px-3 py-1 text-sm font-medium text-white ${getAlertLevelBadgeColor(status.alertLevel ?? "")}`}
-            >
-              {status.alertLevel?.replace("_", " ")}
-            </span>
-            <span className="text-white/60">
-              Since {formatRelativeTime(new Date(status.activeAlert.triggeredAt))}
-            </span>
-          </div>
-        ) : (
-          <p className="text-green-400">No active alerts</p>
-        )}
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">
+            Alert Status
+          </h3>
+          {status.activeAlert ? (
+            <div className="flex items-center gap-3">
+              <Badge className={getAlertLevelBadgeStyle(status.alertLevel ?? "")}>
+                {status.alertLevel?.replace("_", " ")}
+              </Badge>
+              <span className="text-muted-foreground">
+                Since {formatRelativeTime(new Date(status.activeAlert.triggeredAt))}
+              </span>
+            </div>
+          ) : (
+            <p className="text-green-500">No active alerts</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Quick Action */}
       {showCheckInPrompt && (
-        <Link
-          href="/check-in"
-          className="block w-full rounded-full bg-purple-600 py-3 text-center font-semibold transition hover:bg-purple-700"
-        >
-          Check In Now
-        </Link>
+        <Button asChild className="w-full rounded-full" size="lg">
+          <Link href="/check-in">Check In Now</Link>
+        </Button>
       )}
     </div>
   );
