@@ -11,7 +11,7 @@ None
 ## Milestones
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-01-17
-- 🚧 **v2.0 Mobile & Messaging** — Phases 11-14 (in progress)
+- 🚧 **v2.0 Mobile & Messaging** — Phases 11-16 (in progress)
 
 ## Phases
 
@@ -33,7 +33,7 @@ None
 
 ### 🚧 v2.0 Mobile & Messaging (In Progress)
 
-**Milestone Goal:** Transform ALVIN into a native-like mobile experience with reliable multi-channel notifications
+**Milestone Goal:** Transform ALVIN into a native-like mobile experience with reliable multi-channel notifications, polished UI, and real-time updates
 
 #### Phase 11: PWA Foundation ✓
 
@@ -71,12 +71,32 @@ Plans:
 
 **Goal**: Twilio SMS for user check-in reminders and family escalation alerts (L3-4)
 **Depends on**: Phase 11 (can run in parallel after PWA foundation)
-**Research**: Likely (Twilio API integration)
-**Research topics**: Twilio Node.js SDK, phone number validation, SMS templates
-**Plans**: TBD
+**Research**: Complete (Twilio SDK patterns verified)
+**Status**: Planned (2026-01-21)
 
 Plans:
-- [ ] 14-01: TBD
+- [ ] 14-01: Twilio infrastructure (schema, service, env, unified notifications)
+- [ ] 14-02: Family SMS + cron integration (L3/L4 alerts, reminder fallback)
+
+#### Phase 15: Shadcn UI Refresh
+
+**Goal**: Replace current styling with Shadcn components for a polished, consistent look
+**Depends on**: None (can run in parallel)
+**Research**: Minimal (design-os reference available)
+**Reference**: design-os/src/components/ui/ contains base Shadcn components
+
+Plans:
+- [ ] 15-01: TBD
+
+#### Phase 16: Convex Real-time Dashboard
+
+**Goal**: Live updates for activity log, alerts, and status without page refresh
+**Depends on**: Phase 15 recommended (UI should be stable first)
+**Research**: Likely (Convex React integration, subscriptions)
+**Research topics**: Convex queries vs mutations, real-time subscriptions, migration strategy
+
+Plans:
+- [ ] 16-01: TBD
 
 ## Progress
 
@@ -102,6 +122,8 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 11. PWA Foundation | v2.0 | 2/2 | Complete | 2026-01-17 |
-| 12. Push Notifications | v2.0 | 2/4 | In progress | - |
-| 13. Offline Caching | v2.0 | 0/? | Not started | - |
-| 14. SMS Integration | v2.0 | 0/? | Not started | - |
+| 12. Push Notifications | v2.0 | 4/4 | Complete | 2026-01-19 |
+| 13. Offline Caching | v2.0 | 1/1 | Complete | 2026-01-21 |
+| 14. SMS Integration | v2.0 | 0/2 | Planned | - |
+| 15. Shadcn UI Refresh | v2.0 | 0/? | Not started | - |
+| 16. Convex Real-time | v2.0 | 0/? | Not started | - |
