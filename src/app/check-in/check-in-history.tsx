@@ -1,6 +1,8 @@
 "use client";
 
 import { api } from "~/trpc/react";
+import { Card, CardContent } from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();
@@ -26,13 +28,13 @@ function formatRelativeTime(date: Date): string {
 function getMethodBadgeColor(method: string): string {
   switch (method) {
     case "MANUAL":
-      return "bg-blue-600";
+      return "bg-blue-600 text-white";
     case "BIOMETRIC":
-      return "bg-purple-600";
+      return "bg-purple-600 text-white";
     case "CONVERSATION":
-      return "bg-green-600";
+      return "bg-green-600 text-white";
     default:
-      return "bg-gray-600";
+      return "bg-gray-600 text-white";
   }
 }
 
@@ -54,7 +56,7 @@ export function CheckInHistory() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md text-center text-white/70">
+      <div className="w-full max-w-md text-center text-muted-foreground">
         Loading history...
       </div>
     );
@@ -62,7 +64,7 @@ export function CheckInHistory() {
 
   if (!checkIns || checkIns.length === 0) {
     return (
-      <div className="w-full max-w-md text-center text-white/70">
+      <div className="w-full max-w-md text-center text-muted-foreground">
         No check-ins yet. Press the button above to check in!
       </div>
     );
@@ -77,24 +79,22 @@ export function CheckInHistory() {
           return (
             <li
               key={checkIn.id}
-              className="flex items-center justify-between rounded-lg bg-white/10 p-3"
+              className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
             >
               <div className="flex flex-col">
-                <span className="text-white">
+                <span className="text-foreground">
                   {formatRelativeTime(performedAt)}
                 </span>
                 <span
-                  className="text-sm text-white/60"
+                  className="text-sm text-muted-foreground"
                   title={performedAt.toLocaleString()}
                 >
                   {performedAt.toLocaleString()}
                 </span>
               </div>
-              <span
-                className={`rounded-full px-3 py-1 text-sm font-medium text-white ${getMethodBadgeColor(checkIn.method)}`}
-              >
+              <Badge className={getMethodBadgeColor(checkIn.method)}>
                 {formatMethodLabel(checkIn.method)}
-              </span>
+              </Badge>
             </li>
           );
         })}

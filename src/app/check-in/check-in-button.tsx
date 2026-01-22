@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { startAuthentication } from "@simplewebauthn/browser";
 import Link from "next/link";
 import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
 
 export function CheckInButton() {
   const [showSuccess, setShowSuccess] = useState(false);
@@ -149,12 +150,9 @@ export function CheckInButton() {
 
       {/* Setup Biometric Link (only shown if no passkeys) */}
       {hasPasskeys === false && (
-        <Link
-          href="/profile/passkeys"
-          className="text-sm text-white/70 hover:text-white hover:underline"
-        >
-          Set up biometric check-in &rarr;
-        </Link>
+        <Button asChild variant="link" className="text-sm">
+          <Link href="/profile/passkeys">Set up biometric check-in &rarr;</Link>
+        </Button>
       )}
     </div>
   );
