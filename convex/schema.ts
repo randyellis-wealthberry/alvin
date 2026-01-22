@@ -28,7 +28,7 @@ export default defineSchema({
         v.literal("L2"),
         v.literal("L3"),
         v.literal("L4"),
-        v.null_()
+        v.null()
       )
     ),
     alertTriggeredAt: v.optional(v.number()), // Unix timestamp
