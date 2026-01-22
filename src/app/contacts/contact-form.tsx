@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Select } from "~/components/ui/select";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 
 const RELATIONSHIP_OPTIONS = [
   "spouse",
@@ -107,164 +113,138 @@ export function ContactForm({ contact, onClose }: ContactFormProps) {
   const isPending = createContact.isPending || updateContact.isPending;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex w-full flex-col gap-6 rounded-xl bg-white/10 p-8"
-    >
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">
-          {isEditing ? "Edit Contact" : "Add New Contact"}
-        </h2>
-        <button
-          type="button"
-          onClick={onClose}
-          className="text-white/50 transition hover:text-white"
-        >
+    <Card className="w-full">
+      <CardHeader className="flex-row items-center justify-between">
+        <CardTitle>{isEditing ? "Edit Contact" : "Add New Contact"}</CardTitle>
+        <Button variant="ghost" type="button" onClick={onClose}>
           Cancel
-        </button>
-      </div>
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {/* Name */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="name">Name *</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="John Doe"
+            />
+          </div>
 
-      {/* Name */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="name" className="text-sm font-medium">
-          Name *
-        </label>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="rounded-lg bg-white/10 px-4 py-2 text-white placeholder:text-white/50"
-          placeholder="John Doe"
-        />
-      </div>
+          {/* Email */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="email">Email *</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="john@example.com"
+            />
+          </div>
 
-      {/* Email */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="text-sm font-medium">
-          Email *
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="rounded-lg bg-white/10 px-4 py-2 text-white placeholder:text-white/50"
-          placeholder="john@example.com"
-        />
-      </div>
+          {/* Phone */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="phone">Phone (optional)</Label>
+            <Input
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1 (555) 123-4567"
+            />
+          </div>
 
-      {/* Phone */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="phone" className="text-sm font-medium">
-          Phone (optional)
-        </label>
-        <input
-          id="phone"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="rounded-lg bg-white/10 px-4 py-2 text-white placeholder:text-white/50"
-          placeholder="+1 (555) 123-4567"
-        />
-      </div>
+          {/* Relationship */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="relationship">Relationship (optional)</Label>
+            <Select
+              id="relationship"
+              value={relationship}
+              onChange={(e) => setRelationship(e.target.value)}
+            >
+              <option value="">Select relationship</option>
+              {RELATIONSHIP_OPTIONS.map((rel) => (
+                <option key={rel} value={rel}>
+                  {rel.charAt(0).toUpperCase() + rel.slice(1)}
+                </option>
+              ))}
+            </Select>
+          </div>
 
-      {/* Relationship */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="relationship" className="text-sm font-medium">
-          Relationship (optional)
-        </label>
-        <select
-          id="relationship"
-          value={relationship}
-          onChange={(e) => setRelationship(e.target.value)}
-          className="rounded-lg bg-white/10 px-4 py-2 text-white"
-        >
-          <option value="" className="bg-[#15162c]">
-            Select relationship
-          </option>
-          {RELATIONSHIP_OPTIONS.map((rel) => (
-            <option key={rel} value={rel} className="bg-[#15162c] capitalize">
-              {rel.charAt(0).toUpperCase() + rel.slice(1)}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* Priority */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="priority">Priority</Label>
+            <Input
+              id="priority"
+              type="number"
+              min={1}
+              value={priority}
+              onChange={(e) => setPriority(Number(e.target.value))}
+            />
+            <p className="text-xs text-muted-foreground">
+              Lower number = notified first (1 is highest priority)
+            </p>
+          </div>
 
-      {/* Priority */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="priority" className="text-sm font-medium">
-          Priority
-        </label>
-        <input
-          id="priority"
-          type="number"
-          min={1}
-          value={priority}
-          onChange={(e) => setPriority(Number(e.target.value))}
-          className="rounded-lg bg-white/10 px-4 py-2 text-white"
-        />
-        <p className="text-xs text-white/50">
-          Lower number = notified first (1 is highest priority)
-        </p>
-      </div>
+          {/* Notification Preferences */}
+          <div className="flex flex-col gap-3">
+            <p className="text-sm font-medium">Notification Preferences</p>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="notifyByEmail"
+                checked={notifyByEmail}
+                onCheckedChange={(checked) =>
+                  setNotifyByEmail(checked === true)
+                }
+              />
+              <Label htmlFor="notifyByEmail" className="font-normal">
+                Notify by email
+              </Label>
+            </div>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="notifyBySms"
+                checked={notifyBySms}
+                onCheckedChange={(checked) => setNotifyBySms(checked === true)}
+                disabled
+              />
+              <Label
+                htmlFor="notifyBySms"
+                className="font-normal text-muted-foreground"
+              >
+                Notify by SMS (coming soon)
+              </Label>
+            </div>
+          </div>
 
-      {/* Notification Preferences */}
-      <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium">Notification Preferences</p>
-        <div className="flex items-center gap-3">
-          <input
-            id="notifyByEmail"
-            type="checkbox"
-            checked={notifyByEmail}
-            onChange={(e) => setNotifyByEmail(e.target.checked)}
-            className="h-5 w-5 rounded bg-white/10"
-          />
-          <label htmlFor="notifyByEmail" className="text-sm">
-            Notify by email
-          </label>
-        </div>
-        <div className="flex items-center gap-3">
-          <input
-            id="notifyBySms"
-            type="checkbox"
-            checked={notifyBySms}
-            onChange={(e) => setNotifyBySms(e.target.checked)}
-            disabled
-            className="h-5 w-5 rounded bg-white/10 opacity-50"
-          />
-          <label htmlFor="notifyBySms" className="text-sm text-white/50">
-            Notify by SMS (coming soon)
-          </label>
-        </div>
-      </div>
+          {/* Feedback Messages */}
+          {successMessage && (
+            <p className="rounded-lg bg-green-500/20 px-4 py-2 text-sm text-green-600 dark:text-green-400">
+              {successMessage}
+            </p>
+          )}
+          {errorMessage && (
+            <p className="rounded-lg bg-destructive/20 px-4 py-2 text-sm text-destructive">
+              {errorMessage}
+            </p>
+          )}
 
-      {/* Feedback Messages */}
-      {successMessage && (
-        <p className="rounded-lg bg-green-500/20 px-4 py-2 text-sm text-green-300">
-          {successMessage}
-        </p>
-      )}
-      {errorMessage && (
-        <p className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-300">
-          {errorMessage}
-        </p>
-      )}
-
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={isPending}
-        className="rounded-full bg-white/20 px-6 py-3 font-semibold transition hover:bg-white/30 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {isPending
-          ? "Saving..."
-          : isEditing
-            ? "Update Contact"
-            : "Add Contact"}
-      </button>
-    </form>
+          {/* Submit Button */}
+          <Button type="submit" disabled={isPending}>
+            {isPending
+              ? "Saving..."
+              : isEditing
+                ? "Update Contact"
+                : "Add Contact"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
