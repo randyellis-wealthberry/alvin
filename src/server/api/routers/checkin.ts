@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { ACTIVE_LEVELS } from "~/lib/alerts/escalation";
+import { syncActivity, syncUserStatus } from "~/lib/convex/sync";
 
 export const checkInRouter = createTRPCRouter({
   record: protectedProcedure.mutation(async ({ ctx }) => {
@@ -57,6 +58,30 @@ export const checkInRouter = createTRPCRouter({
 
       return newCheckIn;
     });
+
+    // Sync to Convex for real-time updates (non-critical)
+    try {
+      // Calculate next due time based on check-in frequency
+      const nextDue = new Date(
+        now.getTime() + profile.checkInFrequencyHours * 60 * 60 * 1000
+      );
+
+      await syncActivity({
+        userId: ctx.session.user.id,
+        type: "check-in",
+        description: "Manual check-in completed",
+        timestamp: now,
+      });
+
+      await syncUserStatus({
+        userId: ctx.session.user.id,
+        lastCheckIn: now,
+        nextDue,
+        alertLevel: null, // Check-in clears any alerts
+      });
+    } catch (e) {
+      console.error("Convex sync failed (non-critical):", e);
+    }
 
     return checkIn;
   }),
