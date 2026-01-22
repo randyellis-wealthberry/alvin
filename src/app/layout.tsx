@@ -1,10 +1,14 @@
 import "~/styles/globals.css";
 
 import { type Metadata, type Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { ConvexClientProvider } from "~/components/convex-provider";
 import { InstallPrompt, IOSInstallInstructions } from "~/components/pwa";
+import { cn } from "~/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   applicationName: "ALVIN",
@@ -28,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2e026d",
+  themeColor: "#1c1917", // stone-900 - matches dark mode theme
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -43,9 +47,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={cn(geist.variable, inter.variable)}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <ConvexClientProvider>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </ConvexClientProvider>
         <InstallPrompt />
         <IOSInstallInstructions />
       </body>
