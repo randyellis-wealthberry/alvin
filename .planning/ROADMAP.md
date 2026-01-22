@@ -99,7 +99,9 @@ Plans:
 **Research topics**: Convex queries vs mutations, real-time subscriptions, migration strategy
 
 Plans:
-- [ ] 16-01: TBD
+- [x] 16-01: Convex schema & sync utility (schema, queries, mutations, sync)
+- [x] 16-02: Real-time dashboard integration (activity log subscription, write-through sync)
+- [ ] 16-03: Status component integration (user status subscription)
 
 ## Progress
 
@@ -128,5 +130,5 @@ Plans:
 | 12. Push Notifications | v2.0 | 4/4 | Complete | 2026-01-19 |
 | 13. Offline Caching | v2.0 | 1/1 | Complete | 2026-01-21 |
 | 14. SMS Integration | v2.0 | 2/2 | Complete | 2026-01-21 |
-| 15. Shadcn UI Refresh | v2.0 | 1/4 | In progress | - |
-| 16. Convex Real-time | v2.0 | 0/? | Not started | - |
+| 15. Shadcn UI Refresh | v2.0 | 4/4 | Complete | 2026-01-22 |
+| 16. Convex Real-time | v2.0 | 2/3 | In progress | - |
