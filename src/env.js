@@ -23,6 +23,10 @@ export const env = createEnv({
     // Generate with: npx web-push generate-vapid-keys --json
     VAPID_PRIVATE_KEY: z.string().min(1),
     VAPID_CONTACT_EMAIL: z.string().email(), // Used in VAPID "subject" field
+    // Twilio SMS - Get from https://console.twilio.com
+    TWILIO_ACCOUNT_SID: z.string().optional(),
+    TWILIO_AUTH_TOKEN: z.string().optional(),
+    TWILIO_PHONE_NUMBER: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -54,6 +58,10 @@ export const env = createEnv({
     VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY,
     VAPID_CONTACT_EMAIL: process.env.VAPID_CONTACT_EMAIL,
     NEXT_PUBLIC_VAPID_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+    // Twilio SMS
+    TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+    TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**

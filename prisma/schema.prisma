@@ -88,6 +88,8 @@ model UserProfile {
     checkInFrequencyHours Int      @default(24)
     preferredCheckInTime  String?  // "HH:MM" format
     timezone              String   @default("UTC")
+    // Phone number for SMS notifications (E.164 format)
+    phone                 String?
 
     // Status
     isActive       Boolean   @default(true)
