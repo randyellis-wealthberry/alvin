@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { startRegistration } from "@simplewebauthn/browser";
 import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 
 export function PasskeySetup() {
   const [passkeys] = api.passkey.list.useSuspenseQuery();
@@ -105,80 +109,84 @@ export function PasskeySetup() {
   return (
     <div className="w-full max-w-md space-y-6">
       {/* Add Passkey Form */}
-      <div className="rounded-xl bg-white/10 p-6">
-        <h2 className="mb-4 text-xl font-semibold">Add New Passkey</h2>
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="passkey-name" className="block text-sm font-medium text-white/70">
-              Passkey Name (optional)
-            </label>
-            <input
+      <Card>
+        <CardHeader>
+          <CardTitle>Add New Passkey</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="passkey-name">Passkey Name (optional)</Label>
+            <Input
               id="passkey-name"
               type="text"
               value={passkeyName}
               onChange={(e) => setPasskeyName(e.target.value)}
               placeholder="e.g., MacBook TouchID"
-              className="mt-1 w-full rounded-lg bg-white/10 px-4 py-2 text-white placeholder:text-white/50"
               disabled={isRegistering}
             />
           </div>
-          <button
+          <Button
             onClick={handleAddPasskey}
             disabled={isRegistering || generateRegOptions.isPending || verifyRegistration.isPending}
-            className="w-full rounded-full bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full"
           >
             {isRegistering ? "Registering..." : "Add Passkey"}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Feedback Messages */}
       {error && (
-        <div className="rounded-lg bg-red-500/20 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
           {error}
         </div>
       )}
       {success && (
-        <div className="rounded-lg bg-green-500/20 px-4 py-3 text-sm text-green-300">
+        <div className="rounded-lg bg-green-500/10 px-4 py-3 text-sm text-green-600 dark:text-green-400">
           {success}
         </div>
       )}
 
       {/* Registered Passkeys List */}
-      <div className="rounded-xl bg-white/10 p-6">
-        <h2 className="mb-4 text-xl font-semibold">Registered Passkeys</h2>
-        {passkeys.length === 0 ? (
-          <p className="text-white/50">
-            No passkeys registered yet. Add one above to enable biometric check-ins.
-          </p>
-        ) : (
-          <ul className="space-y-3">
-            {passkeys.map((passkey) => (
-              <li
-                key={passkey.id}
-                className="flex items-center justify-between rounded-lg bg-white/5 px-4 py-3"
-              >
-                <div>
-                  <p className="font-medium">
-                    {passkey.name ?? "Unnamed Passkey"}
-                  </p>
-                  <p className="text-sm text-white/50">
-                    {formatDeviceType(passkey.deviceType)} &bull;{" "}
-                    {formatDate(passkey.createdAt)}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleDeletePasskey(passkey.id)}
-                  disabled={deletePasskey.isPending}
-                  className="rounded-lg bg-red-500/20 px-3 py-1 text-sm text-red-300 transition hover:bg-red-500/30 disabled:opacity-50"
+      <Card>
+        <CardHeader>
+          <CardTitle>Registered Passkeys</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {passkeys.length === 0 ? (
+            <p className="text-muted-foreground">
+              No passkeys registered yet. Add one above to enable biometric check-ins.
+            </p>
+          ) : (
+            <ul className="space-y-3">
+              {passkeys.map((passkey) => (
+                <li
+                  key={passkey.id}
+                  className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3"
                 >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                  <div>
+                    <p className="font-medium">
+                      {passkey.name ?? "Unnamed Passkey"}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {formatDeviceType(passkey.deviceType)} &bull;{" "}
+                      {formatDate(passkey.createdAt)}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleDeletePasskey(passkey.id)}
+                    disabled={deletePasskey.isPending}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    Delete
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
