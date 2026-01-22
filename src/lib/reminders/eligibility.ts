@@ -3,6 +3,7 @@ import { db } from "~/server/db";
 export interface UserNeedingReminder {
   userId: string;
   email: string | null;
+  phone: string | null; // E.164 format for SMS fallback
   name: string | null;
   profileId: string;
   lastCheckInAt: Date | null;
@@ -149,6 +150,7 @@ export async function findUsersNeedingReminders(): Promise<
       usersNeedingReminders.push({
         userId: profile.user.id,
         email: profile.user.email,
+        phone: profile.phone,
         name: profile.user.name,
         profileId: profile.id,
         lastCheckInAt: profile.lastCheckInAt,
