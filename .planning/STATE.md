@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-17)
 
 ## Current Position
 
-Phase: 14 of 16 (SMS Integration) — COMPLETE
-Plan: 2 of 2 complete
-Status: Phase complete, ready for Phase 15
-Last activity: 2026-01-21 — Completed 14-02-PLAN.md (Family SMS + cron integration)
+Phase: 15 of 16 (Shadcn UI Refresh) — IN PROGRESS
+Plan: 1 of 4 complete
+Status: In progress
+Last activity: 2026-01-22 — Completed 15-01-PLAN.md (Shadcn CSS + core components)
 
-Progress: ████████████████████████░░░░░░ 67% (Phases 11-14 complete, 2 remaining)
+Progress: █████████████████████████░░░░░ 75% (Phases 11-14 complete, 15 in progress)
 
 ## v2.0 Mobile & Messaging
 
@@ -65,16 +65,16 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-21
-Stopped at: Completed Phase 13 (Offline Caching)
+Last session: 2026-01-22
+Stopped at: Completed 15-01-PLAN.md (Shadcn CSS + core components)
 Resume file: None
 
 ## Next Steps
 
-1. **Plan Phase 15** — Shadcn UI Refresh (`/gsd:plan-phase 15`)
-2. **Execute Phase 15** — Shadcn component migration
-3. **Plan Phase 16** — Convex Real-time Dashboard (`/gsd:plan-phase 16`)
-4. **Plan Phase 16** — Convex Real-time Dashboard (`/gsd:plan-phase 16`)
+1. **Execute 15-02-PLAN.md** — Form components (Dialog, Select, Textarea, Checkbox)
+2. **Execute 15-03-PLAN.md** — Feedback components
+3. **Execute 15-04-PLAN.md** — Migrate existing UI to Shadcn
+4. **Plan Phase 16** — Convex Real-time Dashboard
 5. **Complete v2.0 milestone**
 
 ### Roadmap Evolution

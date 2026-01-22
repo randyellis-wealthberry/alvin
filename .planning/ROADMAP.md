@@ -86,7 +86,10 @@ Plans:
 **Reference**: design-os/src/components/ui/ contains base Shadcn components
 
 Plans:
-- [ ] 15-01: TBD
+- [x] 15-01: Shadcn CSS + core components (Button, Input, Label, Card)
+- [ ] 15-02: Form components (Dialog, Select, Textarea, Checkbox)
+- [ ] 15-03: Feedback components (Alert, Badge, Skeleton, Tooltip)
+- [ ] 15-04: Migrate existing UI to Shadcn components
 
 #### Phase 16: Convex Real-time Dashboard
 
@@ -125,5 +128,5 @@ Plans:
 | 12. Push Notifications | v2.0 | 4/4 | Complete | 2026-01-19 |
 | 13. Offline Caching | v2.0 | 1/1 | Complete | 2026-01-21 |
 | 14. SMS Integration | v2.0 | 2/2 | Complete | 2026-01-21 |
-| 15. Shadcn UI Refresh | v2.0 | 0/? | Not started | - |
+| 15. Shadcn UI Refresh | v2.0 | 1/4 | In progress | - |
 | 16. Convex Real-time | v2.0 | 0/? | Not started | - |
