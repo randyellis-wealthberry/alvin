@@ -101,7 +101,7 @@ Plans:
 Plans:
 - [x] 16-01: Convex schema & sync utility (schema, queries, mutations, sync)
 - [x] 16-02: Real-time dashboard integration (activity log subscription, write-through sync)
-- [ ] 16-03: Status component integration (user status subscription)
+- [x] 16-03: Status component integration (user status subscription)
 
 ## Progress
 
@@ -131,4 +131,4 @@ Plans:
 | 13. Offline Caching | v2.0 | 1/1 | Complete | 2026-01-21 |
 | 14. SMS Integration | v2.0 | 2/2 | Complete | 2026-01-21 |
 | 15. Shadcn UI Refresh | v2.0 | 4/4 | Complete | 2026-01-22 |
-| 16. Convex Real-time | v2.0 | 2/3 | In progress | - |
+| 16. Convex Real-time | v2.0 | 3/3 | Complete | 2026-01-22 |
