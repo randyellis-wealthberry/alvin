@@ -13,6 +13,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { redis } from "~/lib/redis";
 
 // WebAuthn Relying Party (RP) configuration
 // In production, these should come from environment variables
@@ -20,33 +21,34 @@ const rpName = "ALVIN";
 const rpID = process.env.WEBAUTHN_RP_ID ?? "localhost";
 const origin = process.env.WEBAUTHN_ORIGIN ?? `http://${rpID}:3000`;
 
-// Challenge storage (in-memory for MVP, would use Redis in production)
-// Challenges expire after 5 minutes
+// WebAuthn challenge storage with 5-minute TTL
+const CHALLENGE_TTL = 300; // 5 minutes in seconds
+
 interface StoredChallenge {
   challenge: string;
   userProfileId: string;
-  expiresAt: Date;
 }
 
-const challengeStore = new Map<string, StoredChallenge>();
+async function storeChallenge(
+  challenge: string,
+  userProfileId: string,
+): Promise<void> {
+  await redis.set(
+    `webauthn:challenge:${userProfileId}`,
+    { challenge, userProfileId },
+    { ex: CHALLENGE_TTL },
+  );
+}
 
-// Clean up expired challenges periodically
-function cleanupExpiredChallenges() {
-  const now = new Date();
-  for (const [key, value] of challengeStore.entries()) {
-    if (value.expiresAt < now) {
-      challengeStore.delete(key);
-    }
+async function getAndDeleteChallenge(
+  userProfileId: string,
+): Promise<StoredChallenge | null> {
+  const key = `webauthn:challenge:${userProfileId}`;
+  const stored = await redis.get<StoredChallenge>(key);
+  if (stored) {
+    await redis.del(key);
   }
-}
-
-// Run cleanup every minute
-setInterval(cleanupExpiredChallenges, 60000);
-
-// Helper to store challenge with 5-minute expiry
-function storeChallenge(challenge: string, userProfileId: string): void {
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-  challengeStore.set(challenge, { challenge, userProfileId, expiresAt });
+  return stored;
 }
 
 // Helper to generate a WebAuthn user ID (random bytes encoded as base64url)
@@ -169,8 +171,8 @@ export const passkeyRouter = createTRPCRouter({
       attestationType: "none",
     });
 
-    // Store challenge for verification
-    storeChallenge(options.challenge, profile.id);
+    // Store challenge for verification in Redis
+    await storeChallenge(options.challenge, profile.id);
 
     // Return options with webAuthnUserID for client to pass back during verification
     return {
@@ -202,16 +204,8 @@ export const passkeyRouter = createTRPCRouter({
 
       const response = input.response as RegistrationResponseJSON;
 
-      // Find the stored challenge for this user
-      let foundChallenge: StoredChallenge | undefined;
-      for (const [, stored] of challengeStore.entries()) {
-        if (stored.userProfileId === profile.id) {
-          foundChallenge = stored;
-          challengeStore.delete(stored.challenge);
-          break;
-        }
-      }
-
+      // Get and delete the stored challenge from Redis
+      const foundChallenge = await getAndDeleteChallenge(profile.id);
       if (!foundChallenge) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -305,8 +299,8 @@ export const passkeyRouter = createTRPCRouter({
         userVerification: "preferred",
       });
 
-      // Store challenge for verification
-      storeChallenge(options.challenge, profile.id);
+      // Store challenge for verification in Redis
+      await storeChallenge(options.challenge, profile.id);
 
       return options;
     },
@@ -346,16 +340,8 @@ export const passkeyRouter = createTRPCRouter({
         });
       }
 
-      // Find the stored challenge for this user
-      let foundChallenge: StoredChallenge | undefined;
-      for (const [, stored] of challengeStore.entries()) {
-        if (stored.userProfileId === profile.id) {
-          foundChallenge = stored;
-          challengeStore.delete(stored.challenge);
-          break;
-        }
-      }
-
+      // Get and delete the stored challenge from Redis
+      const foundChallenge = await getAndDeleteChallenge(profile.id);
       if (!foundChallenge) {
         throw new TRPCError({
           code: "BAD_REQUEST",

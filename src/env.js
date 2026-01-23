@@ -16,6 +16,9 @@ export const env = createEnv({
     // Direct connection URL for Prisma migrations (bypasses Vercel connection pooling)
     DATABASE_URL_UNPOOLED: z.string().optional(),
     ANTHROPIC_API_KEY: z.string(),
+    // Upstash Redis - Get from https://console.upstash.com
+    UPSTASH_REDIS_REST_URL: z.string().url(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
     CRON_SECRET: z.string().min(1),
     // RESEND_API_KEY - Get from https://resend.com/api-keys
     // Optional in development; required in production for email delivery
@@ -52,6 +55,9 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    // Upstash Redis
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     CRON_SECRET: process.env.CRON_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     // VAPID keys for Web Push
