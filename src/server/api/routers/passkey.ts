@@ -251,7 +251,8 @@ export const passkeyRouter = createTRPCRouter({
       } = verification.registrationInfo;
 
       // Convert Uint8Array credentialID to base64url string for storage
-      const credentialIDString = Buffer.from(credentialID).toString("base64url");
+      const credentialIDString =
+        Buffer.from(credentialID).toString("base64url");
 
       // Save the passkey to the database
       await ctx.db.passkey.create({
@@ -263,9 +264,7 @@ export const passkeyRouter = createTRPCRouter({
           counter: BigInt(counter),
           deviceType: credentialDeviceType,
           backedUp: credentialBackedUp,
-          transports: transportsToString(
-            response.response.transports,
-          ),
+          transports: transportsToString(response.response.transports),
           name: input.name ?? null,
         },
       });
@@ -274,42 +273,44 @@ export const passkeyRouter = createTRPCRouter({
     }),
 
   // Generate authentication options for biometric check-in
-  generateAuthenticationOptions: protectedProcedure.mutation(async ({ ctx }) => {
-    const profile = await ctx.db.userProfile.findUnique({
-      where: { userId: ctx.session.user.id },
-      include: {
-        passkeys: {
-          select: {
-            id: true,
-            transports: true,
+  generateAuthenticationOptions: protectedProcedure.mutation(
+    async ({ ctx }) => {
+      const profile = await ctx.db.userProfile.findUnique({
+        where: { userId: ctx.session.user.id },
+        include: {
+          passkeys: {
+            select: {
+              id: true,
+              transports: true,
+            },
           },
         },
-      },
-    });
-
-    if (!profile || profile.passkeys.length === 0) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "No passkeys registered. Please register a passkey first.",
       });
-    }
 
-    const options = await generateAuthenticationOptions({
-      rpID,
-      // Allow credentials
-      allowCredentials: profile.passkeys.map((passkey) => ({
-        id: base64URLToUint8Array(passkey.id),
-        type: "public-key" as const,
-        transports: stringToTransports(passkey.transports),
-      })),
-      userVerification: "preferred",
-    });
+      if (!profile || profile.passkeys.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No passkeys registered. Please register a passkey first.",
+        });
+      }
 
-    // Store challenge for verification
-    storeChallenge(options.challenge, profile.id);
+      const options = await generateAuthenticationOptions({
+        rpID,
+        // Allow credentials
+        allowCredentials: profile.passkeys.map((passkey) => ({
+          id: base64URLToUint8Array(passkey.id),
+          type: "public-key" as const,
+          transports: stringToTransports(passkey.transports),
+        })),
+        userVerification: "preferred",
+      });
 
-    return options;
-  }),
+      // Store challenge for verification
+      storeChallenge(options.challenge, profile.id);
+
+      return options;
+    },
+  ),
 
   // Verify authentication response and record biometric check-in
   verifyAuthentication: protectedProcedure

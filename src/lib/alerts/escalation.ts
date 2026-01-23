@@ -81,7 +81,7 @@ export function shouldCreateAlert(
     preferredCheckInTime: string | null;
     timezone: string;
   },
-  existingAlerts: Array<{ level: string }>
+  existingAlerts: Array<{ level: string }>,
 ): boolean {
   // Calculate when the next check-in is due
   const nextDue = calculateNextCheckInDue(profile);
@@ -94,7 +94,7 @@ export function shouldCreateAlert(
 
   // Check if there's already an active alert
   const hasActiveAlert = existingAlerts.some((alert) =>
-    ACTIVE_LEVELS.includes(alert.level)
+    ACTIVE_LEVELS.includes(alert.level),
   );
 
   return !hasActiveAlert;
@@ -117,7 +117,7 @@ export function shouldEscalate(
     triggeredAt: Date;
     lastEscalatedAt: Date | null;
   },
-  now: Date = new Date()
+  now: Date = new Date(),
 ): boolean {
   // Terminal states cannot be escalated
   if (

@@ -8,7 +8,7 @@ export default defineSchema({
     type: v.union(
       v.literal("check-in"),
       v.literal("alert"),
-      v.literal("conversation")
+      v.literal("conversation"),
     ),
     description: v.string(),
     timestamp: v.number(), // Unix timestamp ms
@@ -28,8 +28,8 @@ export default defineSchema({
         v.literal("L2"),
         v.literal("L3"),
         v.literal("L4"),
-        v.null()
-      )
+        v.null(),
+      ),
     ),
     alertTriggeredAt: v.optional(v.number()), // Unix timestamp
   }).index("by_user", ["userId"]),

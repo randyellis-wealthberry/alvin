@@ -17,7 +17,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background text-foreground">
+    <div className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center gap-4">
       <h2 className="text-2xl font-semibold">Something went wrong</h2>
       <p className="text-muted-foreground">
         {process.env.NODE_ENV === "development"

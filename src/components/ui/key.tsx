@@ -36,7 +36,7 @@ const KeyIcon = forwardRef<KeyIconHandle, KeyIconProps>(
           void controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -47,7 +47,7 @@ const KeyIcon = forwardRef<KeyIconHandle, KeyIconProps>(
           void controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
 
     return (
@@ -96,7 +96,7 @@ const KeyIcon = forwardRef<KeyIconHandle, KeyIconProps>(
         </motion.svg>
       </div>
     );
-  }
+  },
 );
 
 KeyIcon.displayName = "KeyIcon";

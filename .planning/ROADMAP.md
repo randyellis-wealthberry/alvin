@@ -84,12 +84,11 @@ None
 
 **Goal**: Move WebAuthn challenges and sessions from in-memory to Redis for horizontal scaling
 **Depends on**: Previous milestone complete
-**Research**: Likely (Upstash Redis, NextAuth adapters)
-**Research topics**: Upstash setup, NextAuth Redis adapter, WebAuthn challenge storage patterns
-**Plans**: TBD
+**Research**: Complete (Upstash Redis patterns via Context7)
+**Plans**: 1
 
 Plans:
-- [ ] 17-01: TBD (run /gsd:plan-phase 17 to break down)
+- [ ] 17-01: Set up Upstash Redis client and migrate WebAuthn challenge store
 
 #### Phase 18: OAuth Providers
 

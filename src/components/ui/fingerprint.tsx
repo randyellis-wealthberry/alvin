@@ -52,7 +52,7 @@ const FingerprintIcon = forwardRef<FingerprintIconHandle, FingerprintIconProps>(
           void controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -63,7 +63,7 @@ const FingerprintIcon = forwardRef<FingerprintIconHandle, FingerprintIconProps>(
           void controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
 
     return (
@@ -189,7 +189,7 @@ const FingerprintIcon = forwardRef<FingerprintIconHandle, FingerprintIconProps>(
         </svg>
       </div>
     );
-  }
+  },
 );
 
 FingerprintIcon.displayName = "FingerprintIcon";

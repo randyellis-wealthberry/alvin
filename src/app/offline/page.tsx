@@ -5,12 +5,12 @@ import { Card } from "~/components/ui/card";
 
 export default function OfflinePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-foreground">
+    <main className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center px-4">
       <div className="flex flex-col items-center gap-6 text-center">
         {/* Offline icon */}
         <Card className="rounded-full p-6">
           <svg
-            className="h-16 w-16 text-muted-foreground"
+            className="text-muted-foreground h-16 w-16"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -30,7 +30,7 @@ export default function OfflinePage() {
         </h1>
 
         {/* Message */}
-        <p className="max-w-md text-lg text-muted-foreground">
+        <p className="text-muted-foreground max-w-md text-lg">
           ALVIN needs an internet connection to check in and monitor your
           wellness. Please reconnect to continue.
         </p>
@@ -45,7 +45,7 @@ export default function OfflinePage() {
         </Button>
 
         {/* Tip */}
-        <p className="mt-8 text-sm text-muted-foreground/70">
+        <p className="text-muted-foreground/70 mt-8 text-sm">
           Tip: Your check-in history is cached for offline viewing
         </p>
       </div>

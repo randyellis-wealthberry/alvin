@@ -1,48 +1,48 @@
-"use client"
+"use client";
 
-import { Suspense, useState } from "react"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
-import { signIn } from "next-auth/react"
-import { Button } from "~/components/ui/button"
-import { Input } from "~/components/ui/input"
-import { Label } from "~/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
+import { Suspense, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 function SignInForm() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const registered = searchParams.get("registered")
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const registered = searchParams.get("registered");
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError(null)
-    setIsLoading(true)
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
 
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
-    })
+    });
 
-    setIsLoading(false)
+    setIsLoading(false);
 
     if (result?.error) {
-      setError("Invalid email or password")
-      return
+      setError("Invalid email or password");
+      return;
     }
 
-    router.push(callbackUrl)
-    router.refresh()
-  }
+    router.push(callbackUrl);
+    router.refresh();
+  };
 
   return (
     <Card className="w-full max-w-md">
@@ -76,12 +76,12 @@ function SignInForm() {
               required
             />
           </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-destructive text-sm">{error}</p>}
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
-        <p className="mt-4 text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href="/auth/signup" className="text-primary hover:underline">
             Create one
@@ -89,12 +89,12 @@ function SignInForm() {
         </p>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export default function SignInPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background">
+    <main className="bg-background flex min-h-screen items-center justify-center">
       <Suspense
         fallback={
           <Card className="w-full max-w-md">
@@ -103,7 +103,7 @@ export default function SignInPage() {
             </CardHeader>
             <CardContent>
               <div className="flex justify-center py-8">
-                <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
               </div>
             </CardContent>
           </Card>
@@ -112,5 +112,5 @@ export default function SignInPage() {
         <SignInForm />
       </Suspense>
     </main>
-  )
+  );
 }

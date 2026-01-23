@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { api } from "~/trpc/react"
-import { Button } from "~/components/ui/button"
-import { Input } from "~/components/ui/input"
-import { Label } from "~/components/ui/label"
-import { Checkbox } from "~/components/ui/checkbox"
-import { cn } from "~/lib/utils"
+import { useState } from "react";
+import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Checkbox } from "~/components/ui/checkbox";
+import { cn } from "~/lib/utils";
 
 const RELATIONSHIP_OPTIONS = [
   "spouse",
@@ -15,77 +15,77 @@ const RELATIONSHIP_OPTIONS = [
   "parent",
   "friend",
   "other",
-] as const
+] as const;
 
-const PRIORITY_OPTIONS = [1, 2, 3, 4] as const
+const PRIORITY_OPTIONS = [1, 2, 3, 4] as const;
 
 type Contact = {
-  id: string
-  name: string
-  email: string
-  phone: string | null
-  relationship: string | null
-  priority: number
-  notifyByEmail: boolean
-  notifyBySms: boolean
-}
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  relationship: string | null;
+  priority: number;
+  notifyByEmail: boolean;
+  notifyBySms: boolean;
+};
 
 type ContactFormProps = {
-  contact?: Contact
-  onClose: () => void
-}
+  contact?: Contact;
+  onClose: () => void;
+};
 
 export function ContactForm({ contact, onClose }: ContactFormProps) {
-  const utils = api.useUtils()
-  const isEditing = !!contact
+  const utils = api.useUtils();
+  const isEditing = !!contact;
 
-  const [name, setName] = useState(contact?.name ?? "")
-  const [email, setEmail] = useState(contact?.email ?? "")
-  const [phone, setPhone] = useState(contact?.phone ?? "")
-  const [relationship, setRelationship] = useState(contact?.relationship ?? "")
-  const [priority, setPriority] = useState(contact?.priority ?? 1)
+  const [name, setName] = useState(contact?.name ?? "");
+  const [email, setEmail] = useState(contact?.email ?? "");
+  const [phone, setPhone] = useState(contact?.phone ?? "");
+  const [relationship, setRelationship] = useState(contact?.relationship ?? "");
+  const [priority, setPriority] = useState(contact?.priority ?? 1);
   const [notifyByEmail, setNotifyByEmail] = useState(
-    contact?.notifyByEmail ?? true
-  )
-  const [notifyBySms, setNotifyBySms] = useState(contact?.notifyBySms ?? false)
+    contact?.notifyByEmail ?? true,
+  );
+  const [notifyBySms, setNotifyBySms] = useState(contact?.notifyBySms ?? false);
 
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const createContact = api.contact.create.useMutation({
     onSuccess: async () => {
-      await utils.contact.invalidate()
-      setSuccessMessage("Contact added successfully!")
-      setErrorMessage(null)
+      await utils.contact.invalidate();
+      setSuccessMessage("Contact added successfully!");
+      setErrorMessage(null);
       setTimeout(() => {
-        onClose()
-      }, 1000)
+        onClose();
+      }, 1000);
     },
     onError: (err) => {
-      setErrorMessage(err.message || "Failed to add contact")
-      setSuccessMessage(null)
+      setErrorMessage(err.message || "Failed to add contact");
+      setSuccessMessage(null);
     },
-  })
+  });
 
   const updateContact = api.contact.update.useMutation({
     onSuccess: async () => {
-      await utils.contact.invalidate()
-      setSuccessMessage("Contact updated successfully!")
-      setErrorMessage(null)
+      await utils.contact.invalidate();
+      setSuccessMessage("Contact updated successfully!");
+      setErrorMessage(null);
       setTimeout(() => {
-        onClose()
-      }, 1000)
+        onClose();
+      }, 1000);
     },
     onError: (err) => {
-      setErrorMessage(err.message || "Failed to update contact")
-      setSuccessMessage(null)
+      setErrorMessage(err.message || "Failed to update contact");
+      setSuccessMessage(null);
     },
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSuccessMessage(null)
-    setErrorMessage(null)
+    e.preventDefault();
+    setSuccessMessage(null);
+    setErrorMessage(null);
 
     if (isEditing) {
       updateContact.mutate({
@@ -97,7 +97,7 @@ export function ContactForm({ contact, onClose }: ContactFormProps) {
         priority,
         notifyByEmail,
         notifyBySms,
-      })
+      });
     } else {
       createContact.mutate({
         name,
@@ -107,11 +107,11 @@ export function ContactForm({ contact, onClose }: ContactFormProps) {
         priority,
         notifyByEmail,
         notifyBySms,
-      })
+      });
     }
-  }
+  };
 
-  const isPending = createContact.isPending || updateContact.isPending
+  const isPending = createContact.isPending || updateContact.isPending;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -197,7 +197,7 @@ export function ContactForm({ contact, onClose }: ContactFormProps) {
                 "flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors",
                 priority === p
                   ? "bg-violet-600 text-white"
-                  : "bg-white/10 text-white/60 hover:bg-white/20"
+                  : "bg-white/10 text-white/60 hover:bg-white/20",
               )}
             >
               {p}
@@ -217,7 +217,7 @@ export function ContactForm({ contact, onClose }: ContactFormProps) {
             id="notifyByEmail"
             checked={notifyByEmail}
             onCheckedChange={(checked) => setNotifyByEmail(checked === true)}
-            className="border-white/30 data-[state=checked]:bg-violet-600 data-[state=checked]:border-violet-600"
+            className="border-white/30 data-[state=checked]:border-violet-600 data-[state=checked]:bg-violet-600"
           />
           <Label htmlFor="notifyByEmail" className="font-normal text-white/70">
             Notify by email
@@ -231,10 +231,7 @@ export function ContactForm({ contact, onClose }: ContactFormProps) {
             disabled
             className="border-white/20"
           />
-          <Label
-            htmlFor="notifyBySms"
-            className="font-normal text-white/40"
-          >
+          <Label htmlFor="notifyBySms" className="font-normal text-white/40">
             Notify by SMS (coming soon)
           </Label>
         </div>
@@ -275,5 +272,5 @@ export function ContactForm({ contact, onClose }: ContactFormProps) {
         </Button>
       </div>
     </form>
-  )
+  );
 }

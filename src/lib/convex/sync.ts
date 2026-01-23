@@ -25,7 +25,7 @@ async function getApi(): Promise<ConvexApi | null> {
     return module.api;
   } catch {
     console.warn(
-      "[Convex sync] Generated API not available. Run 'npx convex dev' to generate."
+      "[Convex sync] Generated API not available. Run 'npx convex dev' to generate.",
     );
     return null;
   }

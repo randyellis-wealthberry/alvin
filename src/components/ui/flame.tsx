@@ -55,7 +55,7 @@ const FlameIcon = forwardRef<FlameIconHandle, FlameIconProps>(
           void controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -66,7 +66,7 @@ const FlameIcon = forwardRef<FlameIconHandle, FlameIconProps>(
           void controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
 
     return (
@@ -97,7 +97,7 @@ const FlameIcon = forwardRef<FlameIconHandle, FlameIconProps>(
         </svg>
       </div>
     );
-  }
+  },
 );
 
 FlameIcon.displayName = "FlameIcon";

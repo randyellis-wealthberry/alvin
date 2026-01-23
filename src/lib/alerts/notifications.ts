@@ -84,7 +84,7 @@ export function formatLastCheckIn(date: Date | null): string {
  */
 function getEligibleContacts(contacts: Contact[]): Contact[] {
   return contacts.filter(
-    (c) => c.deletedAt === null && c.notifyByEmail && c.email
+    (c) => c.deletedAt === null && c.notifyByEmail && c.email,
   );
 }
 
@@ -101,7 +101,7 @@ function getEligibleContacts(contacts: Contact[]): Contact[] {
  */
 function getEligibleContactsForSms(contacts: Contact[]): Contact[] {
   return contacts.filter(
-    (c) => c.deletedAt === null && c.notifyBySms && c.phone
+    (c) => c.deletedAt === null && c.notifyBySms && c.phone,
   );
 }
 
@@ -121,24 +121,26 @@ function getEligibleContactsForSms(contacts: Contact[]): Contact[] {
 export async function notifyPrimaryContact(
   alert: Alert,
   profile: ProfileWithUser,
-  contacts: Contact[]
+  contacts: Contact[],
 ): Promise<PrimaryNotifyResult> {
   const eligibleContacts = getEligibleContacts(contacts);
   const smsEligibleContacts = getEligibleContactsForSms(contacts);
 
   // Sort by priority (ascending - lower = higher priority) and take first
   const primaryContact = eligibleContacts.sort(
-    (a, b) => a.priority - b.priority
+    (a, b) => a.priority - b.priority,
   )[0];
 
   // Also check if primary contact is SMS-eligible (may be different if no email-eligible contacts)
   const smsPrimaryContact = smsEligibleContacts.sort(
-    (a, b) => a.priority - b.priority
+    (a, b) => a.priority - b.priority,
   )[0];
 
   // If no eligible contacts for either channel, return early
   if (!primaryContact && !smsPrimaryContact) {
-    console.log(`[Notification] Alert ${alert.id}: No eligible primary contact for email or SMS`);
+    console.log(
+      `[Notification] Alert ${alert.id}: No eligible primary contact for email or SMS`,
+    );
     return { success: false, error: "No eligible contact" };
   }
 
@@ -152,7 +154,7 @@ export async function notifyPrimaryContact(
   if (primaryContact && resend) {
     try {
       console.log(
-        `[Notification] Notifying primary contact by email: ${primaryContact.email}`
+        `[Notification] Notifying primary contact by email: ${primaryContact.email}`,
       );
 
       const { error } = await resend.emails.send({
@@ -174,12 +176,12 @@ export async function notifyPrimaryContact(
       if (error) {
         console.error(
           `[Notification] Alert ${alert.id}: Failed to notify ${primaryContact.email}:`,
-          error
+          error,
         );
         emailError = error.message;
       } else {
         console.log(
-          `[Notification] Alert ${alert.id}: Notified primary contact ${primaryContact.email}`
+          `[Notification] Alert ${alert.id}: Notified primary contact ${primaryContact.email}`,
         );
         emailSuccess = true;
       }
@@ -187,12 +189,12 @@ export async function notifyPrimaryContact(
       emailError = err instanceof Error ? err.message : "Unknown error";
       console.error(
         `[Notification] Alert ${alert.id}: Exception notifying ${primaryContact.email}:`,
-        emailError
+        emailError,
       );
     }
   } else if (primaryContact && !resend) {
     console.warn(
-      `[Notification] Alert ${alert.id}: RESEND_API_KEY not configured, skipping email to ${primaryContact.email}`
+      `[Notification] Alert ${alert.id}: RESEND_API_KEY not configured, skipping email to ${primaryContact.email}`,
     );
     emailError = "Email not configured";
   }
@@ -201,21 +203,25 @@ export async function notifyPrimaryContact(
   let smsSuccess = false;
   if (smsPrimaryContact?.phone) {
     console.log(
-      `[Notification] Alert ${alert.id}: Sending SMS to primary contact ${smsPrimaryContact.phone}`
+      `[Notification] Alert ${alert.id}: Sending SMS to primary contact ${smsPrimaryContact.phone}`,
     );
 
-    const smsMessage = SMS_TEMPLATES.L3(smsPrimaryContact.name, userName, lastCheckIn);
+    const smsMessage = SMS_TEMPLATES.L3(
+      smsPrimaryContact.name,
+      userName,
+      lastCheckIn,
+    );
     const smsResult = await sendSMS(smsPrimaryContact.phone, smsMessage);
 
     if (smsResult.success) {
       console.log(
-        `[Notification] Alert ${alert.id}: SMS sent to ${smsPrimaryContact.phone}`
+        `[Notification] Alert ${alert.id}: SMS sent to ${smsPrimaryContact.phone}`,
       );
       smsSuccess = true;
     } else {
       console.error(
         `[Notification] Alert ${alert.id}: SMS failed to ${smsPrimaryContact.phone}:`,
-        smsResult.error
+        smsResult.error,
       );
     }
   }
@@ -247,7 +253,7 @@ export async function notifyPrimaryContact(
 export async function notifyAllContacts(
   alert: Alert,
   profile: ProfileWithUser,
-  contacts: Contact[]
+  contacts: Contact[],
 ): Promise<BatchNotifyResult> {
   const eligibleContacts = getEligibleContacts(contacts);
   const smsEligibleContacts = getEligibleContactsForSms(contacts);
@@ -262,7 +268,7 @@ export async function notifyAllContacts(
   if (eligibleContacts.length > 0 && resend) {
     try {
       console.log(
-        `[Notification] Notifying ${eligibleContacts.length} contacts by email for L4 alert`
+        `[Notification] Notifying ${eligibleContacts.length} contacts by email for L4 alert`,
       );
 
       const emails = eligibleContacts.map((contact) => ({
@@ -286,12 +292,12 @@ export async function notifyAllContacts(
       if (error) {
         console.error(
           `[Notification] Alert ${alert.id}: Batch email send failed:`,
-          error
+          error,
         );
         emailsFailed = eligibleContacts.length;
       } else {
         console.log(
-          `[Notification] Alert ${alert.id}: Sent ${eligibleContacts.length} emails`
+          `[Notification] Alert ${alert.id}: Sent ${eligibleContacts.length} emails`,
         );
         emailsSent = eligibleContacts.length;
       }
@@ -299,23 +305,25 @@ export async function notifyAllContacts(
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
       console.error(
         `[Notification] Alert ${alert.id}: Batch email exception:`,
-        errorMessage
+        errorMessage,
       );
       emailsFailed = eligibleContacts.length;
     }
   } else if (eligibleContacts.length > 0 && !resend) {
     console.warn(
-      `[Notification] Alert ${alert.id}: RESEND_API_KEY not configured, skipping ${eligibleContacts.length} emails`
+      `[Notification] Alert ${alert.id}: RESEND_API_KEY not configured, skipping ${eligibleContacts.length} emails`,
     );
   } else {
-    console.log(`[Notification] Alert ${alert.id}: No email-eligible contacts for L4`);
+    console.log(
+      `[Notification] Alert ${alert.id}: No email-eligible contacts for L4`,
+    );
   }
 
   // Send SMS to all SMS-eligible contacts (supplementary to email)
   let smsSent = 0;
   if (smsEligibleContacts.length > 0) {
     console.log(
-      `[Notification] Alert ${alert.id}: Sending SMS to ${smsEligibleContacts.length} contacts for L4`
+      `[Notification] Alert ${alert.id}: Sending SMS to ${smsEligibleContacts.length} contacts for L4`,
     );
 
     for (const contact of smsEligibleContacts) {
@@ -327,21 +335,23 @@ export async function notifyAllContacts(
       if (smsResult.success) {
         smsSent++;
         console.log(
-          `[Notification] Alert ${alert.id}: SMS sent to ${contact.phone}`
+          `[Notification] Alert ${alert.id}: SMS sent to ${contact.phone}`,
         );
       } else {
         console.error(
           `[Notification] Alert ${alert.id}: SMS failed to ${contact.phone}:`,
-          smsResult.error
+          smsResult.error,
         );
       }
     }
 
     console.log(
-      `[Notification] Alert ${alert.id}: Sent ${smsSent}/${smsEligibleContacts.length} SMS messages`
+      `[Notification] Alert ${alert.id}: Sent ${smsSent}/${smsEligibleContacts.length} SMS messages`,
     );
   } else {
-    console.log(`[Notification] Alert ${alert.id}: No SMS-eligible contacts for L4`);
+    console.log(
+      `[Notification] Alert ${alert.id}: No SMS-eligible contacts for L4`,
+    );
   }
 
   return { sent: emailsSent, failed: emailsFailed, smsSent };

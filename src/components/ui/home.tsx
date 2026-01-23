@@ -54,7 +54,7 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
           void controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -65,7 +65,7 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
           void controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
     return (
       <div
@@ -95,7 +95,7 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
         </svg>
       </div>
     );
-  }
+  },
 );
 
 HomeIcon.displayName = "HomeIcon";

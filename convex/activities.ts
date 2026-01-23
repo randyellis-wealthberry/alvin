@@ -31,7 +31,7 @@ export const addActivity = mutation({
     type: v.union(
       v.literal("check-in"),
       v.literal("alert"),
-      v.literal("conversation")
+      v.literal("conversation"),
     ),
     description: v.string(),
     timestamp: v.number(),

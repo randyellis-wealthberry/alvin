@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Bell, X } from "lucide-react"
-import { api } from "~/trpc/react"
-import { Button } from "~/components/ui/button"
-import { Badge } from "~/components/ui/badge"
-import { Input } from "~/components/ui/input"
+import { useState } from "react";
+import { Bell, X } from "lucide-react";
+import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { Input } from "~/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "~/components/ui/dialog"
-import { cn } from "~/lib/utils"
+} from "~/components/ui/dialog";
+import { cn } from "~/lib/utils";
 
 const LEVEL_STYLES: Record<
   string,
@@ -49,52 +49,52 @@ const LEVEL_STYLES: Record<
     label: "Resolved",
     description: "User checked in",
   },
-}
+};
 
 function formatRelativeTime(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffHours / 24)
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffHours / 24);
 
   if (diffHours < 1) {
-    return "just now"
+    return "just now";
   } else if (diffHours < 24) {
-    return `${diffHours} hour${diffHours === 1 ? "" : "s"} ago`
+    return `${diffHours} hour${diffHours === 1 ? "" : "s"} ago`;
   } else if (diffDays < 7) {
-    return `${diffDays} day${diffDays === 1 ? "" : "s"} ago`
+    return `${diffDays} day${diffDays === 1 ? "" : "s"} ago`;
   } else {
-    return date.toLocaleDateString()
+    return date.toLocaleDateString();
   }
 }
 
 function isActiveLevel(level: string): boolean {
-  return ["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4"].includes(level)
+  return ["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4"].includes(level);
 }
 
 export function AlertList() {
-  const [data] = api.alert.list.useSuspenseQuery()
-  const utils = api.useUtils()
+  const [data] = api.alert.list.useSuspenseQuery();
+  const utils = api.useUtils();
 
-  const [cancelAlertId, setCancelAlertId] = useState<string | null>(null)
-  const [cancelReason, setCancelReason] = useState("")
+  const [cancelAlertId, setCancelAlertId] = useState<string | null>(null);
+  const [cancelReason, setCancelReason] = useState("");
 
   const cancelAlertMutation = api.alert.cancel.useMutation({
     onSuccess: async () => {
-      await utils.alert.invalidate()
-      setCancelAlertId(null)
-      setCancelReason("")
+      await utils.alert.invalidate();
+      setCancelAlertId(null);
+      setCancelReason("");
     },
-  })
+  });
 
   const handleCancel = () => {
     if (cancelAlertId) {
       cancelAlertMutation.mutate({
         alertId: cancelAlertId,
         reason: cancelReason || undefined,
-      })
+      });
     }
-  }
+  };
 
   return (
     <div className="w-full">
@@ -139,15 +139,15 @@ export function AlertList() {
               bg: "bg-gray-500/30 text-gray-300",
               label: alert.level,
               description: "",
-            }
-            const isActive = isActiveLevel(alert.level)
+            };
+            const isActive = isActiveLevel(alert.level);
 
             return (
               <div
                 key={alert.id}
                 className={cn(
                   "rounded-xl p-5",
-                  "bg-white/10 transition-colors hover:bg-white/[0.12]"
+                  "bg-white/10 transition-colors hover:bg-white/[0.12]",
                 )}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -163,18 +163,21 @@ export function AlertList() {
                     </div>
 
                     <p className="mt-2 text-sm text-white/60">
-                      Triggered {formatRelativeTime(new Date(alert.triggeredAt))}
+                      Triggered{" "}
+                      {formatRelativeTime(new Date(alert.triggeredAt))}
                     </p>
 
                     {alert.resolvedAt && (
                       <p className="text-sm text-green-400">
-                        Resolved {formatRelativeTime(new Date(alert.resolvedAt))}
+                        Resolved{" "}
+                        {formatRelativeTime(new Date(alert.resolvedAt))}
                       </p>
                     )}
 
                     {alert.cancelledAt && (
                       <p className="text-sm text-white/50">
-                        Cancelled {formatRelativeTime(new Date(alert.cancelledAt))}
+                        Cancelled{" "}
+                        {formatRelativeTime(new Date(alert.cancelledAt))}
                         {alert.cancelReason && (
                           <span className="ml-1">- {alert.cancelReason}</span>
                         )}
@@ -203,7 +206,7 @@ export function AlertList() {
                   )}
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       )}
@@ -213,8 +216,8 @@ export function AlertList() {
         open={!!cancelAlertId}
         onOpenChange={(open) => {
           if (!open) {
-            setCancelAlertId(null)
-            setCancelReason("")
+            setCancelAlertId(null);
+            setCancelReason("");
           }
         }}
       >
@@ -238,8 +241,8 @@ export function AlertList() {
           <DialogFooter>
             <Button
               onClick={() => {
-                setCancelAlertId(null)
-                setCancelReason("")
+                setCancelAlertId(null);
+                setCancelReason("");
               }}
               variant="ghost"
               className="text-white/70 hover:bg-white/10 hover:text-white"
@@ -257,5 +260,5 @@ export function AlertList() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

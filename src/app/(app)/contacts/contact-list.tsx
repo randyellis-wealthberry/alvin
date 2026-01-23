@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Plus, Users, Mail, Phone, Pencil, Trash2 } from "lucide-react"
-import { api } from "~/trpc/react"
-import { ContactForm } from "./contact-form"
-import { Button } from "~/components/ui/button"
-import { Badge } from "~/components/ui/badge"
+import { useState } from "react";
+import { Plus, Users, Mail, Phone, Pencil, Trash2 } from "lucide-react";
+import { api } from "~/trpc/react";
+import { ContactForm } from "./contact-form";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog"
+} from "~/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,67 +22,67 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "~/components/ui/alert-dialog"
-import { cn } from "~/lib/utils"
+} from "~/components/ui/alert-dialog";
+import { cn } from "~/lib/utils";
 
 type Contact = {
-  id: string
-  name: string
-  email: string
-  phone: string | null
-  relationship: string | null
-  priority: number
-  notifyByEmail: boolean
-  notifyBySms: boolean
-}
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  relationship: string | null;
+  priority: number;
+  notifyByEmail: boolean;
+  notifyBySms: boolean;
+};
 
 function getPriorityBadgeStyles(priority: number): string {
-  if (priority === 1) return "bg-violet-500/30 text-violet-200"
-  if (priority === 2) return "bg-blue-500/30 text-blue-200"
-  if (priority === 3) return "bg-cyan-500/30 text-cyan-200"
-  return "bg-gray-500/30 text-gray-200"
+  if (priority === 1) return "bg-violet-500/30 text-violet-200";
+  if (priority === 2) return "bg-blue-500/30 text-blue-200";
+  if (priority === 3) return "bg-cyan-500/30 text-cyan-200";
+  return "bg-gray-500/30 text-gray-200";
 }
 
 function formatRelationship(rel: string | null): string {
-  if (!rel) return ""
-  return rel.charAt(0).toUpperCase() + rel.slice(1)
+  if (!rel) return "";
+  return rel.charAt(0).toUpperCase() + rel.slice(1);
 }
 
 export function ContactList() {
-  const [contacts] = api.contact.list.useSuspenseQuery()
-  const utils = api.useUtils()
+  const [contacts] = api.contact.list.useSuspenseQuery();
+  const utils = api.useUtils();
 
-  const [editingContact, setEditingContact] = useState<Contact | null>(null)
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [deleteContact, setDeleteContact] = useState<Contact | null>(null)
+  const [editingContact, setEditingContact] = useState<Contact | null>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [deleteContact, setDeleteContact] = useState<Contact | null>(null);
 
   const deleteContactMutation = api.contact.delete.useMutation({
     onSuccess: async () => {
-      await utils.contact.invalidate()
-      setDeleteContact(null)
+      await utils.contact.invalidate();
+      setDeleteContact(null);
     },
-  })
+  });
 
   const handleEdit = (contact: Contact) => {
-    setEditingContact(contact)
-    setIsEditDialogOpen(true)
-  }
+    setEditingContact(contact);
+    setIsEditDialogOpen(true);
+  };
 
   const handleDelete = () => {
     if (deleteContact) {
-      deleteContactMutation.mutate({ id: deleteContact.id })
+      deleteContactMutation.mutate({ id: deleteContact.id });
     }
-  }
+  };
 
   const handleAddClose = () => {
-    setIsAddDialogOpen(false)
-  }
+    setIsAddDialogOpen(false);
+  };
 
   const handleEditClose = () => {
-    setEditingContact(null)
-    setIsEditDialogOpen(false)
-  }
+    setEditingContact(null);
+    setIsEditDialogOpen(false);
+  };
 
   return (
     <div className="w-full">
@@ -123,7 +123,7 @@ export function ContactList() {
               key={contact.id}
               className={cn(
                 "rounded-xl p-5",
-                "bg-white/10 transition-colors hover:bg-white/[0.12]"
+                "bg-white/10 transition-colors hover:bg-white/[0.12]",
               )}
             >
               <div className="flex items-start justify-between gap-4">
@@ -229,5 +229,5 @@ export function ContactList() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
+  );
 }

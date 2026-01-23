@@ -19,7 +19,7 @@ export function LiveIndicator() {
   }
 
   return (
-    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+    <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
       <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
       <span>Live</span>
     </div>

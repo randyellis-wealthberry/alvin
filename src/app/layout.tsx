@@ -10,7 +10,7 @@ import { InstallPrompt, IOSInstallInstructions } from "~/components/pwa";
 import { MobileNav } from "~/components/layout/mobile-nav";
 import { cn } from "~/lib/utils";
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   applicationName: "ALVIN",
@@ -50,7 +50,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={cn(geist.variable, inter.variable, "dark")}>
-      <body className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
+      <body className="bg-background text-foreground selection:bg-primary/20 selection:text-primary min-h-screen">
         <SessionProvider>
           <ConvexClientProvider>
             <TRPCReactProvider>

@@ -17,7 +17,8 @@ export function PasskeySetup() {
 
   const utils = api.useUtils();
 
-  const generateRegOptions = api.passkey.generateRegistrationOptions.useMutation();
+  const generateRegOptions =
+    api.passkey.generateRegistrationOptions.useMutation();
   const verifyRegistration = api.passkey.verifyRegistration.useMutation();
   const deletePasskey = api.passkey.delete.useMutation({
     onSuccess: () => {
@@ -127,7 +128,11 @@ export function PasskeySetup() {
           </div>
           <Button
             onClick={handleAddPasskey}
-            disabled={isRegistering || generateRegOptions.isPending || verifyRegistration.isPending}
+            disabled={
+              isRegistering ||
+              generateRegOptions.isPending ||
+              verifyRegistration.isPending
+            }
             className="w-full"
           >
             {isRegistering ? "Registering..." : "Add Passkey"}
@@ -137,7 +142,7 @@ export function PasskeySetup() {
 
       {/* Feedback Messages */}
       {error && (
-        <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div className="bg-destructive/10 text-destructive rounded-lg px-4 py-3 text-sm">
           {error}
         </div>
       )}
@@ -155,20 +160,21 @@ export function PasskeySetup() {
         <CardContent>
           {passkeys.length === 0 ? (
             <p className="text-muted-foreground">
-              No passkeys registered yet. Add one above to enable biometric check-ins.
+              No passkeys registered yet. Add one above to enable biometric
+              check-ins.
             </p>
           ) : (
             <ul className="space-y-3">
               {passkeys.map((passkey) => (
                 <li
                   key={passkey.id}
-                  className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3"
+                  className="bg-muted/50 flex items-center justify-between rounded-lg px-4 py-3"
                 >
                   <div>
                     <p className="font-medium">
                       {passkey.name ?? "Unnamed Passkey"}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       {formatDeviceType(passkey.deviceType)} &bull;{" "}
                       {formatDate(passkey.createdAt)}
                     </p>

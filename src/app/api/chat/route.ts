@@ -60,9 +60,7 @@ export async function POST(req: Request) {
 
       for (const msg of lastMessages) {
         const content = msg.parts
-          .filter(
-            (p): p is { type: "text"; text: string } => p.type === "text",
-          )
+          .filter((p): p is { type: "text"; text: string } => p.type === "text")
           .map((p) => p.text)
           .join("");
 
@@ -85,9 +83,7 @@ export async function POST(req: Request) {
       const messagesForAnalysis = finalMessages.map((m) => ({
         role: m.role,
         content: m.parts
-          .filter(
-            (p): p is { type: "text"; text: string } => p.type === "text",
-          )
+          .filter((p): p is { type: "text"; text: string } => p.type === "text")
           .map((p) => p.text)
           .join(""),
       }));

@@ -11,9 +11,7 @@ type PermissionState = "loading" | "prompt" | "denied" | "enabled" | "error";
  */
 function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, "+")
-    .replace(/_/g, "/");
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
   const rawData = atob(base64);
   const outputArray = new Uint8Array(rawData.length);
   for (let i = 0; i < rawData.length; i++) {
@@ -137,7 +135,9 @@ export function PushPermissionPrompt() {
       console.error("Failed to enable push notifications:", error);
       setPermissionState("error");
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to enable notifications"
+        error instanceof Error
+          ? error.message
+          : "Failed to enable notifications",
       );
     } finally {
       setIsSubscribing(false);
@@ -167,7 +167,9 @@ export function PushPermissionPrompt() {
     } catch (error) {
       console.error("Failed to disable push notifications:", error);
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to disable notifications"
+        error instanceof Error
+          ? error.message
+          : "Failed to disable notifications",
       );
     } finally {
       setIsUnsubscribing(false);
@@ -208,7 +210,9 @@ export function PushPermissionPrompt() {
               </svg>
             </div>
             <div>
-              <p className="font-semibold text-white">Unable to Enable Notifications</p>
+              <p className="font-semibold text-white">
+                Unable to Enable Notifications
+              </p>
               <p className="text-sm text-white/70">{errorMessage}</p>
             </div>
           </div>
@@ -326,7 +330,9 @@ export function PushPermissionPrompt() {
             </svg>
           </div>
           <div>
-            <p className="font-semibold text-white">Stay Connected with ALVIN</p>
+            <p className="font-semibold text-white">
+              Stay Connected with ALVIN
+            </p>
             <p className="text-sm text-white/70">
               Get notified about check-in reminders and important alerts. Push
               notifications ensure you never miss a check-in.

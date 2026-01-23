@@ -10,7 +10,7 @@ export const authRouter = createTRPCRouter({
         email: z.string().email("Invalid email address"),
         password: z.string().min(8, "Password must be at least 8 characters"),
         name: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       // Check if email already exists

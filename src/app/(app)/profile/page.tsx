@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { signOut, useSession } from "next-auth/react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 import {
   Settings,
   Bell,
@@ -18,9 +18,9 @@ import {
   Loader2,
   AlertTriangle,
   Trash2,
-} from "lucide-react"
-import { api } from "~/trpc/react"
-import { cn } from "~/lib/utils"
+} from "lucide-react";
+import { api } from "~/trpc/react";
+import { cn } from "~/lib/utils";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -36,14 +36,14 @@ const TIMEZONES = [
   { value: "Europe/Paris", label: "Paris" },
   { value: "Asia/Tokyo", label: "Tokyo" },
   { value: "Australia/Sydney", label: "Sydney" },
-]
+];
 
 const FREQUENCY_OPTIONS = [
   { value: 12, label: "Every 12 hours" },
   { value: 24, label: "Every 24 hours" },
   { value: 48, label: "Every 48 hours" },
   { value: 72, label: "Every 72 hours" },
-]
+];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GlassCard Component
@@ -54,9 +54,9 @@ function GlassCard({
   className,
   glow,
 }: {
-  children: React.ReactNode
-  className?: string
-  glow?: "emerald" | "violet" | "amber" | "rose" | "blue"
+  children: React.ReactNode;
+  className?: string;
+  glow?: "emerald" | "violet" | "amber" | "rose" | "blue";
 }) {
   const glowColors = {
     emerald: "shadow-emerald-500/20",
@@ -64,7 +64,7 @@ function GlassCard({
     amber: "shadow-amber-500/20",
     rose: "shadow-rose-500/20",
     blue: "shadow-blue-500/20",
-  }
+  };
 
   return (
     <div
@@ -73,13 +73,13 @@ function GlassCard({
         "bg-white/[0.03] backdrop-blur-xl",
         "border border-white/[0.05]",
         glow && `shadow-2xl ${glowColors[glow]}`,
-        className
+        className,
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
       <div className="relative">{children}</div>
     </div>
-  )
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -91,11 +91,11 @@ function DeleteAccountModal({
   onConfirm,
   isPending,
 }: {
-  onClose: () => void
-  onConfirm: () => void
-  isPending: boolean
+  onClose: () => void;
+  onConfirm: () => void;
+  isPending: boolean;
 }) {
-  const [confirmText, setConfirmText] = useState("")
+  const [confirmText, setConfirmText] = useState("");
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -103,20 +103,21 @@ function DeleteAccountModal({
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-sm animate-reveal">
+      <div className="animate-reveal relative w-full max-w-sm">
         <GlassCard className="p-6" glow="rose">
-          <div className="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mx-auto mb-4">
-            <AlertTriangle className="w-6 h-6 text-rose-400" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-rose-500/20">
+            <AlertTriangle className="h-6 w-6 text-rose-400" />
           </div>
-          <h3 className="text-lg font-semibold text-white text-center mb-2">
+          <h3 className="mb-2 text-center text-lg font-semibold text-white">
             Delete Account
           </h3>
-          <p className="text-white/60 text-center text-sm mb-4">
-            This action is permanent. All your data including check-ins, contacts, and conversations will be deleted.
+          <p className="mb-4 text-center text-sm text-white/60">
+            This action is permanent. All your data including check-ins,
+            contacts, and conversations will be deleted.
           </p>
 
           <div className="mb-4">
-            <label className="block text-sm text-white/60 mb-2">
+            <label className="mb-2 block text-sm text-white/60">
               Type &quot;DELETE&quot; to confirm
             </label>
             <input
@@ -124,24 +125,24 @@ function DeleteAccountModal({
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
               placeholder="DELETE"
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-rose-500/50 transition-colors"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-white/30 focus:border-rose-500/50 focus:outline-none"
             />
           </div>
 
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 py-3 rounded-xl bg-white/5 text-white/70 font-medium hover:bg-white/10 transition-colors"
+              className="flex-1 rounded-xl bg-white/5 py-3 font-medium text-white/70 transition-colors hover:bg-white/10"
             >
               Cancel
             </button>
             <button
               onClick={onConfirm}
               disabled={confirmText !== "DELETE" || isPending}
-              className="flex-1 py-3 rounded-xl bg-rose-500 text-white font-medium hover:bg-rose-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 rounded-xl bg-rose-500 py-3 font-medium text-white transition-colors hover:bg-rose-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isPending ? (
-                <Loader2 className="w-5 h-5 mx-auto animate-spin" />
+                <Loader2 className="mx-auto h-5 w-5 animate-spin" />
               ) : (
                 "Delete Account"
               )}
@@ -150,7 +151,7 @@ function DeleteAccountModal({
         </GlassCard>
       </div>
     </div>
-  )
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -163,19 +164,19 @@ function SettingsRow({
   description,
   children,
 }: {
-  icon: typeof Clock
-  label: string
-  description?: string
-  children: React.ReactNode
+  icon: typeof Clock;
+  label: string;
+  description?: string;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between py-4 border-b border-white/5 last:border-0">
+    <div className="flex items-center justify-between border-b border-white/5 py-4 last:border-0">
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
-          <Icon className="w-5 h-5 text-white/60" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5">
+          <Icon className="h-5 w-5 text-white/60" />
         </div>
         <div>
-          <p className="text-sm text-white font-medium">{label}</p>
+          <p className="text-sm font-medium text-white">{label}</p>
           {description && (
             <p className="text-xs text-white/40">{description}</p>
           )}
@@ -183,7 +184,7 @@ function SettingsRow({
       </div>
       {children}
     </div>
-  )
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -191,66 +192,66 @@ function SettingsRow({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function ProfilePage() {
-  const [mounted, setMounted] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [showSaved, setShowSaved] = useState(false)
+  const [mounted, setMounted] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
 
-  const { data: session } = useSession()
-  const utils = api.useUtils()
-  const { data: profile, isLoading } = api.profile.get.useQuery()
-  const { data: checkInStats } = api.checkIn.stats.useQuery()
-  const { data: hasPasskeys } = api.passkey.hasPasskeys.useQuery()
+  const { data: session } = useSession();
+  const utils = api.useUtils();
+  const { data: profile, isLoading } = api.profile.get.useQuery();
+  const { data: checkInStats } = api.checkIn.stats.useQuery();
+  const { data: hasPasskeys } = api.passkey.hasPasskeys.useQuery();
 
-  const [frequency, setFrequency] = useState(24)
-  const [timezone, setTimezone] = useState("UTC")
-  const [isActive, setIsActive] = useState(true)
+  const [frequency, setFrequency] = useState(24);
+  const [timezone, setTimezone] = useState("UTC");
+  const [isActive, setIsActive] = useState(true);
 
   // Initialize form values when profile loads
   useEffect(() => {
     if (profile) {
-      setFrequency(profile.checkInFrequencyHours)
-      setTimezone(profile.timezone)
-      setIsActive(profile.isActive)
+      setFrequency(profile.checkInFrequencyHours);
+      setTimezone(profile.timezone);
+      setIsActive(profile.isActive);
     }
-  }, [profile])
+  }, [profile]);
 
   const updateProfile = api.profile.update.useMutation({
     onSuccess: async () => {
-      await utils.profile.invalidate()
-      setShowSaved(true)
-      setTimeout(() => setShowSaved(false), 2000)
+      await utils.profile.invalidate();
+      setShowSaved(true);
+      setTimeout(() => setShowSaved(false), 2000);
     },
-  })
+  });
 
   const deleteAccount = api.profile.delete.useMutation({
     onSuccess: () => {
-      void signOut({ callbackUrl: "/" })
+      void signOut({ callbackUrl: "/" });
     },
-  })
+  });
 
   const handleSave = () => {
     updateProfile.mutate({
       checkInFrequencyHours: frequency,
       timezone,
       isActive,
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
-  const userName = session?.user?.name ?? "User"
-  const userEmail = session?.user?.email ?? ""
-  const userInitial = userName.charAt(0).toUpperCase()
+  const userName = session?.user?.name ?? "User";
+  const userEmail = session?.user?.email ?? "";
+  const userInitial = userName.charAt(0).toUpperCase();
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#1a0533] via-[#2e026d] to-[#15162c]">
       {/* Animated Background Blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-violet-500/15 rounded-full blur-3xl animate-blob" />
-        <div className="absolute top-1/2 -left-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-blob animation-delay-2000" />
-        <div className="absolute bottom-20 right-1/4 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-blob animation-delay-4000" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="animate-blob absolute -top-40 -right-40 h-96 w-96 rounded-full bg-violet-500/15 blur-3xl" />
+        <div className="animate-blob animation-delay-2000 absolute top-1/2 -left-40 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="animate-blob animation-delay-4000 absolute right-1/4 bottom-20 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
       </div>
 
       <div className="relative z-10 px-4 pt-8 pb-32">
@@ -259,10 +260,10 @@ export default function ProfilePage() {
           <div
             className={cn(
               "mb-8 transition-all duration-700",
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             )}
           >
-            <p className="text-xs font-medium tracking-[0.2em] text-violet-400/80 uppercase mb-2">
+            <p className="mb-2 text-xs font-medium tracking-[0.2em] text-violet-400/80 uppercase">
               Account
             </p>
             <h1 className="text-3xl font-bold text-white">Your Profile</h1>
@@ -272,7 +273,7 @@ export default function ProfilePage() {
           {isLoading && (
             <GlassCard className="p-12">
               <div className="flex flex-col items-center">
-                <Loader2 className="w-8 h-8 text-violet-400 animate-spin mb-4" />
+                <Loader2 className="mb-4 h-8 w-8 animate-spin text-violet-400" />
                 <p className="text-white/60">Loading profile...</p>
               </div>
             </GlassCard>
@@ -283,13 +284,15 @@ export default function ProfilePage() {
               {/* Profile Card */}
               <div
                 className={cn(
-                  "mb-6 transition-all duration-700 delay-100",
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  "mb-6 transition-all delay-100 duration-700",
+                  mounted
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-4 opacity-0",
                 )}
               >
                 <GlassCard className="p-6" glow="violet">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
+                  <div className="mb-6 flex items-center gap-4">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 shadow-lg shadow-violet-500/30">
                       <span className="text-2xl font-bold text-white">
                         {userInitial}
                       </span>
@@ -304,27 +307,27 @@ export default function ProfilePage() {
 
                   {/* Stats */}
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="text-center p-3 rounded-xl bg-white/5">
-                      <div className="flex items-center justify-center w-8 h-8 mx-auto mb-2 rounded-lg bg-emerald-500/20">
-                        <Zap className="w-4 h-4 text-emerald-400" />
+                    <div className="rounded-xl bg-white/5 p-3 text-center">
+                      <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20">
+                        <Zap className="h-4 w-4 text-emerald-400" />
                       </div>
                       <p className="text-xl font-bold text-emerald-400">
                         {checkInStats?.totalCheckIns ?? 0}
                       </p>
                       <p className="text-xs text-white/50">Total Check-ins</p>
                     </div>
-                    <div className="text-center p-3 rounded-xl bg-white/5">
-                      <div className="flex items-center justify-center w-8 h-8 mx-auto mb-2 rounded-lg bg-amber-500/20">
-                        <Calendar className="w-4 h-4 text-amber-400" />
+                    <div className="rounded-xl bg-white/5 p-3 text-center">
+                      <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/20">
+                        <Calendar className="h-4 w-4 text-amber-400" />
                       </div>
                       <p className="text-xl font-bold text-amber-400">
                         {checkInStats?.currentStreak ?? 0}
                       </p>
                       <p className="text-xs text-white/50">Day Streak</p>
                     </div>
-                    <div className="text-center p-3 rounded-xl bg-white/5">
-                      <div className="flex items-center justify-center w-8 h-8 mx-auto mb-2 rounded-lg bg-violet-500/20">
-                        <Heart className="w-4 h-4 text-violet-400" />
+                    <div className="rounded-xl bg-white/5 p-3 text-center">
+                      <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/20">
+                        <Heart className="h-4 w-4 text-violet-400" />
                       </div>
                       <p className="text-xl font-bold text-violet-400">
                         {isActive ? "Active" : "Paused"}
@@ -338,12 +341,14 @@ export default function ProfilePage() {
               {/* Settings Section */}
               <div
                 className={cn(
-                  "mb-6 transition-all duration-700 delay-200",
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  "mb-6 transition-all delay-200 duration-700",
+                  mounted
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-4 opacity-0",
                 )}
               >
-                <div className="flex items-center gap-2 mb-4">
-                  <Settings className="w-5 h-5 text-white/60" />
+                <div className="mb-4 flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-white/60" />
                   <h2 className="text-lg font-semibold text-white">Settings</h2>
                 </div>
 
@@ -357,10 +362,14 @@ export default function ProfilePage() {
                     <select
                       value={frequency}
                       onChange={(e) => setFrequency(Number(e.target.value))}
-                      className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-violet-500/50 appearance-none cursor-pointer"
+                      className="cursor-pointer appearance-none rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-violet-500/50 focus:outline-none"
                     >
                       {FREQUENCY_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-[#1a1a2e]">
+                        <option
+                          key={opt.value}
+                          value={opt.value}
+                          className="bg-[#1a1a2e]"
+                        >
                           {opt.label}
                         </option>
                       ))}
@@ -376,10 +385,14 @@ export default function ProfilePage() {
                     <select
                       value={timezone}
                       onChange={(e) => setTimezone(e.target.value)}
-                      className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-violet-500/50 appearance-none cursor-pointer max-w-[140px]"
+                      className="max-w-[140px] cursor-pointer appearance-none rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-violet-500/50 focus:outline-none"
                     >
                       {TIMEZONES.map((tz) => (
-                        <option key={tz.value} value={tz.value} className="bg-[#1a1a2e]">
+                        <option
+                          key={tz.value}
+                          value={tz.value}
+                          className="bg-[#1a1a2e]"
+                        >
                           {tz.label}
                         </option>
                       ))}
@@ -395,14 +408,14 @@ export default function ProfilePage() {
                     <button
                       onClick={() => setIsActive(!isActive)}
                       className={cn(
-                        "w-11 h-6 rounded-full transition-colors relative",
-                        isActive ? "bg-emerald-500" : "bg-white/20"
+                        "relative h-6 w-11 rounded-full transition-colors",
+                        isActive ? "bg-emerald-500" : "bg-white/20",
                       )}
                     >
                       <div
                         className={cn(
-                          "absolute top-1 w-4 h-4 rounded-full bg-white transition-transform",
-                          isActive ? "translate-x-6" : "translate-x-1"
+                          "absolute top-1 h-4 w-4 rounded-full bg-white transition-transform",
+                          isActive ? "translate-x-6" : "translate-x-1",
                         )}
                       />
                     </button>
@@ -414,19 +427,19 @@ export default function ProfilePage() {
                       onClick={handleSave}
                       disabled={updateProfile.isPending}
                       className={cn(
-                        "w-full py-3 rounded-xl font-medium transition-all",
+                        "w-full rounded-xl py-3 font-medium transition-all",
                         "bg-gradient-to-r from-violet-500 to-violet-600",
                         "text-white shadow-lg shadow-violet-500/30",
                         "hover:shadow-violet-500/50",
-                        "disabled:opacity-50 disabled:cursor-not-allowed",
-                        "flex items-center justify-center gap-2"
+                        "disabled:cursor-not-allowed disabled:opacity-50",
+                        "flex items-center justify-center gap-2",
                       )}
                     >
                       {updateProfile.isPending ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <Loader2 className="h-5 w-5 animate-spin" />
                       ) : showSaved ? (
                         <>
-                          <Check className="w-5 h-5" />
+                          <Check className="h-5 w-5" />
                           Saved!
                         </>
                       ) : (
@@ -440,19 +453,23 @@ export default function ProfilePage() {
               {/* Passkeys Section */}
               <div
                 className={cn(
-                  "mb-6 transition-all duration-700 delay-300",
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  "mb-6 transition-all delay-300 duration-700",
+                  mounted
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-4 opacity-0",
                 )}
               >
                 <Link href="/profile/passkeys">
-                  <GlassCard className="p-4 hover:border-white/10 transition-colors group">
+                  <GlassCard className="group p-4 transition-colors hover:border-white/10">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                          <Fingerprint className="w-5 h-5 text-blue-400" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/20">
+                          <Fingerprint className="h-5 w-5 text-blue-400" />
                         </div>
                         <div>
-                          <p className="text-white font-medium">Biometric Login</p>
+                          <p className="font-medium text-white">
+                            Biometric Login
+                          </p>
                           <p className="text-xs text-white/50">
                             {hasPasskeys
                               ? "Passkeys configured"
@@ -460,7 +477,7 @@ export default function ProfilePage() {
                           </p>
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-colors" />
+                      <ChevronRight className="h-5 w-5 text-white/30 transition-colors group-hover:text-white/60" />
                     </div>
                   </GlassCard>
                 </Link>
@@ -469,20 +486,22 @@ export default function ProfilePage() {
               {/* Account Actions */}
               <div
                 className={cn(
-                  "space-y-3 transition-all duration-700 delay-400",
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  "space-y-3 transition-all delay-400 duration-700",
+                  mounted
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-4 opacity-0",
                 )}
               >
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
                   className="w-full"
                 >
-                  <GlassCard className="p-4 hover:border-white/10 transition-colors">
+                  <GlassCard className="p-4 transition-colors hover:border-white/10">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
-                        <LogOut className="w-5 h-5 text-white/60" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5">
+                        <LogOut className="h-5 w-5 text-white/60" />
                       </div>
-                      <span className="text-white font-medium">Sign Out</span>
+                      <span className="font-medium text-white">Sign Out</span>
                     </div>
                   </GlassCard>
                 </button>
@@ -491,12 +510,14 @@ export default function ProfilePage() {
                   onClick={() => setShowDeleteModal(true)}
                   className="w-full"
                 >
-                  <GlassCard className="p-4 hover:border-rose-500/30 transition-colors">
+                  <GlassCard className="p-4 transition-colors hover:border-rose-500/30">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center">
-                        <Trash2 className="w-5 h-5 text-rose-400" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/20">
+                        <Trash2 className="h-5 w-5 text-rose-400" />
                       </div>
-                      <span className="text-rose-400 font-medium">Delete Account</span>
+                      <span className="font-medium text-rose-400">
+                        Delete Account
+                      </span>
                     </div>
                   </GlassCard>
                 </button>
@@ -515,5 +536,5 @@ export default function ProfilePage() {
         />
       )}
     </div>
-  )
+  );
 }

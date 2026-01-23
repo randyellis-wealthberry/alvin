@@ -21,13 +21,13 @@ export default async function DashboardPage() {
   return (
     <HydrateClient>
       <OfflineIndicator />
-      <main className="flex min-h-screen flex-col items-center bg-background text-foreground">
+      <main className="bg-background text-foreground flex min-h-screen flex-col items-center">
         <div className="container flex flex-col items-center gap-8 px-4 py-16">
           <div className="flex items-center gap-3">
             <h1 className="text-4xl font-bold">Dashboard</h1>
             <LiveIndicator />
           </div>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-muted-foreground text-lg">
             Your ALVIN status at a glance
           </p>
 

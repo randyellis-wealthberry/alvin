@@ -81,7 +81,7 @@ export function ProfileForm() {
               value={checkInFrequencyHours}
               onChange={(e) => setCheckInFrequencyHours(Number(e.target.value))}
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               How often ALVIN should expect a check-in (1-168 hours)
             </p>
           </div>
@@ -95,7 +95,7 @@ export function ProfileForm() {
               value={preferredCheckInTime}
               onChange={(e) => setPreferredCheckInTime(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               What time of day you prefer to check in
             </p>
           </div>
@@ -135,7 +135,7 @@ export function ProfileForm() {
             </p>
           )}
           {errorMessage && (
-            <p className="rounded-lg bg-destructive/20 px-4 py-2 text-sm text-destructive">
+            <p className="bg-destructive/20 text-destructive rounded-lg px-4 py-2 text-sm">
               {errorMessage}
             </p>
           )}

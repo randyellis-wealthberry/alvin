@@ -43,7 +43,7 @@ const BellIcon = forwardRef<BellIconHandle, BellIconProps>(
           void controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -54,7 +54,7 @@ const BellIcon = forwardRef<BellIconHandle, BellIconProps>(
           void controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
     return (
       <div
@@ -85,7 +85,7 @@ const BellIcon = forwardRef<BellIconHandle, BellIconProps>(
         </motion.svg>
       </div>
     );
-  }
+  },
 );
 
 BellIcon.displayName = "BellIcon";

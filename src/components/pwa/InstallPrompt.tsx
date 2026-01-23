@@ -40,7 +40,7 @@ export function InstallPrompt() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-md rounded-xl bg-white/10 p-4 backdrop-blur-lg">
+    <div className="fixed right-4 bottom-4 left-4 z-50 mx-auto max-w-md rounded-xl bg-white/10 p-4 backdrop-blur-lg">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1">
           <p className="font-semibold text-white">Install ALVIN</p>

@@ -32,8 +32,8 @@ export const updateUserStatus = mutation({
         v.literal("L2"),
         v.literal("L3"),
         v.literal("L4"),
-        v.null()
-      )
+        v.null(),
+      ),
     ),
     alertTriggeredAt: v.optional(v.number()),
   },

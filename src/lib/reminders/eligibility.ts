@@ -33,7 +33,7 @@ export function calculateNextCheckInDue(profile: {
 
   // Calculate base due time (last check-in + frequency hours)
   const baseDue = new Date(
-    baseTime.getTime() + profile.checkInFrequencyHours * 60 * 60 * 1000
+    baseTime.getTime() + profile.checkInFrequencyHours * 60 * 60 * 1000,
   );
 
   // If no preferred time set, return the base due time
@@ -89,7 +89,7 @@ export function calculateNextCheckInDue(profile: {
     preferredHours,
     preferredMinutes,
     0,
-    0
+    0,
   );
 
   // Adjust for timezone offset to get UTC time

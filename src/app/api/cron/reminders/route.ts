@@ -27,7 +27,7 @@ interface ReminderResult {
  * @returns Result of notification attempt
  */
 async function sendReminderNotification(
-  user: UserNeedingReminder
+  user: UserNeedingReminder,
 ): Promise<ReminderResult> {
   try {
     const template = getNotificationWithEmail("CHECKIN_REMINDER");
@@ -40,7 +40,7 @@ async function sendReminderNotification(
     });
 
     console.log(
-      `[Cron] Sent ${result.channel} reminder to user ${user.userId} (${result.sent} delivered)`
+      `[Cron] Sent ${result.channel} reminder to user ${user.userId} (${result.sent} delivered)`,
     );
 
     return {
@@ -52,7 +52,7 @@ async function sendReminderNotification(
     const errorMessage = err instanceof Error ? err.message : "Unknown error";
     console.error(
       `[Cron] Exception sending reminder to user ${user.userId}:`,
-      errorMessage
+      errorMessage,
     );
     return {
       userId: user.userId,
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log(
-      `[Cron] Found ${usersNeedingReminders.length} users needing reminders`
+      `[Cron] Found ${usersNeedingReminders.length} users needing reminders`,
     );
 
     // Send notifications to all users (don't let one failure stop others)
@@ -109,15 +109,23 @@ export async function GET(request: NextRequest) {
     }
 
     // Summarize results by channel
-    const pushSent = results.filter((r) => r.channel === "push" && r.success).length;
-    const emailSent = results.filter((r) => r.channel === "email" && r.success).length;
-    const smsSent = results.filter((r) => r.channel === "sms" && r.success).length;
+    const pushSent = results.filter(
+      (r) => r.channel === "push" && r.success,
+    ).length;
+    const emailSent = results.filter(
+      (r) => r.channel === "email" && r.success,
+    ).length;
+    const smsSent = results.filter(
+      (r) => r.channel === "sms" && r.success,
+    ).length;
     const failed = results.filter((r) => !r.success).length;
     const errors = results
       .filter((r) => !r.success && r.error)
       .map((r) => `${r.userId}: ${r.error}`);
 
-    console.log(`[Cron] Notification summary: ${pushSent} push, ${emailSent} email, ${smsSent} sms, ${failed} failed`);
+    console.log(
+      `[Cron] Notification summary: ${pushSent} push, ${emailSent} email, ${smsSent} sms, ${failed} failed`,
+    );
 
     // Return success response (never expose user data in response)
     return NextResponse.json({
@@ -134,7 +142,7 @@ export async function GET(request: NextRequest) {
     console.error("[Cron] Error processing reminders:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

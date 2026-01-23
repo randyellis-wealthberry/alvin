@@ -100,15 +100,19 @@ function ActivityIcon({ type }: { type: string }) {
 
 export function ActivityLog() {
   // Use tRPC for activity data
-  const { data: activities, isLoading } = api.dashboard.getActivityLog.useQuery({
-    limit: 20,
-  });
+  const { data: activities, isLoading } = api.dashboard.getActivityLog.useQuery(
+    {
+      limit: 20,
+    },
+  );
 
   if (isLoading) {
     return (
       <Card className="w-full max-w-md">
         <CardContent className="pt-6">
-          <p className="text-center text-muted-foreground">Loading activity...</p>
+          <p className="text-muted-foreground text-center">
+            Loading activity...
+          </p>
         </CardContent>
       </Card>
     );
@@ -120,7 +124,7 @@ export function ActivityLog() {
         <h2 className="mb-4 text-2xl font-bold">Recent Activity</h2>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center text-muted-foreground">
+            <p className="text-muted-foreground text-center">
               No activity yet. Start by checking in!
             </p>
           </CardContent>
@@ -140,12 +144,12 @@ export function ActivityLog() {
             {activities.map((activity) => (
               <div
                 key={activity.id}
-                className="flex items-start gap-3 rounded-lg bg-muted/50 p-3"
+                className="bg-muted/50 flex items-start gap-3 rounded-lg p-3"
               >
                 <ActivityIcon type={activity.type} />
                 <div className="flex-1">
                   <p>{activity.description}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {formatRelativeTime(new Date(activity.timestamp))}
                   </p>
                 </div>

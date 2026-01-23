@@ -39,7 +39,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background">
+    <main className="bg-background flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Create Account</CardTitle>
@@ -76,9 +76,7 @@ export default function SignUpPage() {
                 required
               />
             </div>
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
-            )}
+            {error && <p className="text-destructive text-sm">{error}</p>}
             <Button
               type="submit"
               className="w-full"
@@ -87,7 +85,7 @@ export default function SignUpPage() {
               {registerMutation.isPending ? "Creating..." : "Create Account"}
             </Button>
           </form>
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-center text-sm">
             Already have an account?{" "}
             <Link href="/auth/signin" className="text-primary hover:underline">
               Sign in

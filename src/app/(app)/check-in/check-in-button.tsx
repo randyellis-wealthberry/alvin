@@ -1,78 +1,78 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { startAuthentication } from "@simplewebauthn/browser"
-import Link from "next/link"
-import { Fingerprint, ArrowRight, Check, Loader2 } from "lucide-react"
-import { api } from "~/trpc/react"
-import { Button } from "~/components/ui/button"
-import { cn } from "~/lib/utils"
+import { useState, useEffect } from "react";
+import { startAuthentication } from "@simplewebauthn/browser";
+import Link from "next/link";
+import { Fingerprint, ArrowRight, Check, Loader2 } from "lucide-react";
+import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 export function CheckInButton() {
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [biometricError, setBiometricError] = useState<string | null>(null)
-  const [isBiometricLoading, setIsBiometricLoading] = useState(false)
-  const utils = api.useUtils()
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [biometricError, setBiometricError] = useState<string | null>(null);
+  const [isBiometricLoading, setIsBiometricLoading] = useState(false);
+  const utils = api.useUtils();
 
   // Check if user has passkeys registered
-  const { data: hasPasskeys } = api.passkey.hasPasskeys.useQuery()
+  const { data: hasPasskeys } = api.passkey.hasPasskeys.useQuery();
 
   // Manual check-in mutation
   const recordCheckIn = api.checkIn.record.useMutation({
     onSuccess: () => {
-      setShowSuccess(true)
-      void utils.checkIn.list.invalidate()
+      setShowSuccess(true);
+      void utils.checkIn.list.invalidate();
     },
-  })
+  });
 
   // Biometric check-in mutations
   const generateAuthOptions =
-    api.passkey.generateAuthenticationOptions.useMutation()
+    api.passkey.generateAuthenticationOptions.useMutation();
   const verifyAuth = api.passkey.verifyAuthentication.useMutation({
     onSuccess: () => {
-      setShowSuccess(true)
-      void utils.checkIn.list.invalidate()
-      void utils.passkey.hasPasskeys.invalidate()
+      setShowSuccess(true);
+      void utils.checkIn.list.invalidate();
+      void utils.passkey.hasPasskeys.invalidate();
     },
-  })
+  });
 
   useEffect(() => {
     if (showSuccess) {
-      const timer = setTimeout(() => setShowSuccess(false), 2000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setShowSuccess(false), 2000);
+      return () => clearTimeout(timer);
     }
-  }, [showSuccess])
+  }, [showSuccess]);
 
   const handleBiometricCheckIn = async () => {
-    setBiometricError(null)
-    setIsBiometricLoading(true)
+    setBiometricError(null);
+    setIsBiometricLoading(true);
 
     try {
-      const options = await generateAuthOptions.mutateAsync()
-      let authResponse
+      const options = await generateAuthOptions.mutateAsync();
+      let authResponse;
       try {
-        authResponse = await startAuthentication(options)
+        authResponse = await startAuthentication(options);
       } catch (err) {
         if (err instanceof Error) {
           if (err.name === "NotAllowedError") {
-            setBiometricError("Authentication cancelled. Please try again.")
-            return
+            setBiometricError("Authentication cancelled. Please try again.");
+            return;
           }
-          setBiometricError(err.message)
-          return
+          setBiometricError(err.message);
+          return;
         }
-        setBiometricError("Authentication failed. Please try again.")
-        return
+        setBiometricError("Authentication failed. Please try again.");
+        return;
       }
-      await verifyAuth.mutateAsync({ response: authResponse })
+      await verifyAuth.mutateAsync({ response: authResponse });
     } catch (err) {
-      setBiometricError(err instanceof Error ? err.message : "Check-in failed")
+      setBiometricError(err instanceof Error ? err.message : "Check-in failed");
     } finally {
-      setIsBiometricLoading(false)
+      setIsBiometricLoading(false);
     }
-  }
+  };
 
-  const isPending = recordCheckIn.isPending || isBiometricLoading
+  const isPending = recordCheckIn.isPending || isBiometricLoading;
 
   return (
     <div className="flex flex-col items-center">
@@ -86,9 +86,9 @@ export function CheckInButton() {
             "group relative flex h-32 w-32 flex-col items-center justify-center rounded-full",
             "bg-green-600 text-white shadow-lg shadow-green-500/25",
             "transition-all duration-200",
-            "hover:bg-green-500 hover:shadow-green-500/40 hover:shadow-xl",
+            "hover:bg-green-500 hover:shadow-xl hover:shadow-green-500/40",
             "active:scale-95",
-            "disabled:cursor-not-allowed disabled:opacity-50"
+            "disabled:cursor-not-allowed disabled:opacity-50",
           )}
         >
           {recordCheckIn.isPending ? (
@@ -110,9 +110,9 @@ export function CheckInButton() {
               "group relative flex h-32 w-32 flex-col items-center justify-center gap-1 rounded-full",
               "bg-blue-600 text-white shadow-lg shadow-blue-500/25",
               "transition-all duration-200",
-              "hover:bg-blue-500 hover:shadow-blue-500/40 hover:shadow-xl",
+              "hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/40",
               "active:scale-95",
-              "disabled:cursor-not-allowed disabled:opacity-50"
+              "disabled:cursor-not-allowed disabled:opacity-50",
             )}
           >
             {isBiometricLoading ? (
@@ -164,5 +164,5 @@ export function CheckInButton() {
         </div>
       )}
     </div>
-  )
+  );
 }

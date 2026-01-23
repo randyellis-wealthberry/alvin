@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   MessageCircle,
   Plus,
@@ -11,9 +11,9 @@ import {
   Loader2,
   Heart,
   Bot,
-} from "lucide-react"
-import { api } from "~/trpc/react"
-import { cn } from "~/lib/utils"
+} from "lucide-react";
+import { api } from "~/trpc/react";
+import { cn } from "~/lib/utils";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GlassCard Component
@@ -24,9 +24,9 @@ function GlassCard({
   className,
   glow,
 }: {
-  children: React.ReactNode
-  className?: string
-  glow?: "emerald" | "violet" | "amber" | "rose" | "blue"
+  children: React.ReactNode;
+  className?: string;
+  glow?: "emerald" | "violet" | "amber" | "rose" | "blue";
 }) {
   const glowColors = {
     emerald: "shadow-emerald-500/20",
@@ -34,7 +34,7 @@ function GlassCard({
     amber: "shadow-amber-500/20",
     rose: "shadow-rose-500/20",
     blue: "shadow-blue-500/20",
-  }
+  };
 
   return (
     <div
@@ -43,13 +43,13 @@ function GlassCard({
         "bg-white/[0.03] backdrop-blur-xl",
         "border border-white/[0.05]",
         glow && `shadow-2xl ${glowColors[glow]}`,
-        className
+        className,
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
       <div className="relative">{children}</div>
     </div>
-  )
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -57,17 +57,17 @@ function GlassCard({
 // ─────────────────────────────────────────────────────────────────────────────
 
 function formatRelativeTime(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMins = Math.floor(diffMs / (1000 * 60))
-  const diffHours = Math.floor(diffMins / 60)
-  const diffDays = Math.floor(diffHours / 24)
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
 
-  if (diffMins < 1) return "now"
-  if (diffMins < 60) return `${diffMins}m`
-  if (diffHours < 24) return `${diffHours}h`
-  if (diffDays < 7) return `${diffDays}d`
-  return date.toLocaleDateString()
+  if (diffMins < 1) return "now";
+  if (diffMins < 60) return `${diffMins}m`;
+  if (diffHours < 24) return `${diffHours}h`;
+  if (diffDays < 7) return `${diffDays}d`;
+  return date.toLocaleDateString();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -79,45 +79,43 @@ function ConversationCard({
   index,
 }: {
   conversation: {
-    id: string
-    createdAt: Date
-    updatedAt: Date
-    checkInId: string | null
-    messages: { id: string; content: string; createdAt: Date }[]
-  }
-  index: number
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    checkInId: string | null;
+    messages: { id: string; content: string; createdAt: Date }[];
+  };
+  index: number;
 }) {
-  const lastActivity = conversation.updatedAt ?? conversation.createdAt
-  const lastMessage = conversation.messages[0]
-  const title = lastMessage?.content?.slice(0, 50) ?? "New Conversation"
+  const lastActivity = conversation.updatedAt ?? conversation.createdAt;
+  const lastMessage = conversation.messages[0];
+  const title = lastMessage?.content?.slice(0, 50) ?? "New Conversation";
 
   return (
     <Link
       href={`/chat/${conversation.id}`}
-      className="block animate-reveal"
+      className="animate-reveal block"
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      <GlassCard className="p-4 hover:border-white/10 hover:bg-white/[0.05] transition-all group">
+      <GlassCard className="group p-4 transition-all hover:border-white/10 hover:bg-white/[0.05]">
         <div className="flex items-center gap-4">
           {/* Avatar */}
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/30 to-violet-500/30 flex items-center justify-center flex-shrink-0">
-            <Bot className="w-6 h-6 text-blue-300" />
+          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-violet-500/30">
+            <Bot className="h-6 w-6 text-blue-300" />
           </div>
 
           {/* Content */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-medium text-white truncate">
-                {title}
-              </h3>
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-center gap-2">
+              <h3 className="truncate font-medium text-white">{title}</h3>
               {conversation.checkInId && (
-                <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-500/20 text-emerald-300 flex items-center gap-1">
-                  <Heart className="w-3 h-3" fill="currentColor" />
+                <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-300">
+                  <Heart className="h-3 w-3" fill="currentColor" />
                   Check-in
                 </span>
               )}
             </div>
-            <p className="text-sm text-white/50 truncate">
+            <p className="truncate text-sm text-white/50">
               Tap to continue conversation
             </p>
           </div>
@@ -127,12 +125,12 @@ function ConversationCard({
             <span className="text-xs text-white/40">
               {formatRelativeTime(new Date(lastActivity))}
             </span>
-            <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-colors" />
+            <ChevronRight className="h-5 w-5 text-white/30 transition-colors group-hover:text-white/60" />
           </div>
         </div>
       </GlassCard>
     </Link>
-  )
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -140,30 +138,30 @@ function ConversationCard({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function ChatPage() {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
 
-  const { data: conversations, isLoading } = api.conversation.list.useQuery()
-  const utils = api.useUtils()
+  const { data: conversations, isLoading } = api.conversation.list.useQuery();
+  const utils = api.useUtils();
 
   const createConversation = api.conversation.create.useMutation({
     onSuccess: async (data) => {
-      await utils.conversation.invalidate()
+      await utils.conversation.invalidate();
       // Navigate to the new conversation
-      window.location.href = `/chat/${data.id}`
+      window.location.href = `/chat/${data.id}`;
     },
-  })
+  });
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#1a0533] via-[#2e026d] to-[#15162c]">
       {/* Animated Background Blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-blob" />
-        <div className="absolute top-1/2 -right-40 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl animate-blob animation-delay-2000" />
-        <div className="absolute bottom-20 left-1/4 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-blob animation-delay-4000" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="animate-blob absolute -top-40 -left-40 h-96 w-96 rounded-full bg-blue-500/15 blur-3xl" />
+        <div className="animate-blob animation-delay-2000 absolute top-1/2 -right-40 h-80 w-80 rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="animate-blob animation-delay-4000 absolute bottom-20 left-1/4 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
       </div>
 
       <div className="relative z-10 px-4 pt-8 pb-32">
@@ -172,38 +170,40 @@ export default function ChatPage() {
           <div
             className={cn(
               "mb-8 transition-all duration-700",
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             )}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium tracking-[0.2em] text-blue-400/80 uppercase mb-2">
+                <p className="mb-2 text-xs font-medium tracking-[0.2em] text-blue-400/80 uppercase">
                   AI Companion
                 </p>
-                <h1 className="text-3xl font-bold text-white">Chat with ALVIN</h1>
+                <h1 className="text-3xl font-bold text-white">
+                  Chat with ALVIN
+                </h1>
               </div>
               <button
                 onClick={() => createConversation.mutate()}
                 disabled={createConversation.isPending}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2.5 rounded-xl",
+                  "flex items-center gap-2 rounded-xl px-4 py-2.5",
                   "bg-gradient-to-r from-blue-500 to-violet-600",
-                  "text-white text-sm font-medium",
+                  "text-sm font-medium text-white",
                   "shadow-lg shadow-blue-500/30",
-                  "hover:shadow-blue-500/50 hover:scale-105",
+                  "hover:scale-105 hover:shadow-blue-500/50",
                   "transition-all duration-300",
-                  "disabled:opacity-50 disabled:cursor-not-allowed"
+                  "disabled:cursor-not-allowed disabled:opacity-50",
                 )}
               >
                 {createConversation.isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <Plus className="w-4 h-4" />
+                  <Plus className="h-4 w-4" />
                 )}
                 New Chat
               </button>
             </div>
-            <p className="mt-2 text-white/50 text-sm">
+            <p className="mt-2 text-sm text-white/50">
               Talk about how you&apos;re feeling or just chat
             </p>
           </div>
@@ -211,23 +211,23 @@ export default function ChatPage() {
           {/* ALVIN Introduction Card */}
           <div
             className={cn(
-              "mb-6 transition-all duration-700 delay-100",
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              "mb-6 transition-all delay-100 duration-700",
+              mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             )}
           >
             <GlassCard className="p-5" glow="blue">
               <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/30">
-                  <Sparkles className="w-7 h-7 text-white" />
+                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 shadow-lg shadow-blue-500/30">
+                  <Sparkles className="h-7 w-7 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-1">
+                  <h3 className="mb-1 font-semibold text-white">
                     Hi, I&apos;m ALVIN
                   </h3>
                   <p className="text-sm text-white/60">
-                    Your wellness companion. I&apos;m here to listen, support, and help
-                    you check in when you&apos;re ready. Just say &quot;I&apos;m okay&quot; anytime to
-                    record a check-in.
+                    Your wellness companion. I&apos;m here to listen, support,
+                    and help you check in when you&apos;re ready. Just say
+                    &quot;I&apos;m okay&quot; anytime to record a check-in.
                   </p>
                 </div>
               </div>
@@ -238,7 +238,7 @@ export default function ChatPage() {
           {isLoading && (
             <GlassCard className="p-12">
               <div className="flex flex-col items-center">
-                <Loader2 className="w-8 h-8 text-blue-400 animate-spin mb-4" />
+                <Loader2 className="mb-4 h-8 w-8 animate-spin text-blue-400" />
                 <p className="text-white/60">Loading conversations...</p>
               </div>
             </GlassCard>
@@ -248,37 +248,40 @@ export default function ChatPage() {
           {!isLoading && (!conversations || conversations.length === 0) && (
             <div
               className={cn(
-                "transition-all duration-700 delay-200",
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                "transition-all delay-200 duration-700",
+                mounted
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-4 opacity-0",
               )}
             >
               <GlassCard className="p-10 text-center" glow="violet">
-                <div className="w-20 h-20 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-6">
-                  <MessageCircle className="w-10 h-10 text-violet-400" />
+                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-violet-500/20">
+                  <MessageCircle className="h-10 w-10 text-violet-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="mb-2 text-xl font-semibold text-white">
                   No conversations yet
                 </h3>
-                <p className="text-white/60 mb-6 max-w-sm mx-auto">
-                  Start a chat with ALVIN to share how you&apos;re feeling or just have a friendly conversation
+                <p className="mx-auto mb-6 max-w-sm text-white/60">
+                  Start a chat with ALVIN to share how you&apos;re feeling or
+                  just have a friendly conversation
                 </p>
                 <button
                   onClick={() => createConversation.mutate()}
                   disabled={createConversation.isPending}
                   className={cn(
-                    "inline-flex items-center gap-2 px-6 py-3 rounded-xl",
+                    "inline-flex items-center gap-2 rounded-xl px-6 py-3",
                     "bg-gradient-to-r from-blue-500 to-violet-600",
-                    "text-white font-medium",
+                    "font-medium text-white",
                     "shadow-lg shadow-violet-500/30",
                     "hover:shadow-violet-500/50",
                     "transition-all duration-300",
-                    "disabled:opacity-50"
+                    "disabled:opacity-50",
                   )}
                 >
                   {createConversation.isPending ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
-                    <Plus className="w-5 h-5" />
+                    <Plus className="h-5 w-5" />
                   )}
                   Start Your First Chat
                 </button>
@@ -290,13 +293,17 @@ export default function ChatPage() {
           {!isLoading && conversations && conversations.length > 0 && (
             <div
               className={cn(
-                "space-y-3 transition-all duration-700 delay-200",
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                "space-y-3 transition-all delay-200 duration-700",
+                mounted
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-4 opacity-0",
               )}
             >
-              <div className="flex items-center gap-2 mb-4">
-                <Clock className="w-5 h-5 text-white/60" />
-                <h2 className="text-lg font-semibold text-white">Recent Chats</h2>
+              <div className="mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-white/60" />
+                <h2 className="text-lg font-semibold text-white">
+                  Recent Chats
+                </h2>
               </div>
               {conversations.map((conversation, index) => (
                 <ConversationCard
@@ -311,12 +318,12 @@ export default function ChatPage() {
           {/* Quick Tips */}
           <div
             className={cn(
-              "mt-8 transition-all duration-700 delay-300",
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              "mt-8 transition-all delay-300 duration-700",
+              mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             )}
           >
             <GlassCard className="p-5">
-              <h3 className="font-medium text-white mb-3">Try saying:</h3>
+              <h3 className="mb-3 font-medium text-white">Try saying:</h3>
               <div className="flex flex-wrap gap-2">
                 {[
                   "I'm feeling great today",
@@ -326,7 +333,7 @@ export default function ChatPage() {
                 ].map((prompt) => (
                   <span
                     key={prompt}
-                    className="px-3 py-1.5 rounded-full bg-white/5 text-white/60 text-sm border border-white/10"
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/60"
                   >
                     &quot;{prompt}&quot;
                   </span>
@@ -337,5 +344,5 @@ export default function ChatPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

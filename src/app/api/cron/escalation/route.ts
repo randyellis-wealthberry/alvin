@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
         },
       });
       console.log(
-        `[Escalation] Created LEVEL_1 alert for user ${user.userId} (profile: ${user.profileId})`
+        `[Escalation] Created LEVEL_1 alert for user ${user.userId} (profile: ${user.profileId})`,
       );
       alertsCreated++;
 
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
           },
         });
         console.log(
-          `[Escalation] Escalated alert ${alert.id} from ${alert.level} to ${nextLevel}`
+          `[Escalation] Escalated alert ${alert.id} from ${alert.level} to ${nextLevel}`,
         );
         alertsEscalated++;
 
@@ -134,7 +134,7 @@ export async function GET(request: NextRequest) {
                 const result = await notifyPrimaryContact(
                   updatedAlert,
                   profileWithUserAndContacts,
-                  profileWithUserAndContacts.contacts
+                  profileWithUserAndContacts.contacts,
                 );
                 if (result.success) {
                   notificationsL3++;
@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
                 const result = await notifyAllContacts(
                   updatedAlert,
                   profileWithUserAndContacts,
-                  profileWithUserAndContacts.contacts
+                  profileWithUserAndContacts.contacts,
                 );
                 notificationsL4 += result.sent;
               }
@@ -154,7 +154,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log(
-      `[Escalation] Summary: ${alertsCreated} created, ${alertsEscalated} escalated, user push: ${userPushNotifications}, L3 family: ${notificationsL3}, L4 family: ${notificationsL4}`
+      `[Escalation] Summary: ${alertsCreated} created, ${alertsEscalated} escalated, user push: ${userPushNotifications}, L3 family: ${notificationsL3}, L4 family: ${notificationsL4}`,
     );
 
     return NextResponse.json({
@@ -170,7 +170,7 @@ export async function GET(request: NextRequest) {
     console.error("[Escalation] Error processing escalation:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

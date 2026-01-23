@@ -93,7 +93,7 @@ export interface UserNotificationInput {
  * @returns Result indicating which channel was used and count sent
  */
 export async function sendUserNotification(
-  input: UserNotificationInput
+  input: UserNotificationInput,
 ): Promise<NotificationResult> {
   const {
     userProfileId,
@@ -122,14 +122,14 @@ export async function sendUserNotification(
 
     if (pushSent > 0) {
       console.log(
-        `[Notification] Sent push to ${pushSent} device(s) for profile ${userProfileId}`
+        `[Notification] Sent push to ${pushSent} device(s) for profile ${userProfileId}`,
       );
       return { channel: "push", sent: pushSent };
     }
   } catch (error) {
     console.error(
       `[Notification] Push failed for profile ${userProfileId}:`,
-      error
+      error,
     );
     // Fall through to email
   }
@@ -146,19 +146,19 @@ export async function sendUserNotification(
 
       if (!error) {
         console.log(
-          `[Notification] Sent fallback email to ${userEmail} for profile ${userProfileId}`
+          `[Notification] Sent fallback email to ${userEmail} for profile ${userProfileId}`,
         );
         return { channel: "email", sent: 1 };
       }
 
       console.error(
         `[Notification] Email failed for ${userEmail}:`,
-        error.message
+        error.message,
       );
     } catch (err) {
       console.error(
         `[Notification] Email exception for ${userEmail}:`,
-        err instanceof Error ? err.message : err
+        err instanceof Error ? err.message : err,
       );
       // Fall through to SMS
     }
@@ -171,20 +171,20 @@ export async function sendUserNotification(
 
     if (smsResult.success) {
       console.log(
-        `[Notification] Sent fallback SMS to ${userPhone} for profile ${userProfileId}`
+        `[Notification] Sent fallback SMS to ${userPhone} for profile ${userProfileId}`,
       );
       return { channel: "sms", sent: 1 };
     }
 
     console.error(
       `[Notification] SMS failed for ${userPhone}:`,
-      smsResult.error
+      smsResult.error,
     );
   }
 
   // Neither push, email, nor SMS succeeded
   console.log(
-    `[Notification] No notification sent for profile ${userProfileId} (no push subscriptions, no email/SMS fallback)`
+    `[Notification] No notification sent for profile ${userProfileId} (no push subscriptions, no email/SMS fallback)`,
   );
   return { channel: "none", sent: 0 };
 }
@@ -199,7 +199,7 @@ export async function sendUserNotification(
  */
 export function getNotificationWithEmail(
   template: keyof typeof NOTIFICATION_TEMPLATES,
-  overrides?: { body?: string }
+  overrides?: { body?: string },
 ): Omit<UserNotificationInput, "userProfileId" | "userEmail" | "userPhone"> {
   const t = NOTIFICATION_TEMPLATES[template];
   const body = overrides?.body ?? t.body;
@@ -236,7 +236,7 @@ export interface NotificationWithFallbacks {
  */
 export function getNotificationWithFallbacks(
   template: keyof typeof NOTIFICATION_TEMPLATES,
-  overrides?: { body?: string }
+  overrides?: { body?: string },
 ): NotificationWithFallbacks {
   const t = NOTIFICATION_TEMPLATES[template];
   const body = overrides?.body ?? t.body;

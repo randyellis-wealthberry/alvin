@@ -57,7 +57,7 @@ const ZapIcon = forwardRef<ZapHandle, ZapProps>(
           void controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -68,7 +68,7 @@ const ZapIcon = forwardRef<ZapHandle, ZapProps>(
           void controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
 
     return (
@@ -97,7 +97,7 @@ const ZapIcon = forwardRef<ZapHandle, ZapProps>(
         </svg>
       </div>
     );
-  }
+  },
 );
 
 ZapIcon.displayName = "ZapIcon";

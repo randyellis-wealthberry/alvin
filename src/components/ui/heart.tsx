@@ -37,7 +37,7 @@ const HeartIcon = forwardRef<HeartIconHandle, HeartIconProps>(
           void controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -48,7 +48,7 @@ const HeartIcon = forwardRef<HeartIconHandle, HeartIconProps>(
           void controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
 
     return (
@@ -82,7 +82,7 @@ const HeartIcon = forwardRef<HeartIconHandle, HeartIconProps>(
         </motion.svg>
       </div>
     );
-  }
+  },
 );
 
 HeartIcon.displayName = "HeartIcon";

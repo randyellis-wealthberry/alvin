@@ -46,7 +46,7 @@ export async function sendSMS(to: string, body: string): Promise<SmsResult> {
   // Check if client is configured
   if (!client) {
     console.warn(
-      "[SMS] Twilio not configured (missing TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN)"
+      "[SMS] Twilio not configured (missing TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN)",
     );
     return { success: false, error: "SMS not configured" };
   }
@@ -74,11 +74,15 @@ export async function sendSMS(to: string, body: string): Promise<SmsResult> {
       "code" in error &&
       "message" in error
     ) {
-      const twilioError = error as { code: number; message: string; status?: number };
+      const twilioError = error as {
+        code: number;
+        message: string;
+        status?: number;
+      };
       console.error(
         `[SMS] Twilio error ${twilioError.code}: ${twilioError.message}${
           twilioError.status ? ` (HTTP ${twilioError.status})` : ""
-        }`
+        }`,
       );
       return {
         success: false,

@@ -77,7 +77,7 @@ export const dashboardRouter = createTRPCRouter({
         .object({
           limit: z.number().min(1).max(100).optional().default(20),
         })
-        .optional()
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
       const limit = input?.limit ?? 20;
@@ -150,7 +150,11 @@ export const dashboardRouter = createTRPCRouter({
         }
 
         // Use the most recent relevant timestamp
-        const timestamp = alert.resolvedAt ?? alert.cancelledAt ?? alert.lastEscalatedAt ?? alert.triggeredAt;
+        const timestamp =
+          alert.resolvedAt ??
+          alert.cancelledAt ??
+          alert.lastEscalatedAt ??
+          alert.triggeredAt;
 
         activities.push({
           id: `alert-${alert.id}`,

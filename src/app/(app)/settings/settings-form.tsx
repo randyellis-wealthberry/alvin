@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { api } from "~/trpc/react"
-import { Button } from "~/components/ui/button"
-import { Input } from "~/components/ui/input"
-import { Label } from "~/components/ui/label"
-import { Switch } from "~/components/ui/switch"
-import { cn } from "~/lib/utils"
+import { useState } from "react";
+import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Switch } from "~/components/ui/switch";
+import { cn } from "~/lib/utils";
 
 const FREQUENCY_OPTIONS = [
   { value: 12, label: "12h" },
   { value: 24, label: "24h" },
   { value: 48, label: "48h" },
-] as const
+] as const;
 
 const TIMEZONES = [
   "UTC",
@@ -24,49 +24,49 @@ const TIMEZONES = [
   "Europe/Paris",
   "Asia/Tokyo",
   "Australia/Sydney",
-] as const
+] as const;
 
 export function SettingsForm() {
-  const [profile] = api.profile.get.useSuspenseQuery()
-  const utils = api.useUtils()
+  const [profile] = api.profile.get.useSuspenseQuery();
+  const utils = api.useUtils();
 
   const [checkInFrequencyHours, setCheckInFrequencyHours] = useState(
-    profile.checkInFrequencyHours
-  )
+    profile.checkInFrequencyHours,
+  );
   const [preferredCheckInTime, setPreferredCheckInTime] = useState(
-    profile.preferredCheckInTime ?? ""
-  )
-  const [timezone, setTimezone] = useState(profile.timezone)
-  const [isActive, setIsActive] = useState(profile.isActive)
+    profile.preferredCheckInTime ?? "",
+  );
+  const [timezone, setTimezone] = useState(profile.timezone);
+  const [isActive, setIsActive] = useState(profile.isActive);
 
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const updateProfile = api.profile.update.useMutation({
     onSuccess: async () => {
-      await utils.profile.invalidate()
-      setSuccessMessage("Settings saved!")
-      setErrorMessage(null)
-      setTimeout(() => setSuccessMessage(null), 3000)
+      await utils.profile.invalidate();
+      setSuccessMessage("Settings saved!");
+      setErrorMessage(null);
+      setTimeout(() => setSuccessMessage(null), 3000);
     },
     onError: (err) => {
-      setErrorMessage(err.message || "Failed to save settings")
-      setSuccessMessage(null)
+      setErrorMessage(err.message || "Failed to save settings");
+      setSuccessMessage(null);
     },
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSuccessMessage(null)
-    setErrorMessage(null)
+    e.preventDefault();
+    setSuccessMessage(null);
+    setErrorMessage(null);
 
     updateProfile.mutate({
       checkInFrequencyHours,
       preferredCheckInTime: preferredCheckInTime || null,
       timezone,
       isActive,
-    })
-  }
+    });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -100,7 +100,7 @@ export function SettingsForm() {
                 "flex-1 rounded-lg py-3 text-sm font-medium transition-colors",
                 checkInFrequencyHours === option.value
                   ? "bg-violet-600 text-white"
-                  : "bg-white/10 text-white/60 hover:bg-white/20"
+                  : "bg-white/10 text-white/60 hover:bg-white/20",
               )}
             >
               {option.label}
@@ -169,5 +169,5 @@ export function SettingsForm() {
         {updateProfile.isPending ? "Saving..." : "Save Changes"}
       </Button>
     </form>
-  )
+  );
 }

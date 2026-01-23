@@ -34,7 +34,8 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
               <C1Component
                 c1Response={message.parts
                   .filter(
-                    (p): p is { type: "text"; text: string } => p.type === "text",
+                    (p): p is { type: "text"; text: string } =>
+                      p.type === "text",
                   )
                   .map((p) => p.text)
                   .join("")}

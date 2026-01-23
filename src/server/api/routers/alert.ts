@@ -2,7 +2,10 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { ACTIVE_LEVELS, getNextLevel } from "~/lib/alerts/escalation";
-import { sendUserNotification, NOTIFICATION_TEMPLATES } from "~/lib/notifications";
+import {
+  sendUserNotification,
+  NOTIFICATION_TEMPLATES,
+} from "~/lib/notifications";
 import { syncActivity, syncUserStatus } from "~/lib/convex/sync";
 
 export const alertRouter = createTRPCRouter({
@@ -30,7 +33,7 @@ export const alertRouter = createTRPCRouter({
     });
 
     const activeCount = alerts.filter((a) =>
-      ACTIVE_LEVELS.includes(a.level)
+      ACTIVE_LEVELS.includes(a.level),
     ).length;
     const resolvedCount = alerts.filter((a) => a.level === "RESOLVED").length;
     const cancelledCount = alerts.filter((a) => a.level === "CANCELLED").length;

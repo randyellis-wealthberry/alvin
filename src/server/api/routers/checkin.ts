@@ -63,7 +63,7 @@ export const checkInRouter = createTRPCRouter({
     try {
       // Calculate next due time based on check-in frequency
       const nextDue = new Date(
-        now.getTime() + profile.checkInFrequencyHours * 60 * 60 * 1000
+        now.getTime() + profile.checkInFrequencyHours * 60 * 60 * 1000,
       );
 
       await syncActivity({

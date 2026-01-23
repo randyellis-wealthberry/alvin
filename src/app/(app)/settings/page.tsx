@@ -1,12 +1,12 @@
-import Link from "next/link"
-import { api, HydrateClient } from "~/trpc/server"
-import { SettingsForm } from "./settings-form"
-import { Button } from "~/components/ui/button"
-import { Key, LogOut } from "lucide-react"
+import Link from "next/link";
+import { api, HydrateClient } from "~/trpc/server";
+import { SettingsForm } from "./settings-form";
+import { Button } from "~/components/ui/button";
+import { Key, LogOut } from "lucide-react";
 
 export default async function SettingsPage() {
   // Prefetch profile data for SSR
-  void api.profile.get.prefetch()
+  void api.profile.get.prefetch();
 
   return (
     <HydrateClient>
@@ -51,5 +51,5 @@ export default async function SettingsPage() {
         </div>
       </div>
     </HydrateClient>
-  )
+  );
 }

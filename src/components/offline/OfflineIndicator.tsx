@@ -31,7 +31,7 @@ export function OfflineIndicator() {
   return (
     <div
       role="alert"
-      className="fixed left-0 right-0 top-0 z-50 flex items-center justify-center gap-2 bg-amber-500 px-4 py-2 text-sm font-medium text-amber-950"
+      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-center gap-2 bg-amber-500 px-4 py-2 text-sm font-medium text-amber-950"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

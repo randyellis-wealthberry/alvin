@@ -1,16 +1,16 @@
-import { redirect } from "next/navigation"
-import { auth } from "~/server/auth"
-import { AppShell } from "~/components/shell"
+import { redirect } from "next/navigation";
+import { auth } from "~/server/auth";
+import { AppShell } from "~/components/shell";
 
 export default async function AppLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const session = await auth()
+  const session = await auth();
   if (!session?.user) {
-    redirect("/auth/signin")
+    redirect("/auth/signin");
   }
 
-  return <AppShell>{children}</AppShell>
+  return <AppShell>{children}</AppShell>;
 }

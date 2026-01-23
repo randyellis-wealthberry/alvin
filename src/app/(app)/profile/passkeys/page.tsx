@@ -17,7 +17,7 @@ export default async function PasskeysPage() {
 
   return (
     <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
+      <main className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16">
           <div className="flex items-center gap-4">
             <Button asChild variant="ghost">
@@ -25,7 +25,7 @@ export default async function PasskeysPage() {
             </Button>
           </div>
           <h1 className="text-4xl font-bold">Passkey Management</h1>
-          <p className="max-w-md text-center text-lg text-muted-foreground">
+          <p className="text-muted-foreground max-w-md text-center text-lg">
             Set up passkeys to enable biometric check-ins using TouchID, FaceID,
             Windows Hello, or other device authenticators.
           </p>

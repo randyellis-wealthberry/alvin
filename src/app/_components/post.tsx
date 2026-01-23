@@ -29,14 +29,20 @@ export function LatestPost() {
 
   return (
     <div className="w-full max-w-sm rounded-[2rem] bg-white/5 p-1 backdrop-blur-sm">
-      <div className="rounded-[1.8rem] border border-white/5 bg-background/50 p-6 shadow-xl">
+      <div className="bg-background/50 rounded-[1.8rem] border border-white/5 p-6 shadow-xl">
         {latestPost ? (
-          <div className="mb-4 rounded-xl bg-primary/10 p-4 text-center">
-            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Most Recent Status</p>
-            <p className="mt-1 truncate text-lg font-semibold text-primary">{latestPost.name}</p>
+          <div className="bg-primary/10 mb-4 rounded-xl p-4 text-center">
+            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+              Most Recent Status
+            </p>
+            <p className="text-primary mt-1 truncate text-lg font-semibold">
+              {latestPost.name}
+            </p>
           </div>
         ) : (
-          <p className="mb-4 text-center text-sm text-muted-foreground">No recent status updates.</p>
+          <p className="text-muted-foreground mb-4 text-center text-sm">
+            No recent status updates.
+          </p>
         )}
         <form
           onSubmit={(e) => {
@@ -55,7 +61,7 @@ export function LatestPost() {
               onChange={(e) => setName(e.target.value)}
               required
               minLength={1}
-              className="h-12 border-white/10 bg-black/20 text-base backdrop-blur-md focus-visible:ring-primary/50"
+              className="focus-visible:ring-primary/50 h-12 border-white/10 bg-black/20 text-base backdrop-blur-md"
             />
           </div>
           {error && <p className="text-sm text-red-400">{error}</p>}

@@ -79,7 +79,7 @@ export function StatusWidget() {
     return (
       <Card className="w-full max-w-md">
         <CardContent className="pt-6">
-          <p className="text-center text-muted-foreground">Loading status...</p>
+          <p className="text-muted-foreground text-center">Loading status...</p>
         </CardContent>
       </Card>
     );
@@ -89,7 +89,7 @@ export function StatusWidget() {
     return (
       <Card className="w-full max-w-md">
         <CardContent className="pt-6">
-          <p className="text-center text-muted-foreground">
+          <p className="text-muted-foreground text-center">
             No profile found. Please set up your profile first.
           </p>
         </CardContent>
@@ -97,7 +97,8 @@ export function StatusWidget() {
     );
   }
 
-  const showCheckInPrompt = status.daysUntilDue !== null && status.daysUntilDue < 1;
+  const showCheckInPrompt =
+    status.daysUntilDue !== null && status.daysUntilDue < 1;
 
   return (
     <div className="w-full max-w-md space-y-4">
@@ -106,7 +107,7 @@ export function StatusWidget() {
       {/* Last Check-in Card */}
       <Card>
         <CardContent className="pt-6">
-          <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">
+          <h3 className="text-muted-foreground mb-2 text-sm font-medium tracking-wide uppercase">
             Last Check-in
           </h3>
           {status.lastCheckIn ? (
@@ -114,7 +115,7 @@ export function StatusWidget() {
               <p className="text-xl font-semibold">
                 {formatRelativeTime(new Date(status.lastCheckIn))}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {new Date(status.lastCheckIn).toLocaleString()}
               </p>
             </div>
@@ -127,7 +128,7 @@ export function StatusWidget() {
       {/* Next Check-in Due Card */}
       <Card>
         <CardContent className="pt-6">
-          <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">
+          <h3 className="text-muted-foreground mb-2 text-sm font-medium tracking-wide uppercase">
             Next Check-in Due
           </h3>
           {status.nextDue ? (
@@ -137,7 +138,7 @@ export function StatusWidget() {
               >
                 {formatFutureRelativeTime(new Date(status.nextDue))}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {new Date(status.nextDue).toLocaleString()}
               </p>
             </div>
@@ -150,16 +151,19 @@ export function StatusWidget() {
       {/* Active Alert Card */}
       <Card>
         <CardContent className="pt-6">
-          <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">
+          <h3 className="text-muted-foreground mb-2 text-sm font-medium tracking-wide uppercase">
             Alert Status
           </h3>
           {status.activeAlert ? (
             <div className="flex items-center gap-3">
-              <Badge className={getAlertLevelBadgeStyle(status.alertLevel ?? "")}>
+              <Badge
+                className={getAlertLevelBadgeStyle(status.alertLevel ?? "")}
+              >
                 {status.alertLevel?.replace("_", " ")}
               </Badge>
               <span className="text-muted-foreground">
-                Since {formatRelativeTime(new Date(status.activeAlert.triggeredAt))}
+                Since{" "}
+                {formatRelativeTime(new Date(status.activeAlert.triggeredAt))}
               </span>
             </div>
           ) : (
