@@ -11,9 +11,10 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    AUTH_DISCORD_ID: z.string(),
-    AUTH_DISCORD_SECRET: z.string(),
-    DATABASE_URL: z.string().url(),
+    // Accepts both SQLite (file:./db.sqlite) and PostgreSQL (postgres://...) URLs
+    DATABASE_URL: z.string().min(1),
+    // Direct connection URL for Prisma migrations (bypasses Vercel connection pooling)
+    DATABASE_URL_UNPOOLED: z.string().optional(),
     ANTHROPIC_API_KEY: z.string(),
     CRON_SECRET: z.string().min(1),
     // RESEND_API_KEY - Get from https://resend.com/api-keys
@@ -48,9 +49,8 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AUTH_SECRET: process.env.AUTH_SECRET,
-    AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
-    AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     CRON_SECRET: process.env.CRON_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,

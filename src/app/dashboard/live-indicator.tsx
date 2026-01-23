@@ -1,14 +1,19 @@
 "use client";
 
-// Check if Convex is configured via environment variable
-const isConvexConfigured =
-  typeof window !== "undefined" && !!process.env.NEXT_PUBLIC_CONVEX_URL;
+import { useState, useEffect } from "react";
 
 /**
  * Shows a "Live" indicator when Convex real-time is active.
  * Displays nothing when Convex is not configured (graceful absence).
  */
 export function LiveIndicator() {
+  const [isConvexConfigured, setIsConvexConfigured] = useState(false);
+
+  useEffect(() => {
+    // Check on client only to avoid hydration mismatch
+    setIsConvexConfigured(!!process.env.NEXT_PUBLIC_CONVEX_URL);
+  }, []);
+
   if (!isConvexConfigured) {
     return null;
   }

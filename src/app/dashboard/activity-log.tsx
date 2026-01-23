@@ -26,19 +26,6 @@ function formatRelativeTime(date: Date): string {
   }
 }
 
-function _getActivityIcon(type: string): string {
-  switch (type) {
-    case "check-in":
-      return "checkmark"; // Will render as text icon
-    case "alert":
-      return "warning";
-    case "conversation":
-      return "chat";
-    default:
-      return "dot";
-  }
-}
-
 function getActivityColor(type: string): string {
   switch (type) {
     case "check-in":

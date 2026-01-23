@@ -39,5 +39,5 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "generated", "public/sw.js"]
+  "exclude": ["node_modules", "generated", "public/sw.js", "design-os", "convex", "**/*.test.tsx", "**/*.test.ts"]
 }

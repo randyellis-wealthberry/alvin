@@ -46,5 +46,24 @@ public/swe-worker-*.js
 # Worktrees
 .worktrees/
 
-# Claude
-.claude/settings.local.json
+# Claude Code
+.claude/
+
+# Planning files
+.planning/
+.1code/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Convex (generated)
+convex/_generated/
+
+# Design assets
+design-os/
+wealthberry-designs/
+
+# Vercel
+.vercel/
+.vercel
+.env*.local

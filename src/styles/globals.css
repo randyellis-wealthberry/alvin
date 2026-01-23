@@ -1,6 +1,340 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-@theme {
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Shadcn Theme Variables - Deep Cosmos Palette
+  A futuristic, high-contrast, neon-infused aesthetic
+*/
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+  /* Custom Animations */
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-up: slide-up 0.5s ease-out;
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  @keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes slide-up {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--primary); }
+    50% { opacity: .8; box-shadow: 0 0 20px var(--primary); }
+  }
+}
+
+/*
+  Default Theme - Deep Cosmos (Dark by default concept, but mapping to :root for consistency)
+  But we want the default experience to be dark.
+  So we'll make :root the dark theme, and .light the light theme if needed.
+  However, sticking to the standard shadcn convention:
+*/
+
+:root {
+  --radius: 0.75rem; /* Slightly rounder for modern feel */
+
+  /* Default to Dark Mode values for "Mobile First / Dark Mode First" feel */
+  /* Background: Deep Void Blue */
+  --background: oklch(0.12 0.04 260); 
+  /* Foreground: Ice Cyan White */
+  --foreground: oklch(0.96 0.02 200);
+
+  /* Card: Translucent Deep Blue */
+  --card: oklch(0.15 0.05 260);
+  --card-foreground: oklch(0.96 0.02 200);
+
+  /* Popover: Slightly lighter Deep Blue */
+  --popover: oklch(0.15 0.05 260);
+  --popover-foreground: oklch(0.96 0.02 200);
+
+  /* Primary: Neon Cyan */
+  --primary: oklch(0.7 0.18 220);
+  --primary-foreground: oklch(0.1 0.05 260);
+
+  /* Secondary: Deep Purple/Indigo */
+  --secondary: oklch(0.3 0.1 280);
+  --secondary-foreground: oklch(0.96 0.02 200);
+
+  /* Muted: Low contrast blue-grey */
+  --muted: oklch(0.25 0.05 260);
+  --muted-foreground: oklch(0.7 0.04 250);
+
+  /* Accent: Electric Purple */
+  --accent: oklch(0.35 0.12 290);
+  --accent-foreground: oklch(0.96 0.02 200);
+
+  /* Destructive: Neon Red */
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.96 0.02 200);
+
+  /* Borders: Subtle glowy blue */
+  --border: oklch(0.3 0.06 260); 
+  --input: oklch(0.3 0.06 260);
+  --ring: oklch(0.7 0.18 220);
+
+  /* Charts: Cyberpunk Palette */
+  --chart-1: oklch(0.7 0.18 220); /* Cyan */
+  --chart-2: oklch(0.65 0.2 300); /* Purple */
+  --chart-3: oklch(0.7 0.15 160); /* Green/Teal */
+  --chart-4: oklch(0.8 0.15 80);  /* Orange/Yellow */
+  --chart-5: oklch(0.6 0.2 340);  /* Pink */
+}
+
+/* 
+  If we ever need a light mode, we can define it here. 
+  But for Level 99, we focus on Dark. 
+*/
+.light {
+  /* Light mode overrides if necessary - keeping it simple for now as inverses */
+  --background: oklch(0.98 0.01 260);
+  --foreground: oklch(0.12 0.04 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0.04 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.12 0.04 260);
+  --primary: oklch(0.5 0.18 220);
+  --primary-foreground: oklch(0.98 0.01 260);
+  --secondary: oklch(0.92 0.05 260);
+  --secondary-foreground: oklch(0.12 0.04 260);
+  --muted: oklch(0.92 0.05 260);
+  --muted-foreground: oklch(0.4 0.04 260);
+  --accent: oklch(0.92 0.05 260);
+  --accent-foreground: oklch(0.12 0.04 260);
+  --destructive: oklch(0.6 0.22 25);
+  --border: oklch(0.85 0.04 260);
+  --input: oklch(0.85 0.04 260);
+  --ring: oklch(0.5 0.18 220);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* ================================
+   ALVIN Custom Animations
+   Level 99 Dashboard Effects
+   ================================ */
+
+/* Heartbeat pulse for the main check-in button */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.05);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.03);
+  }
+  56% {
+    transform: scale(1);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Slow ping for outer ring */
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  75%, 100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Even slower ping for outer-outer ring */
+@keyframes ping-slower {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  75%, 100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.animate-ping-slower {
+  animation: ping-slower 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation-delay: 0.3s;
+}
+
+/* Organic blob movement */
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(20px, -30px) scale(1.05);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  75% {
+    transform: translate(30px, 10px) scale(1.02);
+  }
+}
+
+.animate-blob {
+  animation: blob 20s ease-in-out infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Staggered reveal animation */
+@keyframes reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-reveal {
+  animation: reveal 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Bounce once for check-in success */
+@keyframes bounce-once {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-8px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-once {
+  animation: bounce-once 0.6s ease-out;
+}
+
+/* Subtle float for cards */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Glow pulse for active elements */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.5);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Breathing animation for subtle life-like effect */
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Shimmer effect for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
 }

@@ -10,6 +10,10 @@ import {
   notifyPrimaryContact,
   notifyAllContacts,
 } from "~/lib/alerts/notifications";
+import {
+  sendUserNotification,
+  NOTIFICATION_TEMPLATES,
+} from "~/lib/notifications";
 
 /**
  * Cron endpoint for creating and escalating alerts.
@@ -43,6 +47,7 @@ export async function GET(request: NextRequest) {
     // Step 1: Create alerts for users needing them
     const usersNeedingAlerts = await findUsersNeedingAlerts();
     let alertsCreated = 0;
+    let userPushNotifications = 0;
 
     for (const user of usersNeedingAlerts) {
       await db.alert.create({
@@ -56,6 +61,15 @@ export async function GET(request: NextRequest) {
         `[Escalation] Created LEVEL_1 alert for user ${user.userId} (profile: ${user.profileId})`
       );
       alertsCreated++;
+
+      // Send push notification to user for L1
+      const pushResult = await sendUserNotification({
+        userProfileId: user.profileId,
+        ...NOTIFICATION_TEMPLATES.ESCALATION_L1,
+      });
+      if (pushResult.sent > 0) {
+        userPushNotifications++;
+      }
     }
 
     // Step 2: Escalate alerts that need it and send notifications for L3/L4
@@ -81,7 +95,29 @@ export async function GET(request: NextRequest) {
         );
         alertsEscalated++;
 
-        // Send notifications for L3 and L4 transitions
+        // Send push notification to user at each escalation level
+        if (updatedAlert.userProfileId) {
+          const template =
+            nextLevel === "LEVEL_2"
+              ? NOTIFICATION_TEMPLATES.ESCALATION_L2
+              : nextLevel === "LEVEL_3"
+                ? NOTIFICATION_TEMPLATES.ESCALATION_L3
+                : nextLevel === "LEVEL_4"
+                  ? NOTIFICATION_TEMPLATES.ESCALATION_L4
+                  : null;
+
+          if (template) {
+            const pushResult = await sendUserNotification({
+              userProfileId: updatedAlert.userProfileId,
+              ...template,
+            });
+            if (pushResult.sent > 0) {
+              userPushNotifications++;
+            }
+          }
+        }
+
+        // Send email notifications to family contacts for L3 and L4 transitions
         if (nextLevel === "LEVEL_3" || nextLevel === "LEVEL_4") {
           // Fetch profile with user for name, and contacts for notifications
           if (updatedAlert.userProfileId) {
@@ -118,13 +154,14 @@ export async function GET(request: NextRequest) {
     }
 
     console.log(
-      `[Escalation] Summary: ${alertsCreated} created, ${alertsEscalated} escalated, L3 notifications: ${notificationsL3}, L4 notifications: ${notificationsL4}`
+      `[Escalation] Summary: ${alertsCreated} created, ${alertsEscalated} escalated, user push: ${userPushNotifications}, L3 family: ${notificationsL3}, L4 family: ${notificationsL4}`
     );
 
     return NextResponse.json({
       success: true,
       alertsCreated,
       alertsEscalated,
+      userPushNotifications,
       notificationsL3,
       notificationsL4,
       timestamp: now.toISOString(),

@@ -7,9 +7,10 @@ import { SessionProvider } from "next-auth/react";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ConvexClientProvider } from "~/components/convex-provider";
 import { InstallPrompt, IOSInstallInstructions } from "~/components/pwa";
+import { MobileNav } from "~/components/layout/mobile-nav";
 import { cn } from "~/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   applicationName: "ALVIN",
@@ -48,11 +49,16 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(geist.variable, inter.variable)}>
-      <body>
+    <html lang="en" className={cn(geist.variable, inter.variable, "dark")}>
+      <body className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
         <SessionProvider>
           <ConvexClientProvider>
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <TRPCReactProvider>
+              <div className="relative flex min-h-screen flex-col">
+                {children}
+                <MobileNav />
+              </div>
+            </TRPCReactProvider>
           </ConvexClientProvider>
           <InstallPrompt />
           <IOSInstallInstructions />

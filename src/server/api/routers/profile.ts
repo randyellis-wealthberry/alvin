@@ -53,4 +53,46 @@ export const profileRouter = createTRPCRouter({
         },
       });
     }),
+
+  delete: protectedProcedure.mutation(async ({ ctx }) => {
+    // Delete all user data in transaction
+    await ctx.db.$transaction(async (tx) => {
+      // Find profile
+      const profile = await tx.userProfile.findUnique({
+        where: { userId: ctx.session.user.id },
+      });
+
+      if (profile) {
+        // Delete related data
+        await tx.message.deleteMany({
+          where: { conversation: { userProfileId: profile.id } },
+        });
+        await tx.conversation.deleteMany({
+          where: { userProfileId: profile.id },
+        });
+        await tx.checkIn.deleteMany({
+          where: { userProfileId: profile.id },
+        });
+        await tx.alert.deleteMany({
+          where: { userProfileId: profile.id },
+        });
+        await tx.contact.deleteMany({
+          where: { userProfileId: profile.id },
+        });
+        await tx.passkey.deleteMany({
+          where: { userProfileId: profile.id },
+        });
+        await tx.userProfile.delete({
+          where: { id: profile.id },
+        });
+      }
+
+      // Delete user account
+      await tx.user.delete({
+        where: { id: ctx.session.user.id },
+      });
+    });
+
+    return { success: true };
+  }),
 });

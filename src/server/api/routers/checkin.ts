@@ -103,4 +103,51 @@ export const checkInRouter = createTRPCRouter({
       take: 20,
     });
   }),
+
+  stats: protectedProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.userProfile.findUnique({
+      where: { userId: ctx.session.user.id },
+    });
+
+    if (!profile) {
+      return { totalCheckIns: 0, currentStreak: 0 };
+    }
+
+    // Get total check-ins
+    const totalCheckIns = await ctx.db.checkIn.count({
+      where: { userProfileId: profile.id },
+    });
+
+    // Calculate streak (simplified: count consecutive days with check-ins)
+    const checkIns = await ctx.db.checkIn.findMany({
+      where: { userProfileId: profile.id },
+      orderBy: { performedAt: "desc" },
+      take: 30,
+    });
+
+    let currentStreak = 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 30; i++) {
+      const targetDate = new Date(today);
+      targetDate.setDate(targetDate.getDate() - i);
+      const nextDate = new Date(targetDate);
+      nextDate.setDate(nextDate.getDate() + 1);
+
+      const hasCheckIn = checkIns.some((c) => {
+        const checkInDate = new Date(c.performedAt);
+        return checkInDate >= targetDate && checkInDate < nextDate;
+      });
+
+      if (hasCheckIn) {
+        currentStreak++;
+      } else if (i > 0) {
+        // Allow missing today, but break on earlier gaps
+        break;
+      }
+    }
+
+    return { totalCheckIns, currentStreak };
+  }),
 });
