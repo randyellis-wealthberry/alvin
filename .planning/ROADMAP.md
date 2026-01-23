@@ -12,6 +12,7 @@ None
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-01-17
 - ✅ [v2.0 Mobile & Messaging](milestones/v2.0-ROADMAP.md) (Phases 11-16) — SHIPPED 2026-01-22
+- 🚧 **v3.0 Production Hardening** (Phases 17-24) — In Progress
 
 ## Phases
 
@@ -74,3 +75,110 @@ None
 | 16. Convex Real-time | v2.0 | 3/3 | Complete | 2026-01-22 |
 
 **Total: 6 phases, 16 plans — 100% complete**
+
+### 🚧 v3.0 Production Hardening (In Progress)
+
+**Milestone Goal:** Harden ALVIN for production deployment with scalable infrastructure, security improvements, and operational observability.
+
+#### Phase 17: Redis Session Store
+
+**Goal**: Move WebAuthn challenges and sessions from in-memory to Redis for horizontal scaling
+**Depends on**: Previous milestone complete
+**Research**: Likely (Upstash Redis, NextAuth adapters)
+**Research topics**: Upstash setup, NextAuth Redis adapter, WebAuthn challenge storage patterns
+**Plans**: TBD
+
+Plans:
+- [ ] 17-01: TBD (run /gsd:plan-phase 17 to break down)
+
+#### Phase 18: OAuth Providers
+
+**Goal**: Add Google and Apple OAuth alongside existing Discord provider
+**Depends on**: Phase 17
+**Research**: Likely (NextAuth provider configuration, Apple OAuth quirks)
+**Research topics**: NextAuth Google/Apple providers, account linking, Apple sign-in requirements
+**Plans**: TBD
+
+Plans:
+- [ ] 18-01: TBD
+
+#### Phase 19: Rate Limiting
+
+**Goal**: Production-grade rate limiting with Redis backend to prevent abuse
+**Depends on**: Phase 17 (requires Redis)
+**Research**: Likely (upstash/ratelimit library)
+**Research topics**: @upstash/ratelimit patterns, sliding window vs fixed window, tRPC middleware
+**Plans**: TBD
+
+Plans:
+- [ ] 19-01: TBD
+
+#### Phase 20: Error Monitoring
+
+**Goal**: Sentry integration for error tracking, performance monitoring, and alerting
+**Depends on**: Phase 17
+**Research**: Likely (Sentry Next.js SDK)
+**Research topics**: @sentry/nextjs setup, source maps, environment configuration
+**Plans**: TBD
+
+Plans:
+- [ ] 20-01: TBD
+
+#### Phase 21: Security Audit
+
+**Goal**: CSP headers, input sanitization review, dependency audit, security best practices
+**Depends on**: Phase 20
+**Research**: Unlikely (internal patterns, security checklist)
+**Plans**: TBD
+
+Plans:
+- [ ] 21-01: TBD
+
+#### Phase 22: Health Checks
+
+**Goal**: API health endpoints for DB connectivity, external services, and deployment verification
+**Depends on**: Phase 20
+**Research**: Unlikely (internal patterns)
+**Plans**: TBD
+
+Plans:
+- [ ] 22-01: TBD
+
+#### Phase 23: Logging & Observability
+
+**Goal**: Structured logging with Pino, request tracing, and log aggregation setup
+**Depends on**: Phase 20
+**Research**: Likely (Pino, tracing patterns)
+**Research topics**: Pino Next.js integration, correlation IDs, structured log format
+**Plans**: TBD
+
+Plans:
+- [ ] 23-01: TBD
+
+#### Phase 24: Load Testing
+
+**Goal**: k6 load test scripts, performance baselines, and bottleneck identification
+**Depends on**: Phase 22, 23
+**Research**: Likely (k6 setup)
+**Research topics**: k6 installation, test scenarios, metrics interpretation
+**Plans**: TBD
+
+Plans:
+- [ ] 24-01: TBD
+
+---
+
+**v3.0 Production Hardening — NOT STARTED**
+
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 17. Redis Session Store | v3.0 | 0/? | Not started | - |
+| 18. OAuth Providers | v3.0 | 0/? | Not started | - |
+| 19. Rate Limiting | v3.0 | 0/? | Not started | - |
+| 20. Error Monitoring | v3.0 | 0/? | Not started | - |
+| 21. Security Audit | v3.0 | 0/? | Not started | - |
+| 22. Health Checks | v3.0 | 0/? | Not started | - |
+| 23. Logging & Observability | v3.0 | 0/? | Not started | - |
+| 24. Load Testing | v3.0 | 0/? | Not started | - |
+
+**Total: 8 phases, ? plans — 0% complete**
