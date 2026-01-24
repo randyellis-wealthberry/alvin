@@ -17,8 +17,10 @@ export const env = createEnv({
     DATABASE_URL_UNPOOLED: z.string().optional(),
     ANTHROPIC_API_KEY: z.string(),
     // Upstash Redis - Get from https://console.upstash.com
-    UPSTASH_REDIS_REST_URL: z.string().url(),
-    UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+    // Optional: falls back to in-memory storage (see src/lib/redis.ts)
+    // Required in production for WebAuthn challenge persistence across instances
+    UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
     CRON_SECRET: z.string().min(1),
     // RESEND_API_KEY - Get from https://resend.com/api-keys
     // Optional in development; required in production for email delivery

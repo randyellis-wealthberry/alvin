@@ -32,11 +32,11 @@ export function Header() {
     "U";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/5 bg-black/20 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#15162c]/85 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-screen-xl items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 shadow-[0_0_10px_rgba(168,85,247,0.4)]">
             <HeartIcon size={16} className="text-white" />
           </div>
           <h1 className="text-lg font-semibold tracking-tight text-white">
@@ -84,7 +84,7 @@ export function Header() {
               {/* Dropdown Menu */}
               {dropdownOpen && (
                 <div className="animate-in fade-in slide-in-from-top-2 absolute top-full right-0 mt-2 w-56 duration-200">
-                  <div className="overflow-hidden rounded-xl border border-white/10 bg-[#1a1a2e]/95 shadow-2xl shadow-black/60 backdrop-blur-xl">
+                  <div className="overflow-hidden rounded-xl border border-white/10 bg-[#15162c]/95 shadow-2xl shadow-black/60 backdrop-blur-xl">
                     {/* User Info */}
                     <div className="border-b border-white/10 bg-white/[0.02] px-4 py-3">
                       <p className="truncate text-sm font-medium text-white">

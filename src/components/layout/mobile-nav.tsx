@@ -42,7 +42,7 @@ export function MobileNav() {
   ];
 
   return (
-    <div className="bg-background/80 fixed right-0 bottom-0 left-0 z-50 flex h-20 items-center justify-around border-t border-white/10 px-4 pb-2 backdrop-blur-xl md:hidden">
+    <div className="bg-[#15162c]/85 fixed right-0 bottom-0 left-0 z-50 flex h-20 items-center justify-around border-t border-white/10 px-4 pb-2 backdrop-blur-xl md:hidden">
       {links.map((link) => {
         const Icon = link.icon;
         const isActive = pathname === link.href;
@@ -54,14 +54,14 @@ export function MobileNav() {
             className={cn(
               "flex flex-col items-center gap-1 p-2 transition-all duration-300",
               isActive
-                ? "text-primary scale-110 drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]"
+                ? "text-primary scale-110"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
             <div
               className={cn(
                 "relative flex h-10 w-10 items-center justify-center rounded-full transition-all",
-                isActive ? "bg-primary/10" : "bg-transparent",
+                isActive ? "bg-primary/20 shadow-[0_0_15px_rgba(168,85,247,0.3)]" : "bg-transparent",
               )}
             >
               <Icon

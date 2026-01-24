@@ -49,8 +49,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(geist.variable, inter.variable, "dark")}>
-      <body className="bg-background text-foreground selection:bg-primary/20 selection:text-primary min-h-screen">
+    <html lang="en" className={cn(geist.variable, inter.variable)}>
+      <body className="bg-gradient-to-b from-[#2e026d] to-[#15162c] text-foreground selection:bg-purple-500/30 selection:text-white min-h-screen">
         <SessionProvider>
           <ConvexClientProvider>
             <TRPCReactProvider>

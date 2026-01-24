@@ -36,9 +36,9 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans: var(--font-sans), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  
+
   /* Custom Animations */
   --animate-fade-in: fade-in 0.5s ease-out;
   --animate-slide-up: slide-up 0.5s ease-out;
@@ -59,86 +59,79 @@
 }
 
 /*
-  Default Theme - Deep Cosmos (Dark by default concept, but mapping to :root for consistency)
-  But we want the default experience to be dark.
-  So we'll make :root the dark theme, and .light the light theme if needed.
-  However, sticking to the standard shadcn convention:
+  Default Theme - Level 99: Cosmic Glass
 */
 
 :root {
-  --radius: 0.75rem; /* Slightly rounder for modern feel */
+  --radius: 1rem;
 
-  /* Default to Dark Mode values for "Mobile First / Dark Mode First" feel */
-  /* Background: Deep Void Blue */
-  --background: oklch(0.12 0.04 260); 
-  /* Foreground: Ice Cyan White */
-  --foreground: oklch(0.96 0.02 200);
+  /* Background: Deep Midnight (Gradient base provided in layout.tsx) */
+  --background: #15162c;
+  /* Foreground: White */
+  --foreground: #ffffff;
 
-  /* Card: Translucent Deep Blue */
-  --card: oklch(0.15 0.05 260);
-  --card-foreground: oklch(0.96 0.02 200);
+  /* Card: Glass White (10% opacity) */
+  --card: rgba(255, 255, 255, 0.1);
+  --card-foreground: #ffffff;
 
-  /* Popover: Slightly lighter Deep Blue */
-  --popover: oklch(0.15 0.05 260);
-  --popover-foreground: oklch(0.96 0.02 200);
+  /* Popover: Slightly cleaner glass */
+  --popover: #1c1d33;
+  --popover-foreground: #ffffff;
 
-  /* Primary: Neon Cyan */
-  --primary: oklch(0.7 0.18 220);
-  --primary-foreground: oklch(0.1 0.05 260);
+  /* Primary: Purple (Brand) */
+  --primary: #a855f7;
+  --primary-foreground: #ffffff;
 
-  /* Secondary: Deep Purple/Indigo */
-  --secondary: oklch(0.3 0.1 280);
-  --secondary-foreground: oklch(0.96 0.02 200);
+  /* Secondary: Green (Action/Success) */
+  --secondary: #22c55e;
+  --secondary-foreground: #ffffff;
 
-  /* Muted: Low contrast blue-grey */
-  --muted: oklch(0.25 0.05 260);
-  --muted-foreground: oklch(0.7 0.04 250);
+  /* Accent: Blue (Info/Biometric) */
+  --accent: #3b82f6;
+  --accent-foreground: #ffffff;
 
-  /* Accent: Electric Purple */
-  --accent: oklch(0.35 0.12 290);
-  --accent-foreground: oklch(0.96 0.02 200);
+  /* Muted: White with opacity */
+  --muted: rgba(255, 255, 255, 0.1);
+  --muted-foreground: rgba(255, 255, 255, 0.6);
 
-  /* Destructive: Neon Red */
-  --destructive: oklch(0.6 0.22 25);
-  --destructive-foreground: oklch(0.96 0.02 200);
+  /* Destructive: Red */
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
 
-  /* Borders: Subtle glowy blue */
-  --border: oklch(0.3 0.06 260); 
-  --input: oklch(0.3 0.06 260);
-  --ring: oklch(0.7 0.18 220);
+  /* Borders: Glass Border */
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #a855f7;
 
-  /* Charts: Cyberpunk Palette */
-  --chart-1: oklch(0.7 0.18 220); /* Cyan */
-  --chart-2: oklch(0.65 0.2 300); /* Purple */
-  --chart-3: oklch(0.7 0.15 160); /* Green/Teal */
-  --chart-4: oklch(0.8 0.15 80);  /* Orange/Yellow */
-  --chart-5: oklch(0.6 0.2 340);  /* Pink */
+  /* Chart Palette */
+  --chart-1: #a855f7;
+  --chart-2: #22c55e;
+  --chart-3: #3b82f6;
+  --chart-4: #f59e0b;
+  --chart-5: #ec4899;
 }
 
-/* 
-  If we ever need a light mode, we can define it here. 
-  But for Level 99, we focus on Dark. 
-*/
-.light {
-  /* Light mode overrides if necessary - keeping it simple for now as inverses */
-  --background: oklch(0.98 0.01 260);
-  --foreground: oklch(0.12 0.04 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.12 0.04 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.12 0.04 260);
-  --primary: oklch(0.5 0.18 220);
-  --primary-foreground: oklch(0.98 0.01 260);
-  --secondary: oklch(0.92 0.05 260);
-  --secondary-foreground: oklch(0.12 0.04 260);
-  --muted: oklch(0.92 0.05 260);
-  --muted-foreground: oklch(0.4 0.04 260);
-  --accent: oklch(0.92 0.05 260);
-  --accent-foreground: oklch(0.12 0.04 260);
-  --destructive: oklch(0.6 0.22 25);
-  --border: oklch(0.85 0.04 260);
-  --input: oklch(0.85 0.04 260);
-  --ring: oklch(0.5 0.18 220);
+.dark {
+  /* Inherit root */
+  --background: #15162c;
+  --foreground: #ffffff;
+  --card: rgba(255, 255, 255, 0.1);
+  --card-foreground: #ffffff;
+  --popover: #1c1d33;
+  --popover-foreground: #ffffff;
+  --primary: #a855f7;
+  --primary-foreground: #ffffff;
+  --secondary: #22c55e;
+  --secondary-foreground: #ffffff;
+  --muted: rgba(255, 255, 255, 0.1);
+  --muted-foreground: rgba(255, 255, 255, 0.6);
+  --accent: #3b82f6;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #a855f7;
 }
 
 @layer base {
@@ -157,21 +150,11 @@
 
 /* Heartbeat pulse for the main check-in button */
 @keyframes heartbeat {
-  0%, 100% {
-    transform: scale(1);
-  }
-  14% {
-    transform: scale(1.05);
-  }
-  28% {
-    transform: scale(1);
-  }
-  42% {
-    transform: scale(1.03);
-  }
-  56% {
-    transform: scale(1);
-  }
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.05); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.03); }
+  56% { transform: scale(1); }
 }
 
 .animate-heartbeat {
@@ -180,14 +163,8 @@
 
 /* Slow ping for outer ring */
 @keyframes ping-slow {
-  0% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  75%, 100% {
-    transform: scale(1.4);
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 0.5; }
+  75%, 100% { transform: scale(1.4); opacity: 0; }
 }
 
 .animate-ping-slow {
@@ -196,14 +173,8 @@
 
 /* Even slower ping for outer-outer ring */
 @keyframes ping-slower {
-  0% {
-    transform: scale(1);
-    opacity: 0.3;
-  }
-  75%, 100% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 0.3; }
+  75%, 100% { transform: scale(1.6); opacity: 0; }
 }
 
 .animate-ping-slower {
@@ -213,18 +184,10 @@
 
 /* Organic blob movement */
 @keyframes blob {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  25% {
-    transform: translate(20px, -30px) scale(1.05);
-  }
-  50% {
-    transform: translate(-20px, 20px) scale(0.95);
-  }
-  75% {
-    transform: translate(30px, 10px) scale(1.02);
-  }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -30px) scale(1.05); }
+  50% { transform: translate(-20px, 20px) scale(0.95); }
+  75% { transform: translate(30px, 10px) scale(1.02); }
 }
 
 .animate-blob {
@@ -241,14 +204,8 @@
 
 /* Staggered reveal animation */
 @keyframes reveal {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .animate-reveal {
@@ -258,18 +215,10 @@
 
 /* Bounce once for check-in success */
 @keyframes bounce-once {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  30% {
-    transform: translateY(-8px);
-  }
-  50% {
-    transform: translateY(0);
-  }
-  70% {
-    transform: translateY(-4px);
-  }
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-8px); }
+  50% { transform: translateY(0); }
+  70% { transform: translateY(-4px); }
 }
 
 .animate-bounce-once {
@@ -278,12 +227,8 @@
 
 /* Subtle float for cards */
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
 .animate-float {
@@ -292,12 +237,8 @@
 
 /* Glow pulse for active elements */
 @keyframes glow-pulse {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(16, 185, 129, 0.5);
-  }
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
 }
 
 .animate-glow-pulse {
@@ -306,12 +247,8 @@
 
 /* Breathing animation for subtle life-like effect */
 @keyframes breathe {
-  0%, 100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 0.8;
-  }
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
 }
 
 .animate-breathe {
@@ -320,21 +257,12 @@
 
 /* Shimmer effect for loading states */
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }

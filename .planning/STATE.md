@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-22)
 ## Current Position
 
 Phase: 17 of 24 (Redis Session Store)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-01-23 — Milestone v3.0 created
+Plan: 17-01 complete
+Status: Phase complete, ready for Phase 18
+Last activity: 2026-01-23 — Phase 17 completed (Redis WebAuthn challenge store)
 
-Progress: ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0%
+Progress: █████░░░░░░░░░░░░░░░░░░░░░░░░░ 12.5% (1/8 phases)
 
 ## Milestones Shipped
 
@@ -35,7 +35,8 @@ All decisions logged in PROJECT.md Key Decisions table with outcomes marked.
 ### Deferred Issues
 
 Carried forward:
-- In-memory WebAuthn challenges → Redis (Phase 17 will address)
+
+- ~~In-memory WebAuthn challenges → Redis~~ (Resolved in Phase 17-01)
 - Custom escalation timing (potential v4 feature)
 
 ### Blockers/Concerns
@@ -50,8 +51,8 @@ Resume file: None
 
 ## Next Steps
 
-1. **Plan Phase 17** — `/gsd:plan-phase 17` (Redis Session Store)
-2. **Or research first** — `/gsd:research-phase 17` if unfamiliar with Upstash/Redis
+1. **Plan Phase 18** — `/gsd:plan-phase 18` (OAuth Providers - Google, Apple)
+2. **Or research first** — `/gsd:research-phase 18` for NextAuth provider configuration
 
 ### Roadmap Evolution
 
