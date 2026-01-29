@@ -28,6 +28,9 @@ export const env = createEnv({
     VAPID_PRIVATE_KEY: z.string().min(1),
     VAPID_CONTACT_EMAIL: z.string().email(), // Used in VAPID "subject" field
     // Twilio SMS - Get from https://console.twilio.com
+    // Google OAuth - Get from https://console.cloud.google.com/apis/credentials
+    AUTH_GOOGLE_ID: z.string().optional(),
+    AUTH_GOOGLE_SECRET: z.string().optional(),
     TWILIO_ACCOUNT_SID: z.string().optional(),
     TWILIO_AUTH_TOKEN: z.string().optional(),
     TWILIO_PHONE_NUMBER: z.string().optional(),
@@ -64,6 +67,9 @@ export const env = createEnv({
     VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY,
     VAPID_CONTACT_EMAIL: process.env.VAPID_CONTACT_EMAIL,
     NEXT_PUBLIC_VAPID_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+    // Google OAuth
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     // Twilio SMS
     TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,

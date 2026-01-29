@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-22)
 
 ## Current Position
 
-Phase: 17 of 25 (Redis Session Store)
+Phase: 18 of 25 (OAuth Providers)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-01-23 — Milestone v3.0 created
+Last activity: 2026-01-29 — Phase 17 complete, Phase 25 work done
 
-Progress: ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0%
+Progress: █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 11%
 
 ## Milestones Shipped
 
@@ -35,13 +35,13 @@ All decisions logged in PROJECT.md Key Decisions table with outcomes marked.
 ### Deferred Issues
 
 Carried forward:
-- In-memory WebAuthn challenges → Redis (Phase 17 will address)
+- ~~In-memory WebAuthn challenges → Redis~~ (Phase 17 DONE)
 - Custom escalation timing (potential v4 feature)
 
 ### Pending Todos
 
 1 pending todo in `.planning/todos/pending/`:
-- **Add navigation out of chat screen** (ui) — No wayfinding to exit full-screen chat
+- ~~**Add navigation out of chat screen** (ui)~~ — DONE (floating home button added)
 
 ### Blockers/Concerns
 
@@ -49,14 +49,14 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-23
-Stopped at: Milestone v3.0 initialization
+Last session: 2026-01-29
+Stopped at: Starting Phase 18
 Resume file: None
 
 ## Next Steps
 
-1. **Plan Phase 17** — `/gsd:plan-phase 17` (Redis Session Store)
-2. **Or research first** — `/gsd:research-phase 17` if unfamiliar with Upstash/Redis
+1. **Plan Phase 18** — `/gsd:plan-phase 18` (OAuth Providers)
+2. **Or skip to Phase 19** — Rate Limiting (if OAuth not needed yet)
 
 ### Roadmap Evolution
 
@@ -64,4 +64,6 @@ Resume file: None
 - v2.0 Mobile & Messaging shipped: 6 phases, 16 plans (2026-01-22)
 - v3.0 Production Hardening created: 8 phases (Phase 17-24) (2026-01-23)
 - Phase 25 added: C1Chat Rich Response Integration (2026-01-28)
+- Phase 17 completed: Redis Session Store (2026-01-28)
+- Phase 25 partially done: C1Chat rich responses, delete confirmation, chat nav (2026-01-29)
 - Total: 25 phases across 3 milestones

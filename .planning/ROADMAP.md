@@ -80,15 +80,15 @@ None
 
 **Milestone Goal:** Harden ALVIN for production deployment with scalable infrastructure, security improvements, and operational observability.
 
-#### Phase 17: Redis Session Store
+#### Phase 17: Redis Session Store ✅
 
 **Goal**: Move WebAuthn challenges and sessions from in-memory to Redis for horizontal scaling
 **Depends on**: Previous milestone complete
 **Research**: Complete (Upstash Redis patterns via Context7)
-**Plans**: 1
+**Plans**: 1/1
 
 Plans:
-- [ ] 17-01: Set up Upstash Redis client and migrate WebAuthn challenge store
+- [x] 17-01: Set up Upstash Redis client and migrate WebAuthn challenge store
 
 #### Phase 18: OAuth Providers
 
@@ -165,13 +165,23 @@ Plans:
 Plans:
 - [ ] 24-01: TBD
 
+#### Phase 25: C1Chat Rich Response Integration
+
+**Goal**: Switch from plain markdown to rich C1 responses — think items, wellness check-in cards, structured content via writeContent/writeThinkItem
+**Depends on**: Phase 17
+**Research**: Unlikely (SDK already installed, APIs explored)
+**Plans**: TBD
+
+Plans:
+- [ ] 25-01: TBD
+
 ---
 
 **v3.0 Production Hardening — NOT STARTED**
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 17. Redis Session Store | v3.0 | 0/? | Not started | - |
+| 17. Redis Session Store | v3.0 | 1/1 | Complete | 2026-01-28 |
 | 18. OAuth Providers | v3.0 | 0/? | Not started | - |
 | 19. Rate Limiting | v3.0 | 0/? | Not started | - |
 | 20. Error Monitoring | v3.0 | 0/? | Not started | - |
@@ -179,5 +189,6 @@ Plans:
 | 22. Health Checks | v3.0 | 0/? | Not started | - |
 | 23. Logging & Observability | v3.0 | 0/? | Not started | - |
 | 24. Load Testing | v3.0 | 0/? | Not started | - |
+| 25. C1Chat Rich Responses | v3.0 | 0/? | Not started | - |
 
-**Total: 8 phases, ? plans — 0% complete**
+**Total: 9 phases, ? plans — 0% complete**
