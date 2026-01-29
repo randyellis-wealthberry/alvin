@@ -4,11 +4,20 @@ import { analyzeConversationForCheckIn } from "~/lib/ai/check-in-detection";
 import { ALVIN_SYSTEM_PROMPT } from "~/lib/ai/prompts";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { chatRateLimit } from "~/server/api/rate-limit";
 
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return new Response("Unauthorized", { status: 401 });
+  }
+
+  // Rate limit: 20 messages per minute per user
+  const { success } = await chatRateLimit.limit(session.user.id);
+  if (!success) {
+    return new Response("Rate limit exceeded. Please slow down.", {
+      status: 429,
+    });
   }
 
   const {

@@ -14,7 +14,7 @@ import { ZodError } from "zod";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 
-import { checkRateLimit } from "./rate-limit";
+import { apiRateLimit, authRateLimit, checkRateLimit } from "./rate-limit";
 
 /**
  * 1. CONTEXT
@@ -106,17 +106,28 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 });
 
 /**
- * Rate limiting middleware
+ * Rate limiting middleware (Redis-backed via @upstash/ratelimit)
  *
- * Limits requests per IP address. Uses in-memory storage (resets on restart).
- * For production at scale, consider Redis-based rate limiting.
+ * General API rate limit: 100 req/min per IP.
  */
 export const rateLimitMiddleware = t.middleware(async ({ ctx, next }) => {
   const identifier =
     ctx.headers.get("x-forwarded-for") ??
     ctx.headers.get("x-real-ip") ??
     "unknown";
-  checkRateLimit(identifier);
+  await checkRateLimit(apiRateLimit, identifier);
+  return next();
+});
+
+/**
+ * Stricter rate limiting for auth endpoints: 10 req/min per IP.
+ */
+export const authRateLimitMiddleware = t.middleware(async ({ ctx, next }) => {
+  const identifier =
+    ctx.headers.get("x-forwarded-for") ??
+    ctx.headers.get("x-real-ip") ??
+    "unknown";
+  await checkRateLimit(authRateLimit, identifier);
   return next();
 });
 
@@ -130,11 +141,20 @@ export const rateLimitMiddleware = t.middleware(async ({ ctx, next }) => {
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
 /**
- * Rate-limited public procedure
+ * Rate-limited public procedure (100 req/min)
  *
- * Use for public endpoints that should have rate limiting (e.g., mutations).
+ * Use for public endpoints that should have rate limiting.
  */
 export const rateLimitedProcedure = publicProcedure.use(rateLimitMiddleware);
+
+/**
+ * Auth rate-limited procedure (10 req/min)
+ *
+ * Use for auth endpoints (login, register) with stricter limits.
+ */
+export const authRateLimitedProcedure = publicProcedure.use(
+  authRateLimitMiddleware,
+);
 
 /**
  * Protected (authenticated) procedure

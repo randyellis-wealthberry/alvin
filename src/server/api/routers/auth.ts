@@ -1,10 +1,13 @@
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, rateLimitedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  authRateLimitedProcedure,
+} from "~/server/api/trpc";
 
 export const authRouter = createTRPCRouter({
-  register: rateLimitedProcedure
+  register: authRateLimitedProcedure
     .input(
       z.object({
         email: z.string().email("Invalid email address"),

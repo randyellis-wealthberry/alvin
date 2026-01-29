@@ -1,69 +1,45 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { TRPCError } from "@trpc/server";
 
-import {
-  checkRateLimit,
-  resetRateLimitStore,
-  type RateLimitConfig,
-} from "./rate-limit";
+// Mock the Redis module before importing rate-limit
+vi.mock("~/lib/redis", () => ({
+  redis: {
+    eval: vi.fn(),
+    evalsha: vi.fn(),
+    scriptLoad: vi.fn(),
+  },
+}));
+
+// Mock @upstash/ratelimit
+const mockLimit = vi.fn();
+vi.mock("@upstash/ratelimit", () => ({
+  Ratelimit: class MockRatelimit {
+    static slidingWindow() {
+      return {};
+    }
+    limit = mockLimit;
+  },
+}));
+
+import { checkRateLimit, apiRateLimit } from "./rate-limit";
 
 describe("rate-limit", () => {
-  beforeEach(() => {
-    resetRateLimitStore();
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   describe("checkRateLimit", () => {
-    const config: RateLimitConfig = {
-      windowMs: 60000, // 1 minute
-      maxRequests: 3,
-    };
-
-    it("allows requests under the limit", () => {
-      expect(() => checkRateLimit("user-1", config)).not.toThrow();
-      expect(() => checkRateLimit("user-1", config)).not.toThrow();
-      expect(() => checkRateLimit("user-1", config)).not.toThrow();
+    it("allows requests when under limit", async () => {
+      mockLimit.mockResolvedValueOnce({ success: true });
+      await expect(
+        checkRateLimit(apiRateLimit, "user-1"),
+      ).resolves.toBeUndefined();
     });
 
-    it("throws TOO_MANY_REQUESTS when limit exceeded", () => {
-      checkRateLimit("user-1", config);
-      checkRateLimit("user-1", config);
-      checkRateLimit("user-1", config);
-
-      expect(() => checkRateLimit("user-1", config)).toThrow(
+    it("throws TOO_MANY_REQUESTS when limit exceeded", async () => {
+      mockLimit.mockResolvedValueOnce({ success: false });
+      await expect(checkRateLimit(apiRateLimit, "user-1")).rejects.toThrow(
+        TRPCError,
+      );
+      await expect(checkRateLimit(apiRateLimit, "user-1")).rejects.toThrow(
         "Rate limit exceeded",
       );
-    });
-
-    it("resets after window expires", () => {
-      checkRateLimit("user-1", config);
-      checkRateLimit("user-1", config);
-      checkRateLimit("user-1", config);
-
-      // Advance time past the window
-      vi.advanceTimersByTime(60001);
-
-      // Should allow requests again
-      expect(() => checkRateLimit("user-1", config)).not.toThrow();
-    });
-
-    it("tracks different identifiers independently", () => {
-      checkRateLimit("user-1", config);
-      checkRateLimit("user-1", config);
-      checkRateLimit("user-1", config);
-
-      // user-2 should still be able to make requests
-      expect(() => checkRateLimit("user-2", config)).not.toThrow();
-    });
-
-    it("uses default config when none provided", () => {
-      // Should not throw with default config (100 requests per minute)
-      for (let i = 0; i < 100; i++) {
-        expect(() => checkRateLimit("user-1")).not.toThrow();
-      }
     });
   });
 });

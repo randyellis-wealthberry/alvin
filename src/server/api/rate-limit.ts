@@ -1,60 +1,45 @@
+import { Ratelimit } from "@upstash/ratelimit";
 import { TRPCError } from "@trpc/server";
+import { redis } from "~/lib/redis";
 
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-}
+/**
+ * Redis-backed rate limiters using @upstash/ratelimit sliding window algorithm.
+ * Each limiter targets a different use case with appropriate limits.
+ */
 
-const store = new Map<string, RateLimitEntry>();
+/** General API rate limit: 100 requests per 60s per IP */
+export const apiRateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(100, "60 s"),
+  prefix: "ratelimit:api",
+});
 
-export interface RateLimitConfig {
-  windowMs: number;
-  maxRequests: number;
-}
+/** Auth rate limit: 10 attempts per 60s per IP (login, register) */
+export const authRateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "60 s"),
+  prefix: "ratelimit:auth",
+});
 
-const DEFAULT_CONFIG: RateLimitConfig = {
-  windowMs: 60 * 1000, // 1 minute
-  maxRequests: 100,
-};
+/** AI chat rate limit: 20 messages per 60s per user */
+export const chatRateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(20, "60 s"),
+  prefix: "ratelimit:chat",
+});
 
-export function checkRateLimit(
+/**
+ * Check rate limit and throw TRPCError if exceeded.
+ */
+export async function checkRateLimit(
+  limiter: Ratelimit,
   identifier: string,
-  config: RateLimitConfig = DEFAULT_CONFIG,
-): void {
-  const now = Date.now();
-  const entry = store.get(identifier);
-
-  // Clean up expired entries periodically (1% chance)
-  if (Math.random() < 0.01) {
-    cleanupExpiredEntries(now);
-  }
-
-  if (!entry || now > entry.resetTime) {
-    store.set(identifier, {
-      count: 1,
-      resetTime: now + config.windowMs,
-    });
-    return;
-  }
-
-  if (entry.count >= config.maxRequests) {
+): Promise<void> {
+  const { success } = await limiter.limit(identifier);
+  if (!success) {
     throw new TRPCError({
       code: "TOO_MANY_REQUESTS",
       message: "Rate limit exceeded. Please try again later.",
     });
   }
-
-  entry.count++;
-}
-
-function cleanupExpiredEntries(now: number): void {
-  for (const [key, entry] of store.entries()) {
-    if (now > entry.resetTime) {
-      store.delete(key);
-    }
-  }
-}
-
-export function resetRateLimitStore(): void {
-  store.clear();
 }
