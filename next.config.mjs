@@ -16,6 +16,35 @@ const withSerwist = withSerwistInit({
 });
 
 /** @type {import("next").NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          // Prevent clickjacking
+          { key: "X-Frame-Options", value: "DENY" },
+          // Prevent MIME-type sniffing
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          // Control referrer information
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // Opt out of Google FLoC / Topics
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+          // Strict transport security (1 year, include subdomains)
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains; preload",
+          },
+          // XSS protection (legacy browsers)
+          { key: "X-XSS-Protection", value: "1; mode=block" },
+        ],
+      },
+    ];
+  },
+};
 
 export default withSerwist(nextConfig);
