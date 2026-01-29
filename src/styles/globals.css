@@ -338,3 +338,191 @@
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
+
+/* ================================
+   C1Chat / Crayon UI — Deep Cosmos
+   Force dark theme on all chat UI
+   ================================ */
+
+/* ── Main containers ── */
+.crayon-copilot-shell-container,
+.crayon-shell-container {
+  background: transparent !important;
+  color: #f0f9ff !important;
+  height: 100% !important;
+  max-height: 100% !important;
+}
+
+/* ── Header — frosted glass ── */
+.crayon-copilot-shell-header {
+  background: rgba(26, 5, 51, 0.6) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.crayon-copilot-shell-header-agent-name {
+  color: #f0f9ff !important;
+}
+
+/* ── Sidebar / thread list — dark translucent panel ── */
+.crayon-shell-sidebar-container,
+.crayon-shell-sidebar-content {
+  background: rgba(26, 5, 51, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.crayon-shell-sidebar-header {
+  color: #f0f9ff !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.crayon-shell-thread-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.crayon-shell-thread-button:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #f0f9ff !important;
+}
+
+.crayon-shell-thread-button--selected {
+  background: rgba(14, 165, 233, 0.12) !important;
+  color: #0ea5e9 !important;
+}
+
+/* ── Thread / message area ── */
+.crayon-copilot-shell-thread-container,
+.crayon-copilot-shell-thread-scroll-container {
+  background: transparent !important;
+}
+
+/* ── Assistant messages ── */
+.crayon-copilot-shell-thread-message-assistant,
+.crayon-shell-thread-message-assistant {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.crayon-copilot-shell-thread-message-assistant__content,
+.crayon-shell-thread-message-assistant__content {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ── User messages ── */
+.crayon-copilot-shell-thread-message-user__content,
+.crayon-shell-thread-message-user__content {
+  background: rgba(139, 92, 246, 0.15) !important;
+  color: #ede9fe !important;
+}
+
+/* ── Composer / input area ── */
+.crayon-copilot-shell-thread-composer,
+.crayon-shell-thread-composer {
+  background: rgba(26, 5, 51, 0.4) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.crayon-copilot-shell-thread-composer__input-wrapper,
+.crayon-shell-thread-composer__input-wrapper {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0.75rem !important;
+}
+
+.crayon-copilot-shell-thread-composer__input-wrapper:focus-within {
+  border-color: rgba(14, 165, 233, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1) !important;
+}
+
+.crayon-copilot-shell-thread-composer__input,
+.crayon-shell-thread-composer__input {
+  color: #f0f9ff !important;
+}
+
+.crayon-copilot-shell-thread-composer__input::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* ── Welcome screen ── */
+.crayon-copilot-shell-welcome-screen {
+  background: transparent !important;
+}
+
+.crayon-copilot-shell-welcome-screen__title {
+  color: #f0f9ff !important;
+}
+
+.crayon-copilot-shell-welcome-screen__description {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ── Conversation starters ── */
+.crayon-copilot-shell-conversation-starter-item-short {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.crayon-copilot-shell-conversation-starter-item-short:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f0f9ff !important;
+}
+
+.crayon-copilot-shell-conversation-starter-item-long {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* ── C1 content blocks (genui-sdk) ── */
+.c1-think-container {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.c1-callout-v2 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.c1-inline-markdown-renderer {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ── Follow-up suggestions ── */
+.crayon-follow-up-block {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* ── Generic catch-all for any remaining white backgrounds ── */
+.crayon-copilot-shell-container *,
+.crayon-shell-container * {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Scrollbar ── */
+.crayon-copilot-shell-thread-scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.crayon-copilot-shell-thread-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.crayon-copilot-shell-thread-scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.crayon-copilot-shell-thread-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Ensure AlertDialog renders above C1Chat sidebar (z-1000) and thread menus (z-10000) */
+[data-slot="alert-dialog-overlay"] {
+  z-index: 10001 !important;
+}
+[data-slot="alert-dialog-content"] {
+  z-index: 10001 !important;
+}

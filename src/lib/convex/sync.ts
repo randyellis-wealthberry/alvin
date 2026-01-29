@@ -5,35 +5,13 @@ import { ConvexHttpClient } from "convex/browser";
 const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
 const convex = convexUrl ? new ConvexHttpClient(convexUrl) : null;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ConvexApi = any;
-
-// Path to the generated Convex API - uses template to prevent static resolution
-const CONVEX_API_PATH = `${"../../../convex/_generated/api"}`;
-
-/**
- * Dynamically load the Convex API.
- * Returns null if the generated files don't exist yet.
- */
-async function getApi(): Promise<ConvexApi | null> {
-  try {
-    // Dynamic import - will fail gracefully if generated files don't exist
-    // Uses variable path to prevent TypeScript from resolving at compile time
-    const module = (await import(/* @vite-ignore */ CONVEX_API_PATH)) as {
-      api: ConvexApi;
-    };
-    return module.api;
-  } catch {
-    console.warn(
-      "[Convex sync] Generated API not available. Run 'npx convex dev' to generate.",
-    );
-    return null;
-  }
-}
-
 /**
  * Sync an activity to Convex for real-time dashboard updates.
- * Silently skips if Convex is not configured or API not generated.
+ * Silently skips if Convex is not configured.
+ * 
+ * NOTE: Convex API integration is disabled until `npx convex dev` is run
+ * to generate the required API files. This is intentional to allow the app
+ * to work without Convex during initial development.
  */
 export async function syncActivity(data: {
   userId: string;
@@ -44,26 +22,14 @@ export async function syncActivity(data: {
 }): Promise<void> {
   if (!convex) return; // Graceful skip if Convex not configured
 
-  try {
-    const api = await getApi();
-    if (!api) return;
-
-    await convex.mutation(api.activities.addActivity, {
-      userId: data.userId,
-      type: data.type,
-      description: data.description,
-      timestamp: data.timestamp.getTime(),
-      metadata: data.metadata,
-    });
-  } catch (error) {
-    // Log but don't throw - sync failures shouldn't break primary operations
-    console.error("[Convex sync] Failed to sync activity:", error);
-  }
+  // TODO: Re-enable when Convex is set up
+  // For now, just log that we would sync
+  console.log("[Convex sync] Would sync activity:", data.type, data.description);
 }
 
 /**
  * Sync user status to Convex for real-time dashboard updates.
- * Silently skips if Convex is not configured or API not generated.
+ * Silently skips if Convex is not configured.
  */
 export async function syncUserStatus(data: {
   userId: string;
@@ -74,21 +40,9 @@ export async function syncUserStatus(data: {
 }): Promise<void> {
   if (!convex) return; // Graceful skip if Convex not configured
 
-  try {
-    const api = await getApi();
-    if (!api) return;
-
-    await convex.mutation(api.alerts.updateUserStatus, {
-      userId: data.userId,
-      lastCheckIn: data.lastCheckIn?.getTime(),
-      nextDue: data.nextDue?.getTime(),
-      alertLevel: data.alertLevel,
-      alertTriggeredAt: data.alertTriggeredAt?.getTime() ?? undefined,
-    });
-  } catch (error) {
-    // Log but don't throw - sync failures shouldn't break primary operations
-    console.error("[Convex sync] Failed to sync user status:", error);
-  }
+  // TODO: Re-enable when Convex is set up
+  // For now, just log that we would sync
+  console.log("[Convex sync] Would sync user status for:", data.userId);
 }
 
 /**

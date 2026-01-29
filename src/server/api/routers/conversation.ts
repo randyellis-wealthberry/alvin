@@ -107,6 +107,33 @@ export const conversationRouter = createTRPCRouter({
       return { success: true };
     }),
 
+  // Delete a conversation and its messages
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.userProfile.findUnique({
+        where: { userId: ctx.session.user.id },
+      });
+
+      if (!profile) throw new Error("Profile not found");
+
+      const conversation = await ctx.db.conversation.findUnique({
+        where: { id: input.id, userProfileId: profile.id },
+      });
+
+      if (!conversation) throw new Error("Conversation not found");
+
+      await ctx.db.message.deleteMany({
+        where: { conversationId: input.id },
+      });
+
+      await ctx.db.conversation.delete({
+        where: { id: input.id },
+      });
+
+      return { success: true };
+    }),
+
   // Get check-in status for a conversation
   getCheckInStatus: protectedProcedure
     .input(z.object({ conversationId: z.string() }))

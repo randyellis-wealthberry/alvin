@@ -9,7 +9,7 @@ See: .planning/PROJECT.md (updated 2026-01-22)
 
 ## Current Position
 
-Phase: 17 of 24 (Redis Session Store)
+Phase: 17 of 25 (Redis Session Store)
 Plan: Not started
 Status: Ready to plan
 Last activity: 2026-01-23 — Milestone v3.0 created
@@ -38,6 +38,11 @@ Carried forward:
 - In-memory WebAuthn challenges → Redis (Phase 17 will address)
 - Custom escalation timing (potential v4 feature)
 
+### Pending Todos
+
+1 pending todo in `.planning/todos/pending/`:
+- **Add navigation out of chat screen** (ui) — No wayfinding to exit full-screen chat
+
 ### Blockers/Concerns
 
 None.
@@ -58,4 +63,5 @@ Resume file: None
 - v1.0 MVP shipped: 10 phases, 16 plans (2026-01-17)
 - v2.0 Mobile & Messaging shipped: 6 phases, 16 plans (2026-01-22)
 - v3.0 Production Hardening created: 8 phases (Phase 17-24) (2026-01-23)
-- Total: 24 phases across 3 milestones
+- Phase 25 added: C1Chat Rich Response Integration (2026-01-28)
+- Total: 25 phases across 3 milestones

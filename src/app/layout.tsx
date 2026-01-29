@@ -50,7 +50,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={cn(geist.variable, inter.variable, "dark")}>
-      <body className="bg-background text-foreground selection:bg-primary/20 selection:text-primary min-h-screen">
+      <body
+        className="bg-background text-foreground selection:bg-primary/20 selection:text-primary min-h-screen"
+        suppressHydrationWarning
+      >
         <SessionProvider>
           <ConvexClientProvider>
             <TRPCReactProvider>

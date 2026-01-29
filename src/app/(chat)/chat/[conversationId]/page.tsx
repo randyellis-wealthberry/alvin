@@ -137,7 +137,18 @@ export default function ConversationPage() {
 
   const [input, setInput] = useState("");
   const [mounted, setMounted] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Monitor scroll position
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    // If we are within 100px of the bottom, enable auto-scroll
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+    setShouldAutoScroll(isAtBottom);
+  };
   const inputRef = useRef<HTMLInputElement>(null);
 
   const utils = api.useUtils();
@@ -157,10 +168,12 @@ export default function ConversationPage() {
     setMounted(true);
   }, []);
 
-  // Scroll to bottom when messages change
+  // Scroll to bottom when messages change or loading state changes, BUT only if we should auto-scroll
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [conversation?.messages]);
+    if (shouldAutoScroll) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [conversation?.messages, sendMessage.isPending, shouldAutoScroll]);
 
   // Focus input on mount
   useEffect(() => {
@@ -171,6 +184,7 @@ export default function ConversationPage() {
     e.preventDefault();
     if (!input.trim() || sendMessage.isPending) return;
 
+    setShouldAutoScroll(true); // Force auto-scroll on send
     sendMessage.mutate({
       conversationId,
       messages: [{ role: "user", content: input.trim() }],
@@ -178,6 +192,7 @@ export default function ConversationPage() {
   };
 
   const handleQuickReply = (text: string) => {
+    setShouldAutoScroll(true); // Force auto-scroll on quick reply
     sendMessage.mutate({
       conversationId,
       messages: [{ role: "user", content: text }],
@@ -226,7 +241,11 @@ export default function ConversationPage() {
         </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="flex-1 overflow-y-auto px-4 py-6"
+        >
           <div className="mx-auto max-w-2xl space-y-4">
             {isLoading ? (
               <div className="flex justify-center py-12">
@@ -237,36 +256,36 @@ export default function ConversationPage() {
                 {/* Welcome message if no messages yet */}
                 {(!conversation?.messages ||
                   conversation.messages.length === 0) && (
-                  <div className="py-12 text-center">
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 shadow-lg shadow-blue-500/30">
-                      <Sparkles className="h-8 w-8 text-white" />
+                    <div className="py-12 text-center">
+                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 shadow-lg shadow-blue-500/30">
+                        <Sparkles className="h-8 w-8 text-white" />
+                      </div>
+                      <h2 className="mb-2 text-xl font-semibold text-white">
+                        Start chatting with ALVIN
+                      </h2>
+                      <p className="mx-auto mb-6 max-w-sm text-sm text-white/60">
+                        Share how you&apos;re feeling, ask for support, or just
+                        have a friendly conversation
+                      </p>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {[
+                          "Hi ALVIN!",
+                          "I'm feeling good today",
+                          "I'm okay",
+                          "Tell me something positive",
+                        ].map((text) => (
+                          <button
+                            key={text}
+                            onClick={() => handleQuickReply(text)}
+                            disabled={sendMessage.isPending}
+                            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
+                          >
+                            {text}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <h2 className="mb-2 text-xl font-semibold text-white">
-                      Start chatting with ALVIN
-                    </h2>
-                    <p className="mx-auto mb-6 max-w-sm text-sm text-white/60">
-                      Share how you&apos;re feeling, ask for support, or just
-                      have a friendly conversation
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-2">
-                      {[
-                        "Hi ALVIN!",
-                        "I'm feeling good today",
-                        "I'm okay",
-                        "Tell me something positive",
-                      ].map((text) => (
-                        <button
-                          key={text}
-                          onClick={() => handleQuickReply(text)}
-                          disabled={sendMessage.isPending}
-                          className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
-                        >
-                          {text}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                  )}
 
                 {/* Message list */}
                 {conversation?.messages?.map(

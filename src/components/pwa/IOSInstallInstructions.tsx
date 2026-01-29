@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+const INSTALLED_KEY = "alvin-pwa-installed-ios";
+const DISMISSED_KEY = "ios-install-dismissed";
+
 function isIOS(): boolean {
   if (typeof navigator === "undefined") return false;
   return /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -20,18 +23,27 @@ export function IOSInstallInstructions() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // Only show on iOS Safari when not already installed
-    if (isIOS() && !isInStandaloneMode()) {
-      // Check if user dismissed before (localStorage)
-      const dismissed = localStorage.getItem("ios-install-dismissed");
-      if (!dismissed) {
-        setShowBanner(true);
-      }
+    if (!isIOS()) return;
+
+    // Already running as installed PWA — never show
+    if (isInStandaloneMode()) {
+      localStorage.setItem(INSTALLED_KEY, "true");
+      return;
     }
+
+    // Was installed before but no longer standalone — user removed it
+    if (localStorage.getItem(INSTALLED_KEY)) {
+      localStorage.removeItem(INSTALLED_KEY);
+    }
+
+    // User dismissed this session
+    if (sessionStorage.getItem(DISMISSED_KEY)) return;
+
+    setShowBanner(true);
   }, []);
 
   const handleDismiss = () => {
-    localStorage.setItem("ios-install-dismissed", "true");
+    sessionStorage.setItem(DISMISSED_KEY, "true");
     setShowBanner(false);
   };
 

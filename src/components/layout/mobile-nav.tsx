@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutDashboard, Users, Bell, Activity } from "lucide-react";
+import { LayoutDashboard, Users, Bell, Activity, MessageCircle } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 export function MobileNav() {
   const pathname = usePathname();
 
-  // Hide navigation on auth pages
-  if (pathname?.startsWith("/auth")) {
+  // Hide navigation on auth pages and full-screen chat
+  if (pathname?.startsWith("/auth") || pathname?.startsWith("/chat")) {
     return null;
   }
 
@@ -25,9 +25,10 @@ export function MobileNav() {
       icon: Activity,
     },
     {
-      href: "/",
-      label: "Home",
-      icon: Home,
+      href: "/chat",
+      label: "ALVIN",
+      icon: MessageCircle,
+      isCenter: true,
     },
     {
       href: "/contacts",
@@ -46,6 +47,30 @@ export function MobileNav() {
       {links.map((link) => {
         const Icon = link.icon;
         const isActive = pathname === link.href;
+
+        if (link.isCenter) {
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex flex-col items-center gap-1 transition-all duration-300"
+            >
+              <div
+                className={cn(
+                  "bg-primary text-primary-foreground -mt-7 flex h-14 w-14 items-center justify-center rounded-full shadow-lg shadow-primary/40 transition-all",
+                  isActive
+                    ? "scale-110 ring-primary/50 ring-2 ring-offset-2 ring-offset-background"
+                    : "hover:scale-105 hover:shadow-primary/60",
+                )}
+              >
+                <Icon className={cn("h-7 w-7", isActive && "animate-pulse-glow")} />
+              </div>
+              <span className={cn("text-[10px] font-semibold", isActive ? "text-primary" : "text-muted-foreground")}>
+                {link.label}
+              </span>
+            </Link>
+          );
+        }
 
         return (
           <Link
