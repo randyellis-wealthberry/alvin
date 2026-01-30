@@ -64,15 +64,19 @@ export default function PreferencesPage() {
   }, []);
 
   const handleContinue = async () => {
-    await updateProfile.mutateAsync({
-      checkInFrequencyHours: frequency,
-      preferredCheckInTime: reminderTime,
-      timezone: showTimezoneInput ? timezoneOverride : timezone,
-      isActive: true,
-    });
-    await advanceStep.mutateAsync({ step: 2 });
-    await update();
-    router.push("/onboarding/contact");
+    try {
+      await updateProfile.mutateAsync({
+        checkInFrequencyHours: frequency,
+        preferredCheckInTime: reminderTime,
+        timezone: showTimezoneInput ? timezoneOverride : timezone,
+        isActive: true,
+      });
+      await advanceStep.mutateAsync({ step: 2 });
+      await update();
+      router.push("/onboarding/contact");
+    } catch {
+      // Error state is tracked by updateProfile.isError / advanceStep.isError
+    }
   };
 
   return (
@@ -254,6 +258,12 @@ export default function PreferencesPage() {
             )}
           </Button>
         </div>
+
+        {(updateProfile.isError || advanceStep.isError) && (
+          <p className="mt-4 text-center text-sm text-red-400">
+            Something went wrong. Please try again.
+          </p>
+        )}
       </div>
     </div>
   );

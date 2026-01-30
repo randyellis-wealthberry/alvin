@@ -51,9 +51,13 @@ export default function WelcomePage() {
   const firstName = fullName?.split(" ")[0] ?? "there";
 
   const handleGetStarted = async () => {
-    await advanceStep.mutateAsync({ step: 1 });
-    await update();
-    router.push("/onboarding/preferences");
+    try {
+      await advanceStep.mutateAsync({ step: 1 });
+      await update();
+      router.push("/onboarding/preferences");
+    } catch {
+      // Error state is tracked by advanceStep.isError
+    }
   };
 
   return (
@@ -128,6 +132,12 @@ export default function WelcomePage() {
           {advanceStep.isPending ? "Starting..." : "Get Started"}
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
         </button>
+
+        {advanceStep.isError && (
+          <p className="mt-4 text-center text-sm text-red-400">
+            Something went wrong. Please try again.
+          </p>
+        )}
       </div>
     </div>
   );

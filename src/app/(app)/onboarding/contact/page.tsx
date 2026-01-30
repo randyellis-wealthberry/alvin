@@ -84,24 +84,32 @@ export default function OnboardingContactPage() {
 
     const hasSms = !!phone.trim() && notifyMissedCheckin;
 
-    await createContact.mutateAsync({
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim() || undefined,
-      relationship: relationship || undefined,
-      priority: 1,
-      notifyByEmail: true,
-      notifyBySms: hasSms,
-    });
-    await advanceStep.mutateAsync({ step: 3 });
-    await update();
-    router.push("/onboarding/complete");
+    try {
+      await createContact.mutateAsync({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        relationship: relationship || undefined,
+        priority: 1,
+        notifyByEmail: true,
+        notifyBySms: hasSms,
+      });
+      await advanceStep.mutateAsync({ step: 3 });
+      await update();
+      router.push("/onboarding/complete");
+    } catch {
+      // Error state is tracked by createContact.isError / advanceStep.isError
+    }
   }
 
   async function handleSkip() {
-    await advanceStep.mutateAsync({ step: 3 });
-    await update();
-    router.push("/onboarding/complete");
+    try {
+      await advanceStep.mutateAsync({ step: 3 });
+      await update();
+      router.push("/onboarding/complete");
+    } catch {
+      // Error state is tracked by advanceStep.isError
+    }
   }
 
   const isFormValid = name.trim() && email.trim() && consentChecked;
@@ -349,7 +357,7 @@ export default function OnboardingContactPage() {
         </div>
 
         {/* Mutation error */}
-        {createContact.isError && (
+        {(createContact.isError || advanceStep.isError) && (
           <p className="mt-4 text-center text-sm text-red-400">
             Something went wrong. Please try again.
           </p>
