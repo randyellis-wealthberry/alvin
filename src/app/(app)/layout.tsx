@@ -12,5 +12,10 @@ export default async function AppLayout({
     redirect("/auth/signin");
   }
 
+  // Suppress header and bottom nav during onboarding
+  if (!session.user.onboardingCompleted) {
+    return <>{children}</>;
+  }
+
   return <AppShell>{children}</AppShell>;
 }
