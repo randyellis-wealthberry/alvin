@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-22)
 
 ## Current Position
 
-Phase: 18 of 25 (OAuth Providers)
+Phase: 22.1 of 25 (Signup & Onboarding UI Overhaul)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-01-29 — Phase 17 complete, Phase 25 work done
+Last activity: 2026-01-29 — Phase 22.1 inserted, Phases 18-22 complete
 
-Progress: █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 11%
+Progress: ██████████████░░░░░░░░░░░░░░░░░ 50%
 
 ## Milestones Shipped
 
@@ -40,8 +40,7 @@ Carried forward:
 
 ### Pending Todos
 
-1 pending todo in `.planning/todos/pending/`:
-- ~~**Add navigation out of chat screen** (ui)~~ — DONE (floating home button added)
+None active.
 
 ### Blockers/Concerns
 
@@ -50,13 +49,13 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-29
-Stopped at: Starting Phase 18
+Stopped at: Phase 22.1 planning (signup & onboarding UI overhaul)
 Resume file: None
 
 ## Next Steps
 
-1. **Plan Phase 18** — `/gsd:plan-phase 18` (OAuth Providers)
-2. **Or skip to Phase 19** — Rate Limiting (if OAuth not needed yet)
+1. **Plan Phase 22.1** — Build signup & onboarding UI from HTML mockups
+2. **Then Phase 23** — Logging & Observability
 
 ### Roadmap Evolution
 
@@ -66,4 +65,7 @@ Resume file: None
 - Phase 25 added: C1Chat Rich Response Integration (2026-01-28)
 - Phase 17 completed: Redis Session Store (2026-01-28)
 - Phase 25 partially done: C1Chat rich responses, delete confirmation, chat nav (2026-01-29)
-- Total: 25 phases across 3 milestones
+- Phases 18-22 completed: OAuth, Rate Limiting, Security, Health Checks (2026-01-29)
+- Phase 20 skipped: Error Monitoring (Sentry) per user preference
+- Phase 22.1 inserted: Signup & Onboarding UI Overhaul (2026-01-29)
+- Total: 26 phases across 3 milestones (1 skipped)

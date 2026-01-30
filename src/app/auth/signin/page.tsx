@@ -4,10 +4,10 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 function GoogleIcon() {
   return (
@@ -38,6 +38,7 @@ function SignInForm() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const registered = searchParams.get("registered");
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
@@ -74,102 +75,151 @@ function SignInForm() {
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-center text-2xl">Sign In</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {registered && (
-          <p className="mb-4 text-center text-sm text-green-600">
-            Account created! Please sign in.
-          </p>
+    <div className="animate-fade-in w-full max-w-md rounded-2xl border border-white/20 bg-white/10 p-8 backdrop-blur-md">
+      {/* Header */}
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
+        <p className="mt-1 text-sm text-white/60">
+          Sign in to continue to your account
+        </p>
+      </div>
+
+      {/* Success message */}
+      {registered && (
+        <div className="mb-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-center text-sm text-emerald-300">
+          Account created! Please sign in.
+        </div>
+      )}
+
+      {/* Google OAuth */}
+      <Button
+        variant="outline"
+        className="w-full border-white/20 bg-white/5 text-white hover:bg-white/10"
+        onClick={handleGoogleSignIn}
+        disabled={isGoogleLoading || isLoading}
+      >
+        {isGoogleLoading ? (
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        ) : (
+          <GoogleIcon />
         )}
+        Continue with Google
+      </Button>
 
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={handleGoogleSignIn}
-          disabled={isGoogleLoading || isLoading}
-        >
-          {isGoogleLoading ? (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          ) : (
-            <GoogleIcon />
-          )}
-          Continue with Google
-        </Button>
+      {/* Divider */}
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-white/20" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white/10 px-3 text-white/60 backdrop-blur-sm">
+            or continue with email
+          </span>
+        </div>
+      </div>
 
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="border-border w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card text-muted-foreground px-2">
-              or continue with email
-            </span>
-          </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-white/80">
+            Email
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+            className="border-white/20 bg-white/5 text-white placeholder:text-white/40 focus:border-cyan-400/50 focus:ring-cyan-400/20"
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
-              required
-            />
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="text-white/80">
+              Password
+            </Label>
+            <Link
+              href="#"
+              className="text-xs text-cyan-400 hover:text-cyan-300"
+            >
+              Forgot password?
+            </Link>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+          <div className="relative">
             <Input
               id="password"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Your password"
               required
+              className="border-white/20 bg-white/5 pr-10 text-white placeholder:text-white/40 focus:border-cyan-400/50 focus:ring-cyan-400/20"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-white/40 hover:text-white/70"
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
           </div>
-          {error && <p className="text-destructive text-sm">{error}</p>}
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading || isGoogleLoading}
-          >
-            {isLoading ? "Signing in..." : "Sign In"}
-          </Button>
-        </form>
-        <p className="text-muted-foreground mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link href="/auth/signup" className="text-primary hover:underline">
-            Create one
-          </Link>
-        </p>
-      </CardContent>
-    </Card>
+        </div>
+
+        {/* Error */}
+        {error && (
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-300">
+            {error}
+          </div>
+        )}
+
+        {/* Submit */}
+        <Button
+          type="submit"
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-500 hover:to-blue-500"
+          disabled={isLoading || isGoogleLoading}
+        >
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              Signing in...
+            </div>
+          ) : (
+            "Sign In"
+          )}
+        </Button>
+      </form>
+
+      {/* Footer link */}
+      <p className="mt-6 text-center text-sm text-white/60">
+        Don&apos;t have an account?{" "}
+        <Link href="/auth/signup" className="text-cyan-400 hover:text-cyan-300">
+          Sign up
+        </Link>
+      </p>
+    </div>
   );
 }
 
 export default function SignInPage() {
   return (
-    <main className="bg-background flex min-h-screen items-center justify-center">
-      <Suspense
-        fallback={
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">Sign In</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-center py-8">
-                <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
-              </div>
-            </CardContent>
-          </Card>
-        }
-      >
-        <SignInForm />
-      </Suspense>
-    </main>
+    <Suspense
+      fallback={
+        <div className="w-full max-w-md rounded-2xl border border-white/20 bg-white/10 p-8 backdrop-blur-md">
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
+          </div>
+          <div className="flex justify-center py-8">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+          </div>
+        </div>
+      }
+    >
+      <SignInForm />
+    </Suspense>
   );
 }

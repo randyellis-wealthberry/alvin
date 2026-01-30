@@ -90,58 +90,60 @@ None
 Plans:
 - [x] 17-01: Set up Upstash Redis client and migrate WebAuthn challenge store
 
-#### Phase 18: OAuth Providers
+#### Phase 18: OAuth Providers ✅
 
-**Goal**: Add Google and Apple OAuth alongside existing Discord provider
+**Goal**: Add Google OAuth alongside existing Discord provider
 **Depends on**: Phase 17
-**Research**: Likely (NextAuth provider configuration, Apple OAuth quirks)
-**Research topics**: NextAuth Google/Apple providers, account linking, Apple sign-in requirements
-**Plans**: TBD
+**Plans**: 1/1
 
 Plans:
-- [ ] 18-01: TBD
+- [x] 18-01: Google OAuth provider with account linking
 
-#### Phase 19: Rate Limiting
+#### Phase 19: Rate Limiting ✅
 
 **Goal**: Production-grade rate limiting with Redis backend to prevent abuse
 **Depends on**: Phase 17 (requires Redis)
-**Research**: Likely (upstash/ratelimit library)
-**Research topics**: @upstash/ratelimit patterns, sliding window vs fixed window, tRPC middleware
-**Plans**: TBD
+**Plans**: 1/1
 
 Plans:
-- [ ] 19-01: TBD
+- [x] 19-01: Redis-backed sliding window rate limiting (API/auth/chat tiers)
 
-#### Phase 20: Error Monitoring
+#### Phase 20: Error Monitoring — SKIPPED
 
 **Goal**: Sentry integration for error tracking, performance monitoring, and alerting
-**Depends on**: Phase 17
-**Research**: Likely (Sentry Next.js SDK)
-**Research topics**: @sentry/nextjs setup, source maps, environment configuration
-**Plans**: TBD
+**Status**: Skipped per user preference
 
-Plans:
-- [ ] 20-01: TBD
-
-#### Phase 21: Security Audit
+#### Phase 21: Security Audit ✅
 
 **Goal**: CSP headers, input sanitization review, dependency audit, security best practices
-**Depends on**: Phase 20
-**Research**: Unlikely (internal patterns, security checklist)
-**Plans**: TBD
+**Plans**: 1/1
 
 Plans:
-- [ ] 21-01: TBD
+- [x] 21-01: Security headers and dependency audit
 
-#### Phase 22: Health Checks
+#### Phase 22: Health Checks ✅
 
 **Goal**: API health endpoints for DB connectivity, external services, and deployment verification
 **Depends on**: Phase 20
 **Research**: Unlikely (internal patterns)
+**Plans**: 1/1
+
+Plans:
+- [x] 22-01: Health check endpoint with DB and Redis checks
+
+#### Phase 22.1: Signup & Onboarding UI Overhaul
+
+**Goal**: Redesign sign-in, sign-up, and build a multi-step onboarding flow with preferences, emergency contact setup, and completion summary
+**Depends on**: Phase 18 (OAuth), Phase 22
+**Research**: Unlikely (UI implementation from mockups)
 **Plans**: TBD
 
 Plans:
-- [ ] 22-01: TBD
+- [ ] 22.1-01: Redesign sign-in and sign-up pages (glass-morphism, password strength, Google OAuth)
+- [ ] 22.1-02: Onboarding Step 1 — Welcome screen with feature overview
+- [ ] 22.1-03: Onboarding Step 2 — Preferences (check-in frequency, reminders, timezone)
+- [ ] 22.1-04: Onboarding Step 3 — Emergency contact setup
+- [ ] 22.1-05: Onboarding completion screen with summary and CTA
 
 #### Phase 23: Logging & Observability
 
@@ -177,18 +179,19 @@ Plans:
 
 ---
 
-**v3.0 Production Hardening — NOT STARTED**
+**v3.0 Production Hardening — IN PROGRESS**
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 17. Redis Session Store | v3.0 | 1/1 | Complete | 2026-01-28 |
-| 18. OAuth Providers | v3.0 | 0/? | Not started | - |
-| 19. Rate Limiting | v3.0 | 0/? | Not started | - |
-| 20. Error Monitoring | v3.0 | 0/? | Not started | - |
-| 21. Security Audit | v3.0 | 0/? | Not started | - |
-| 22. Health Checks | v3.0 | 0/? | Not started | - |
+| 18. OAuth Providers | v3.0 | 1/1 | Complete | 2026-01-29 |
+| 19. Rate Limiting | v3.0 | 1/1 | Complete | 2026-01-29 |
+| 20. Error Monitoring | v3.0 | — | Skipped | — |
+| 21. Security Audit | v3.0 | 1/1 | Complete | 2026-01-29 |
+| 22. Health Checks | v3.0 | 1/1 | Complete | 2026-01-29 |
+| 22.1 Signup & Onboarding UI | v3.0 | 0/5 | Not started | - |
 | 23. Logging & Observability | v3.0 | 0/? | Not started | - |
 | 24. Load Testing | v3.0 | 0/? | Not started | - |
 | 25. C1Chat Rich Responses | v3.0 | 0/? | Not started | - |
 
-**Total: 9 phases, ? plans — 0% complete**
+**Total: 10 phases (1 skipped), 5/5 complete, 5 remaining**
