@@ -1,7 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Heart } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { Heart, LogOut } from "lucide-react";
 
 const STEPS = [
   { path: "/onboarding/welcome", label: "Welcome" },
@@ -65,6 +66,14 @@ export default function OnboardingLayout({
             ))}
           </div>
         )}
+
+        <button
+          onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-white/50 transition-colors hover:bg-white/10 hover:text-white/80"
+        >
+          <LogOut className="h-4 w-4" />
+          <span className="hidden sm:inline">Sign out</span>
+        </button>
       </header>
 
       {/* Content */}
