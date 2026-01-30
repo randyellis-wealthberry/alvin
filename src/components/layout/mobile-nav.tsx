@@ -8,8 +8,12 @@ import { cn } from "~/lib/utils";
 export function MobileNav() {
   const pathname = usePathname();
 
-  // Hide navigation on auth pages and full-screen chat
-  if (pathname?.startsWith("/auth") || pathname?.startsWith("/chat")) {
+  // Hide navigation on auth pages, full-screen chat, and onboarding
+  if (
+    pathname?.startsWith("/auth") ||
+    pathname?.startsWith("/chat") ||
+    pathname?.startsWith("/onboarding")
+  ) {
     return null;
   }
 
