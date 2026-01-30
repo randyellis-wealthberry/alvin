@@ -43,12 +43,8 @@ export default function PreferencesPage() {
   const router = useRouter();
   const { update } = useSession();
 
-  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
-    onSuccess: async () => {
-      await update();
-      router.push("/onboarding/contact");
-    },
-  });
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation();
+  const updateProfile = api.profile.update.useMutation();
 
   const [frequency, setFrequency] = useState(24);
   const [reminderTime, setReminderTime] = useState("09:00");
@@ -67,19 +63,16 @@ export default function PreferencesPage() {
     setTimezoneOverride(detected);
   }, []);
 
-  const updateProfile = api.profile.update.useMutation({
-    onSuccess: () => {
-      advanceStep.mutate({ step: 2 });
-    },
-  });
-
-  const handleContinue = () => {
-    updateProfile.mutate({
+  const handleContinue = async () => {
+    await updateProfile.mutateAsync({
       checkInFrequencyHours: frequency,
       preferredCheckInTime: reminderTime,
       timezone: showTimezoneInput ? timezoneOverride : timezone,
       isActive: true,
     });
+    await advanceStep.mutateAsync({ step: 2 });
+    await update();
+    router.push("/onboarding/contact");
   };
 
   return (

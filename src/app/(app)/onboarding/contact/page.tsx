@@ -34,12 +34,8 @@ export default function OnboardingContactPage() {
   const router = useRouter();
   const { update } = useSession();
 
-  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
-    onSuccess: async () => {
-      await update();
-      router.push("/onboarding/complete");
-    },
-  });
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation();
+  const createContact = api.contact.create.useMutation();
 
   // Form state
   const [name, setName] = useState("");
@@ -59,12 +55,6 @@ export default function OnboardingContactPage() {
   // Validation
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const createContact = api.contact.create.useMutation({
-    onSuccess: () => {
-      advanceStep.mutate({ step: 3 });
-    },
-  });
 
   function validate() {
     const newErrors: Record<string, string> = {};
@@ -87,14 +77,14 @@ export default function OnboardingContactPage() {
     return Object.keys(newErrors).length === 0;
   }
 
-  function handleSave() {
+  async function handleSave() {
     setHasAttemptedSubmit(true);
 
     if (!validate()) return;
 
     const hasSms = !!phone.trim() && notifyMissedCheckin;
 
-    createContact.mutate({
+    await createContact.mutateAsync({
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim() || undefined,
@@ -103,10 +93,15 @@ export default function OnboardingContactPage() {
       notifyByEmail: true,
       notifyBySms: hasSms,
     });
+    await advanceStep.mutateAsync({ step: 3 });
+    await update();
+    router.push("/onboarding/complete");
   }
 
-  function handleSkip() {
-    advanceStep.mutate({ step: 3 });
+  async function handleSkip() {
+    await advanceStep.mutateAsync({ step: 3 });
+    await update();
+    router.push("/onboarding/complete");
   }
 
   const isFormValid = name.trim() && email.trim() && consentChecked;

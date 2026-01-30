@@ -45,15 +45,16 @@ export default function WelcomePage() {
   const router = useRouter();
   const { data: session, update } = useSession();
 
-  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
-    onSuccess: async () => {
-      await update();
-      router.push("/onboarding/preferences");
-    },
-  });
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation();
 
   const fullName = session?.user?.name;
   const firstName = fullName?.split(" ")[0] ?? "there";
+
+  const handleGetStarted = async () => {
+    await advanceStep.mutateAsync({ step: 1 });
+    await update();
+    router.push("/onboarding/preferences");
+  };
 
   return (
     <div className="animate-fade-in w-full max-w-2xl">
@@ -120,7 +121,7 @@ export default function WelcomePage() {
 
         {/* CTA Button */}
         <button
-          onClick={() => advanceStep.mutate({ step: 1 })}
+          onClick={handleGetStarted}
           disabled={advanceStep.isPending}
           className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3.5 text-base font-semibold text-white transition-all hover:from-purple-500 hover:to-blue-500 disabled:opacity-50"
         >

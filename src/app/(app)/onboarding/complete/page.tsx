@@ -22,14 +22,12 @@ export default function OnboardingCompletePage() {
   const { update } = useSession();
   const hasAdvanced = useRef(false);
 
-  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
-    onSuccess: () => void update(),
-  });
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation();
 
   useEffect(() => {
     if (!hasAdvanced.current) {
       hasAdvanced.current = true;
-      advanceStep.mutate({ step: 4 });
+      void advanceStep.mutateAsync({ step: 4 }).then(() => update());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
