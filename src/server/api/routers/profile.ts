@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 import {
   createTRPCRouter,
@@ -15,6 +16,17 @@ export const profileRouter = createTRPCRouter({
 
     if (existing) {
       return existing;
+    }
+
+    // Verify user exists before creating profile (guards against stale JWTs)
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.session.user.id },
+    });
+    if (!user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Session expired. Please sign out and sign back in.",
+      });
     }
 
     // Create default profile
@@ -62,18 +74,31 @@ export const profileRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Find or create profile
-      const profile =
-        (await ctx.db.userProfile.findUnique({
-          where: { userId: ctx.session.user.id },
-        })) ??
-        (await ctx.db.userProfile.create({
+      let profile = await ctx.db.userProfile.findUnique({
+        where: { userId: ctx.session.user.id },
+      });
+
+      if (!profile) {
+        // Verify user exists before creating profile (guards against stale JWTs)
+        const user = await ctx.db.user.findUnique({
+          where: { id: ctx.session.user.id },
+        });
+        if (!user) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Session expired. Please sign out and sign back in.",
+          });
+        }
+
+        profile = await ctx.db.userProfile.create({
           data: {
             userId: ctx.session.user.id,
             checkInFrequencyHours: 24,
             timezone: "UTC",
             isActive: true,
           },
-        }));
+        });
+      }
 
       // Forward-only: ignore if step <= current
       if (input.step <= profile.onboardingStep) {
