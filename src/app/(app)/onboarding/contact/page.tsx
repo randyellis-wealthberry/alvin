@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   UserPlus,
   Shield,
@@ -31,6 +32,14 @@ const RELATIONSHIP_OPTIONS = [
 
 export default function OnboardingContactPage() {
   const router = useRouter();
+  const { update } = useSession();
+
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
+    onSuccess: async () => {
+      await update();
+      router.push("/onboarding/complete");
+    },
+  });
 
   // Form state
   const [name, setName] = useState("");
@@ -53,7 +62,7 @@ export default function OnboardingContactPage() {
 
   const createContact = api.contact.create.useMutation({
     onSuccess: () => {
-      router.push("/onboarding/complete");
+      advanceStep.mutate({ step: 3 });
     },
   });
 
@@ -97,7 +106,7 @@ export default function OnboardingContactPage() {
   }
 
   function handleSkip() {
-    router.push("/onboarding/complete");
+    advanceStep.mutate({ step: 3 });
   }
 
   const isFormValid = name.trim() && email.trim() && consentChecked;
@@ -314,17 +323,22 @@ export default function OnboardingContactPage() {
             <Button
               variant="outline"
               onClick={handleSkip}
+              disabled={advanceStep.isPending}
               className="border-white/20 bg-transparent text-white/60 hover:text-white"
             >
-              Skip for now
+              {advanceStep.isPending && !createContact.isPending
+                ? "Skipping..."
+                : "Skip for now"}
             </Button>
 
             <Button
               onClick={handleSave}
-              disabled={!isFormValid || createContact.isPending}
+              disabled={
+                !isFormValid || createContact.isPending || advanceStep.isPending
+              }
               className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 disabled:opacity-50"
             >
-              {createContact.isPending ? (
+              {createContact.isPending || advanceStep.isPending ? (
                 <>
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                   Saving...

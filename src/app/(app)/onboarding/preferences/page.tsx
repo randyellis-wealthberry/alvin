@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   Clock,
   Bell,
@@ -40,6 +41,14 @@ const notificationOptions = [
 
 export default function PreferencesPage() {
   const router = useRouter();
+  const { update } = useSession();
+
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
+    onSuccess: async () => {
+      await update();
+      router.push("/onboarding/contact");
+    },
+  });
 
   const [frequency, setFrequency] = useState(24);
   const [reminderTime, setReminderTime] = useState("09:00");
@@ -60,7 +69,7 @@ export default function PreferencesPage() {
 
   const updateProfile = api.profile.update.useMutation({
     onSuccess: () => {
-      router.push("/onboarding/contact");
+      advanceStep.mutate({ step: 2 });
     },
   });
 
@@ -239,10 +248,10 @@ export default function PreferencesPage() {
           </Button>
           <Button
             onClick={handleContinue}
-            disabled={updateProfile.isPending}
+            disabled={updateProfile.isPending || advanceStep.isPending}
             className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500"
           >
-            {updateProfile.isPending ? (
+            {updateProfile.isPending || advanceStep.isPending ? (
               "Saving..."
             ) : (
               <>

@@ -94,6 +94,10 @@ model UserProfile {
     lastCheckInAt  DateTime?
     nextCheckInDue DateTime?
 
+    // Onboarding state
+    onboardingStep      Int     @default(0) // 0=not started, 1=welcome, 2=preferences, 3=contact, 4=complete
+    onboardingCompleted Boolean @default(false)
+
     // Relations
     conversations     Conversation[]
     checkIns          CheckIn[]

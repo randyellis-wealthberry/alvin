@@ -54,6 +54,41 @@ export const profileRouter = createTRPCRouter({
       });
     }),
 
+  advanceOnboardingStep: protectedProcedure
+    .input(
+      z.object({
+        step: z.number().int().min(1).max(4),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Find or create profile
+      const profile =
+        (await ctx.db.userProfile.findUnique({
+          where: { userId: ctx.session.user.id },
+        })) ??
+        (await ctx.db.userProfile.create({
+          data: {
+            userId: ctx.session.user.id,
+            checkInFrequencyHours: 24,
+            timezone: "UTC",
+            isActive: true,
+          },
+        }));
+
+      // Forward-only: ignore if step <= current
+      if (input.step <= profile.onboardingStep) {
+        return profile;
+      }
+
+      return ctx.db.userProfile.update({
+        where: { id: profile.id },
+        data: {
+          onboardingStep: input.step,
+          onboardingCompleted: input.step >= 4,
+        },
+      });
+    }),
+
   delete: protectedProcedure.mutation(async ({ ctx }) => {
     // Delete all user data in transaction
     await ctx.db.$transaction(async (tx) => {

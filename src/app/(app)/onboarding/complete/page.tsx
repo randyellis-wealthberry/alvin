@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   CheckCircle2,
   Clock,
@@ -17,6 +19,21 @@ import { Button } from "~/components/ui/button";
 
 export default function OnboardingCompletePage() {
   const router = useRouter();
+  const { update } = useSession();
+  const hasAdvanced = useRef(false);
+
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
+    onSuccess: () => void update(),
+  });
+
+  useEffect(() => {
+    if (!hasAdvanced.current) {
+      hasAdvanced.current = true;
+      advanceStep.mutate({ step: 4 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { data: profile, isLoading: profileLoading } =
     api.profile.get.useQuery();
   const { data: contacts, isLoading: contactsLoading } =

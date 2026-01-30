@@ -10,8 +10,46 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      onboardingStep: number;
+      onboardingCompleted: boolean;
     } & DefaultSession["user"];
   }
+}
+
+declare module "@auth/core/jwt" {
+  interface JWT {
+    onboardingStep?: number;
+    onboardingCompleted?: boolean;
+  }
+}
+
+async function loadOnboardingState(userId: string) {
+  const profile = await db.userProfile.findUnique({
+    where: { userId },
+    select: {
+      onboardingStep: true,
+      onboardingCompleted: true,
+      _count: { select: { contacts: { where: { deletedAt: null } } } },
+    },
+  });
+
+  if (!profile) {
+    return { onboardingStep: 0, onboardingCompleted: false };
+  }
+
+  // Auto-complete for existing users who already have contacts
+  if (!profile.onboardingCompleted && profile._count.contacts > 0) {
+    await db.userProfile.update({
+      where: { userId },
+      data: { onboardingStep: 4, onboardingCompleted: true },
+    });
+    return { onboardingStep: 4, onboardingCompleted: true };
+  }
+
+  return {
+    onboardingStep: profile.onboardingStep,
+    onboardingCompleted: profile.onboardingCompleted,
+  };
 }
 
 export const authConfig = {
@@ -69,12 +107,24 @@ export const authConfig = {
       user: {
         ...session.user,
         id: token.sub,
+        onboardingStep: token.onboardingStep ?? 0,
+        onboardingCompleted: token.onboardingCompleted ?? false,
       },
     }),
-    jwt: ({ token, user }) => {
+    jwt: async ({ token, user, trigger }) => {
       if (user) {
         token.sub = user.id;
+        const state = await loadOnboardingState(user.id!);
+        token.onboardingStep = state.onboardingStep;
+        token.onboardingCompleted = state.onboardingCompleted;
       }
+
+      if (trigger === "update") {
+        const state = await loadOnboardingState(token.sub!);
+        token.onboardingStep = state.onboardingStep;
+        token.onboardingCompleted = state.onboardingCompleted;
+      }
+
       return token;
     },
   },

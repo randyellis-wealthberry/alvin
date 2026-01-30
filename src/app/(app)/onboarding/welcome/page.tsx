@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Clock, Bell, Shield, ArrowRight, CheckCircle2 } from "lucide-react";
+import { api } from "~/trpc/react";
 
 const FEATURES = [
   {
@@ -42,9 +43,16 @@ const STATS = [
 
 export default function WelcomePage() {
   const router = useRouter();
-  const session = useSession();
+  const { data: session, update } = useSession();
 
-  const fullName = session.data?.user?.name;
+  const advanceStep = api.profile.advanceOnboardingStep.useMutation({
+    onSuccess: async () => {
+      await update();
+      router.push("/onboarding/preferences");
+    },
+  });
+
+  const fullName = session?.user?.name;
   const firstName = fullName?.split(" ")[0] ?? "there";
 
   return (
@@ -112,10 +120,11 @@ export default function WelcomePage() {
 
         {/* CTA Button */}
         <button
-          onClick={() => router.push("/onboarding/preferences")}
-          className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3.5 text-base font-semibold text-white transition-all hover:from-purple-500 hover:to-blue-500"
+          onClick={() => advanceStep.mutate({ step: 1 })}
+          disabled={advanceStep.isPending}
+          className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3.5 text-base font-semibold text-white transition-all hover:from-purple-500 hover:to-blue-500 disabled:opacity-50"
         >
-          Get Started
+          {advanceStep.isPending ? "Starting..." : "Get Started"}
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
         </button>
       </div>
