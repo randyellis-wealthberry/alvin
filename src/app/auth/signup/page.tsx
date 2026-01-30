@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { api } from "~/trpc/react";
 
 export default function SignUpPage() {
@@ -40,11 +39,10 @@ export default function SignUpPage() {
 
   return (
     <main className="bg-background flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">Create Account</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="w-full max-w-md space-y-6 px-4">
+        <h1 className="text-center text-2xl font-semibold tracking-tight">
+          Create Account
+        </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Name (optional)</Label>
@@ -91,8 +89,7 @@ export default function SignUpPage() {
               Sign in
             </Link>
           </p>
-        </CardContent>
-      </Card>
+      </div>
     </main>
   );
 }
